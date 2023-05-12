@@ -4,3 +4,7 @@ language = "ja"
 multilingual = false
 src = "src"
 title = "ueckoken-plarail-documents"
+
+[output.html]
+git-repository-url = "https://github.com/ueckoken/plarail2023"
+git-repository-icon = "fa-github"
