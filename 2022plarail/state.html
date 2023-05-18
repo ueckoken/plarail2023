@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>ハードウェア - ueckoken-plarail-documents</title>
+        <title>状態管理 - ueckoken-plarail-documents</title>
                 
 
         <!-- Custom HTML head -->
@@ -82,7 +82,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../topPage.html"><strong aria-hidden="true">1.</strong> このドキュメントは何なのか</a></li><li class="chapter-item expanded "><a href="../software/software.html"><strong aria-hidden="true">2.</strong> ソフトウェア</a></li><li class="chapter-item expanded "><a href="../hardtware/hardware.html" class="active"><strong aria-hidden="true">3.</strong> ハードウェア</a></li><li class="chapter-item expanded "><a href="../2022plarail/2022plarail.html"><strong aria-hidden="true">4.</strong> 2022年プラレール企画</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../2022plarail/systemDiagram.html"><strong aria-hidden="true">4.1.</strong> システム構成図</a></li><li class="chapter-item expanded "><a href="../2022plarail/layout.html"><strong aria-hidden="true">4.2.</strong> レイアウト</a></li><li class="chapter-item expanded "><a href="../2022plarail/state.html"><strong aria-hidden="true">4.3.</strong> 状態管理</a></li><li class="chapter-item expanded "><a href="../2022plarail/automation.html"><strong aria-hidden="true">4.4.</strong> 自動運転</a></li><li class="chapter-item expanded "><a href="../2022plarail/site.html"><strong aria-hidden="true">4.5.</strong> 管理サイト</a></li><li class="chapter-item expanded "><a href="../2022plarail/camera.html"><strong aria-hidden="true">4.6.</strong> カメラ配信</a></li><li class="chapter-item expanded "><a href="../2022plarail/infra.html"><strong aria-hidden="true">4.7.</strong> インフラ</a></li></ol></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../topPage.html"><strong aria-hidden="true">1.</strong> このドキュメントは何なのか</a></li><li class="chapter-item expanded "><a href="../software/software.html"><strong aria-hidden="true">2.</strong> ソフトウェア</a></li><li class="chapter-item expanded "><a href="../hardtware/hardware.html"><strong aria-hidden="true">3.</strong> ハードウェア</a></li><li class="chapter-item expanded "><a href="../2022plarail/2022plarail.html"><strong aria-hidden="true">4.</strong> 2022年プラレール企画</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../2022plarail/systemDiagram.html"><strong aria-hidden="true">4.1.</strong> システム構成図</a></li><li class="chapter-item expanded "><a href="../2022plarail/layout.html"><strong aria-hidden="true">4.2.</strong> レイアウト</a></li><li class="chapter-item expanded "><a href="../2022plarail/state.html" class="active"><strong aria-hidden="true">4.3.</strong> 状態管理</a></li><li class="chapter-item expanded "><a href="../2022plarail/automation.html"><strong aria-hidden="true">4.4.</strong> 自動運転</a></li><li class="chapter-item expanded "><a href="../2022plarail/site.html"><strong aria-hidden="true">4.5.</strong> 管理サイト</a></li><li class="chapter-item expanded "><a href="../2022plarail/camera.html"><strong aria-hidden="true">4.6.</strong> カメラ配信</a></li><li class="chapter-item expanded "><a href="../2022plarail/infra.html"><strong aria-hidden="true">4.7.</strong> インフラ</a></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -146,18 +146,32 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="ハードウェア"><a class="header" href="#ハードウェア">ハードウェア</a></h1>
-<p>under construction...</p>
+                        <h1 id="状態管理"><a class="header" href="#状態管理">状態管理</a></h1>
+<p>IoTシステムの基本的な機能である状態管理を担っているのが、externalとinternalの2つのサービスです。ここら辺のシステムは昨年度のものをそのまま引き継いでいます。</p>
+<p>IoTシステムにおける状態管理について簡単に説明すると、システム上の状態と現実のハードウェアの状態を一致させるということです。例えば最近よくあるようなスマホから電気をON/OFFできるようなライトがあった時に、サーバー上ではライトの現在の状態(ライトがついているのか消えているのか)を保持しており、スマホからライトを消すという指示がくるとサーバー上の状態を更新するとともに、現実のライトもOFFにします。もし状態管理がうまくいっていないと、システム上だとライトが消えているのに現実のライトは点いているというような事態に陥ってしまうのでとても重要な部分です。</p>
+<p>また、この状態管理によってシステムの状態とハードウェアの状態が一致していることが保証されていると、ソフトウェアではより抽象的にハードウェアを扱うことが可能になります。</p>
+<p>さて、今回のシステムではexternalがポイントとストップレールの状態をKVS(Key Value Store)で保持しています。このexternalの状態が変化するとその変化がinternalを介してサーボを制御するESP32に伝わることで現実世界のポイントが動きます。例えば、<code>sakurajosui_b1</code>というストップレールをONにすると、</p>
+<ol>
+<li>ストップレールをONにするボタンが押される</li>
+<li>クライアントからexternalのAPIを叩く</li>
+<li>externalで状態(ON/OFF)を更新して、操作するポイントの名前と状態をinternalへ伝える</li>
+<li>externalから渡された状態に基づいて、そのポイントを管理するESP32に対してサーボの角度を指定するAPIを叩く</li>
+<li>ESP32で指定された角度にサーボが動き、ストップレールが動く</li>
+</ol>
+<p>というような流れになっておりそれぞれで抽象化されているので、上から下へ流れるにつれてレイヤが下がっていくイメージです。</p>
+<p>実装的な面で言うと、externalとinternalはそれぞれgolangで実装され、gRPCを用いて話すようになっており、フロントエンド側からはJSON形式のhttpでリクエストを受けつけるようになっています。ここら辺もconnectとかを使ってprotobufを使うように統一できると良さそうですね。</p>
+<p>また、internalのサーバーはESP32と同じネットワーク上に存在しており、ESP32に固定IPを割り振ってそのIPアドレスをinternal側で管理することで実装しています。最近のIoTシステムだと、ESP32から直接クラウド上のサーバーにアクセスして状態の変更を監視するみたいなパターンが多いので少し特殊かもしれません...?</p>
+<p>MongooseOSとmDashを使ってクラウドにするぞー！という計画はあったのですが、接続できる台数の制限があったり、1からこの部分のコードを書き直していると他の部分が追いつかないなどがあったので断念しました...。もし次回があればそこらへんも挑戦してみたいです。</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                                                    <a rel="prev" href="../software/software.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                                    <a rel="prev" href="../2022plarail/layout.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
-                                                    <a rel="next" href="../2022plarail/2022plarail.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                                    <a rel="next" href="../2022plarail/automation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -167,11 +181,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                                    <a rel="prev" href="../software/software.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                    <a rel="prev" href="../2022plarail/layout.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
-                                    <a rel="next" href="../2022plarail/2022plarail.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                    <a rel="next" href="../2022plarail/automation.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                             </nav>
