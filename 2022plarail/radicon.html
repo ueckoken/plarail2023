@@ -1,0 +1,291 @@
+<!DOCTYPE HTML>
+<html lang="ja" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>ラジコン - ueckoken-plarail-documents</title>
+                
+
+        <!-- Custom HTML head -->
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+                <link rel="icon" href="../favicon.svg">
+                        <link rel="shortcut icon" href="../favicon.png">
+                <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+                <link rel="stylesheet" href="../css/print.css" media="print">
+        
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+                <link rel="stylesheet" href="../fonts/fonts.css">
+        
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+            </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../topPage.html"><strong aria-hidden="true">1.</strong> このドキュメントは何なのか</a></li><li class="chapter-item expanded "><a href="../software/software.html"><strong aria-hidden="true">2.</strong> ソフトウェア</a></li><li class="chapter-item expanded "><a href="../hardtware/hardware.html"><strong aria-hidden="true">3.</strong> ハードウェア</a></li><li class="chapter-item expanded "><a href="../2022plarail/2022plarail.html"><strong aria-hidden="true">4.</strong> 2022年プラレール企画</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../2022plarail/systemDiagram.html"><strong aria-hidden="true">4.1.</strong> システム構成図</a></li><li class="chapter-item expanded "><a href="../2022plarail/layout.html"><strong aria-hidden="true">4.2.</strong> レイアウト</a></li><li class="chapter-item expanded "><a href="../2022plarail/state.html"><strong aria-hidden="true">4.3.</strong> 状態管理</a></li><li class="chapter-item expanded "><a href="../2022plarail/automation.html"><strong aria-hidden="true">4.4.</strong> 自動運転</a></li><li class="chapter-item expanded "><a href="../2022plarail/site.html"><strong aria-hidden="true">4.5.</strong> 管理サイト</a></li><li class="chapter-item expanded "><a href="../2022plarail/camera.html"><strong aria-hidden="true">4.6.</strong> カメラ配信</a></li><li class="chapter-item expanded "><a href="../2022plarail/infra.html"><strong aria-hidden="true">4.7.</strong> インフラ</a></li><li class="chapter-item expanded "><a href="../2022plarail/radicon.html" class="active"><strong aria-hidden="true">4.8.</strong> ラジコン</a></li></ol></li></ol>            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                                                <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                                            </div>
+
+                    <h1 class="menu-title">ueckoken-plarail-documents</h1>
+
+                    <div class="right-buttons">
+                                                <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                                                                        <a href="https://github.com/ueckoken/plarail2023" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                                                
+                    </div>
+                </div>
+
+                                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="プラレールラジコン化計画"><a class="header" href="#プラレールラジコン化計画">プラレールラジコン化計画</a></h1>
+<h2 id="プラレールって"><a class="header" href="#プラレールって">プラレールって？</a></h2>
+<p>プラレールとは古来より男児たちを中心に遊ばれている電車の形状をした玩具である。JR、私鉄を含む
+豊富な車両があり、果てにはモノレールのプラレールも存在する。そんな男児なら一度は触ったことがあるであろうプラレール、その構造は実にシンプルなものだ。
+電源を入れたらモーターが回転し電車がただ走り出すというものだ。端的にいえば前に走るだけであり、その動作は本来制御不能。しかし今回科学の力を用いてプラレールの速度制御を遠隔で行い、ラジコン化させる。</p>
+<h2 id="製作における要件定義"><a class="header" href="#製作における要件定義">製作における要件定義</a></h2>
+<p>今回ラジコンプラレールの製作に当たって以下三つの要件を定めて開発を行った。</p>
+<ul>
+<li>実機コントロールを用いて無線でプラレールをスムーズにリアルタイムで速度制御する。</li>
+<li>改造の際、プラレールの外見を損なわないように部品を内部に収める。</li>
+<li>量産しやすいようシンプルな構造にする。</li>
+</ul>
+<p>そのため最終的にはラジコンプラレールを量産、調布祭で展示及びユーザーによる運転ができるようにする予定である。</p>
+<p><img src="./img/pr-System.png" alt="システムズ図" /></p>
+<p>ラジコンプラレールの大まかなシステムは以下の通りである。主にコントロールを担う送信側と、送られてきた
+値を元にモーターを制御する受信側に分けられる。間の通信にはBluetoothを用いる。これによりある程度遠くから
+運転を行うことが可能になり、消費電力も抑えることができる。</p>
+<h2 id="ハードウェア"><a class="header" href="#ハードウェア">ハードウェア</a></h2>
+<h3 id="使用部品"><a class="header" href="#使用部品">使用部品</a></h3>
+<ul>
+<li>タカラトミー TAKARATOMY S52 [プラレール 小田急ロマンスカーGSE70000形]</li>
+<li>ＥＳＰ３２－ＤｅｖＫｉｔＣ　ＥＳＰ－ＷＲＯＯＭ－３２開発ボード×2</li>
+<li>DＤＲＶ８８３５使用ステッピング＆ＤＣモータドライバモジュール | ＤＲＶ８８３５使用ステッピング＆ＤＣモータドライバモジュール</li>
+<li>ターミナルブロック　２．５４ｍｍ　２Ｐ　青　縦 | ターミナルブロック　２．５４ｍｍ　２Ｐ　青　縦</li>
+<li>ピ分割ロングピンソケット　１×４２　（４２Ｐ） | 分割ロングピンソケット　１×４２　（４２Ｐ）</li>
+<li>ＸＨコネクタ　ベース付ポスト　サイド型　２Ｐ　Ｓ２Ｂ－ＸＨ－Ａ（ＬＦ）（ＳＮ）</li>
+<li>リチウム電池　ＣＲ１２３Ａ（ＣＲ１２３）</li>
+<li>００６Ｐアルカリ電池（積層電池）　９Ｖ　ゴールデンパワー</li>
+<li>ミサイルスイッチ</li>
+<li>ボリューム抵抗10k$¥Omega$</li>
+<li>フルカラーLED</li>
+</ul>
+<p>今回は以上の部品を用いてプラレールのラジコンを行った。使用プラレールは小田急ロマンスカーGSE。箱根湯本へ向かう小田急を代表する特急であり先頭車の展望席から見れるダイナミックな眺望が特徴.
+車内も広々としていて綺麗なので皆さん是非乗ってみてほしい。新宿箱根湯本区間を約2500円で乗れるぞ！みんな乗ってみよう。</p>
+<h3 id="回路図"><a class="header" href="#回路図">回路図</a></h3>
+<p>esp32をモータドライバに繋げたシンプルな一体化回路である。モーターとの接続はターミナルブロックを介しており
+気軽に付け替えを行えるようになっている。マイコンの電源のみ接触不良を極力避けるためXHコネクタを使用している。
+また基盤全体の大きさをプラレールサイズ(32mm×90mm)にとどめており、基本的な中間車に綺麗に収まるようになっている。
+そのため外装を戻した際はぱっと見大きな変化が無いように見えるようになっている。
+基板はユニバーサル基板なので気合いでハンダづけをしている。</p>
+<p><img src="./img/IMG_BH72-3.png" alt="受信側の回路図" /></p>
+<p><img src="./img/IMG_BH72-4.jpg" alt="受信側の回路図" /></p>
+<h3 id="プラレールの改造"><a class="header" href="#プラレールの改造">プラレールの改造</a></h3>
+<p>先頭車に動力、中間車と後尾車は空というのがプラレール車両の基本的な構造である。
+そのため、中間車に先ほどの回路、後尾車にバッテリーという車両構成になった。先頭車の動力は
+モーターから配線を伸ばす以外の改造はしておらず、重りとして絶縁させた乾電池の搭載を行っている。
+また内部に部品を詰める都合上内部の柱は破壊してある。これにより外装を外しやすくなり、気軽にメンテナンスを
+行えるようになった。</p>
+<p>改造したプラレールの様子である。ぱっと見は元のプラレールとの大きな変化もなく
+綺麗に収まった姿になっている。窓から一部のパーツが見えてしまっているが、排熱も兼ねているので何も悪いことだけではない。（上から見れば割とわからんしね…）</p>
+<p><img src="./img/IMG_BH72-2.jpg" alt="製作したプラレール車両" /></p>
+<h3 id="プラレールコントローラー"><a class="header" href="#プラレールコントローラー">プラレールコントローラー</a></h3>
+<p>速度制御はボリューム抵抗を介して行っている。ボリューム抵抗のつまみを回すことでプラレールの速度を制御することができる。
+つまみを最大まで回すことでプラレールは最高速で走り出す。
+また発車できるか否か、
+ちゃんとBluetooth接続がなされているかの確認のため下記の
+ようにフルカラーLEDを搭載している。そのため今の状態が視覚的にわかりやすくなっている。
+解説するとランプが赤の時、Bluetooth接続が完了したことを表している。この時に（かっこいい）ミサイルスイッチをONにすることで
+ランプが青になりプラレールは発信することができる。コントローラーの機能としては最低限あるが
+外装はまだ出来ておらず大変大味な仕様となっている。</p>
+<h3 id="バッテリーについて"><a class="header" href="#バッテリーについて">バッテリーについて</a></h3>
+<p>このラジコンプラレールの中で地味ながらも重要な存在はバッテリーである。
+マイコン用の電源とモーター用の電源の二つが必要となり、尚且つ内部に
+パーツを収める必要があった。最後尾車にバッテリーは収納したが大きさの制限は大きく
+あまり大きい電源を搭載することは出来ない。そこで以下のようにした。マイコン電源はesp32の5V、GNDから供給されており
+esp32の電源供給の必要電圧のラインは7~12Vとなっているので9V電池を使用した。
+内部のレギュレーターで最終的に3.3Vまで落としてくれるらしいので破損の心配もない。
+モーター電源はカメラ用電池で使用されているCR123aを使用。サイズが小さく尚且つ定格電流、電圧も申し分ないという
+理由から採用がなされた。</p>
+<h2 id="ソフトウェア"><a class="header" href="#ソフトウェア">ソフトウェア</a></h2>
+<h4 id="送信側"><a class="header" href="#送信側">送信側</a></h4>
+<p>ペアリングするesp32のMACアドレスを元にまずペアリングを行う。ペアリングは無線イヤホンが飛び交っている状態や
+なんか気分によっては繋がりにくい時がある。また受信側のesp32の電源をONにしてからでないと繋がりにくくなる。
+というかなんか繋がらない。Bluetooth接続後はコントローラーのランプが赤く光る。この状態でボリュームを回しても電車は
+走り出さない。ミサイルスイッチの電源をONにすることでランプが青に代わり発車できるようになる。この辺は信号機の色の変化を意識
+している。結局このコントローラーはBluetoothを介して配列型の値を送信しておりスイッチの動作によって配列型の値が変わるようになっている。
+今回は主に二つのデータを送信しており発車するか否かと、列車の速度の値である。列車の速度は0~255の256段階となっておりボリュームの位置で決まる。
+ボリュームから測ったアナログ入力の値max4095を16で割った数を挿入し送り出しているのだ。Bluetoothからのデータ送信はリアルタイムで行われており
+常に速度を制御することが可能となった。また配列型のデータを遅れることからその拡張性はとても大きい。</p>
+<h4 id="受信側"><a class="header" href="#受信側">受信側</a></h4>
+<p>速度制御ということでPWM制御を行っている。詳しい説明は先人たちがきっとしているので省くが、Bluetoothを介して送られてきた0~255の値を代入し
+任意の速さで動かせるようになっている。余談というべきか、当然の話といえば当然なのだがesp32を使用しているので
+スマホからの制御も実は可能である。</p>
+<h2 id="残る課題と今後の展望"><a class="header" href="#残る課題と今後の展望">残る課題と今後の展望</a></h2>
+<p>まぁ大体上手くいったのだがまだ課題が多く残っている。</p>
+<p>まずこのプラレール車両の構成上満足に前後に走ることが出来ない。
+重量バランスが崩れたこともありすぐ脱線したりするのだ。
+これの解決策としてプラレールの前後、先頭車最後尾車両方にモーターを搭載するということを考えている。プラレールの車両には
+連結することが可能な車両がおり、結果前後にモーター車両が来ることになる。こちらの車両を使用することで満足に前後運転ができるようになるだろうと考えている。
+また重量バランスが狂った弊害としてもう一つ電池残量によっては坂を登れなくなってしまった。
+中間車後尾車に対して先頭車両が相対的に軽くなってしまい、坂を登る際に前輪がウィリーしてしまうのだ。
+これに関してはモーターをより強力なものに換装しかつ先端部に重りを搭載することで解決しようと考えている。</p>
+<p>次にコントローラーだがこれはまず見た目が雑すぎるのだ。基板に直接諸々を乗っけたという状態の上外装がないので持ちにくさにも繋がっている。
+この辺は改造できる点が多い。まず外装を作り、コントロラー部分をマスコンのようなハンドルへの変更。
+せっかく電車を運転しているのでできるならマスコンのようにしたいと考えている。
+またプラレールはモーターで動く都合上モーターのノイズしかならない。そこで走行中車両の発車音、走行音がなればより
+面白みが出るのではないか？と考えている。カメラを先頭部に取り付けラジコン操作ができるように
+なればまさに「電車でGO」である。理想系としてはこの形の完成を目指している。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                                                    <a rel="prev" href="../2022plarail/infra.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+                        
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                                    <a rel="prev" href="../2022plarail/infra.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+                            </nav>
+
+        </div>
+
+        
+        
+        
+                <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+        
+                <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+        
+    </body>
+</html>
