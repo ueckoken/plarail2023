@@ -11,3 +11,4 @@
     - [管理サイト](./2022plarail/site.md)
     - [カメラ配信](./2022plarail/camera.md)
     - [インフラ](./2022plarail/infra.md)
+    - [ラジコン](./2022plarail/radicon.md)
