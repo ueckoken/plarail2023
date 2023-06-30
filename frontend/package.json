@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "@types/node": "^20.3.2",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
+    "next": "^13.4.7",
+    "prettier": "^2.8.8",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.1.6"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "prettier": "prettier --write \"./**/*.{ts,tsx}\" --tab-width 4"
+  }
+}
