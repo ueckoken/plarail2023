@@ -2,29 +2,4 @@
 
 ## アーキテクチャ
 
-```mermaid
-flowchart RL
-subgraph 状態管理
-管理画面 <-->|"connect-web"| StateManager
-
-EventHandler <-->|"connect"| StateManager
-StateManager <--> DB1[(state_db)]
-end
-subgraph 自動運転
-TrainController <--> StateManager
-DiagramManager --> PathPlanner
-PathPlanner <--> TrainController
-DiagramManager <--> DB2[(diagram_db)]
-DiagramManager <-->|"connect-web"| 管理画面
-end
-subgraph 映像配信
-Webカメラ --> |"USB"| 配信サイト
-ESP-EYE -->|"mjpeg"| 配信サイト
-配信サイト -->|"WebRTC"| SkyWay
-SkyWay -->|"WebRTC"| 管理画面
-end
-subgraph エッジデバイス
-StateManager <-->|"MQTT"| Servo
-Sensor -->|"MQTT"| EventHandler
-end
-```
+[![](https://mermaid.ink/img/pako:eNp9Us9LAkEU_leGORXooY4SHTShQ4GpEdFEjO5Lzd23Mo6JWId26QdJ1KGgS5DRoR_QrSg89MdMZv4XjbsK2yqdZt68733fN--9Js3bBtAY3Tbter7IhSTpJYbVWq4geKVIeqdv34et3ku7d3HE0D97l53-zR2Zi0bn95iuR4S8jNYhx-geyUguYZkjL4BgyDC5CygXORomiFDJODwYeWCyEJ_ZmKoOnreM3PQmQ0AjYO_n-KnbuuoftH46dwyzgpcwYaMUtjmSCykslLiutEYaA0CKy2LK5NqSzgcCvzzEOcYwdDm7MWX4iaHPCbDxZgX7Gf7a9_Vt1z3vH559fbYZrkFOOc_KbSv30XOtyVYz8QGJD1HOq3LulXuiW55JRZPrSeJLWjsVKEzEhR6GeK2Uzia82ZQba7yhp-KdY-n_zCvnQbmuct6Ve6zci4GA8zFhvppweSWb9dRA7NoaAli1BfmbCy6RJ0Uj1AJh8ZKhV7fJkBBGZREsYDSmrwYXZUYZ7mscr0k708A8jUlRgwitVQxtYjgeGtvmZhX2fwEbMD9H?type=png)](https://mermaid.live/edit#pako:eNp9Us9LAkEU_leGORXooY4SHTShQ4GpEdFEjO5Lzd23Mo6JWId26QdJ1KGgS5DRoR_QrSg89MdMZv4XjbsK2yqdZt68733fN--9Js3bBtAY3Tbter7IhSTpJYbVWq4geKVIeqdv34et3ku7d3HE0D97l53-zR2Zi0bn95iuR4S8jNYhx-geyUguYZkjL4BgyDC5CygXORomiFDJODwYeWCyEJ_ZmKoOnreM3PQmQ0AjYO_n-KnbuuoftH46dwyzgpcwYaMUtjmSCykslLiutEYaA0CKy2LK5NqSzgcCvzzEOcYwdDm7MWX4iaHPCbDxZgX7Gf7a9_Vt1z3vH559fbYZrkFOOc_KbSv30XOtyVYz8QGJD1HOq3LulXuiW55JRZPrSeJLWjsVKEzEhR6GeK2Uzia82ZQba7yhp-KdY-n_zCvnQbmuct6Ve6zci4GA8zFhvppweSWb9dRA7NoaAli1BfmbCy6RJ0Uj1AJh8ZKhV7fJkBBGZREsYDSmrwYXZUYZ7mscr0k708A8jUlRgwitVQxtYjgeGtvmZhX2fwEbMD9H)
