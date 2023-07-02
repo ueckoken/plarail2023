@@ -147,7 +147,28 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="ソフトウェア"><a class="header" href="#ソフトウェア">ソフトウェア</a></h1>
-<p>under construction...</p>
+<h2 id="アーキテクチャ"><a class="header" href="#アーキテクチャ">アーキテクチャ</a></h2>
+<pre><code class="language-mermaid">flowchart RL
+subgraph 状態管理
+管理画面 &lt;--&gt;|&quot;connect-web&quot;| StateManager
+StateManager &lt;--&gt;|&quot;MQTT&quot;| Servo
+EventHandler &lt;--&gt;|&quot;connect&quot;| StateManager
+StateManager &lt;--&gt; DB1[(state_db)]
+end
+subgraph 自動運転
+Sensor --&gt;|&quot;MQTT&quot;| EventHandler
+TrainController &lt;--&gt; StateManager
+DiagramManager --&gt; PathPlanner
+PathPlanner &lt;--&gt; TrainController
+DiagramManager &lt;--&gt; DB2[(diagram_db)]
+DiagramManager &lt;--&gt;|&quot;connect-web&quot;| 管理画面
+end
+subgraph 映像配信
+ESP-EYE --&gt;|&quot;mjpeg&quot;| 配信サイト
+配信サイト --&gt;|&quot;WebRTC&quot;| SkyWay
+SkyWay --&gt;|&quot;WebRTC&quot;| 管理画面
+end
+</code></pre>
 
                     </main>
 
