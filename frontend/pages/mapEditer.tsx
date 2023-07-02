@@ -1,17 +1,9 @@
 import React, { FC, useState } from "react";
-import Platform, { PlatformProps } from "../components/svgParts/Platform";
+import { Rect, Stage, Layer } from "react-konva";
+import { Platform, PlatformProps } from "../components/MapParts";
 import PlatFormComponentForm from "../components/forms/PlatformComponentForm";
-import Rail, { RailProps } from "../components/svgParts/Rail";
-import StopPoint, { StopPointProps } from "../components/svgParts/StopPoint";
-import SwitchPoint, {
-    SwitchPointProps,
-} from "../components/svgParts/SwitchPoint";
 
-type SVGComponentProps =
-    | PlatformProps
-    | RailProps
-    | StopPointProps
-    | SwitchPointProps;
+type SVGComponentProps = PlatformProps;
 type ComponentType = "platform" | "rail" | "stopPoint" | "switchPoint";
 
 const MapEditerPage: FC<{}> = () => {
@@ -53,23 +45,23 @@ const MapEditerPage: FC<{}> = () => {
                     </button>
                 </div>
             </fieldset>
-            <svg
-                width={mapWidth}
-                height={mapHeight}
-                viewBox={`0 0 ${mapWidth} ${mapHeight}`}
-            >
-                <rect
-                    x={0}
-                    y={0}
-                    width={mapWidth}
-                    height={mapHeight}
-                    fill="lightgray"
-                />
-                {SVGComponents.map((e) => {
-                    if ("name" in e)
-                        return <Platform name={e.name} position={e.position} />;
-                })}
-            </svg>
+            <Stage width={mapWidth} height={mapHeight}>
+                <Layer>
+                    <Rect
+                        x={0}
+                        y={0}
+                        width={mapWidth}
+                        height={mapHeight}
+                        fill="lightgray"
+                    />
+                    {SVGComponents.map((e) => {
+                        if ("name" in e)
+                            return (
+                                <Platform name={e.name} position={e.position} />
+                            );
+                    })}
+                </Layer>
+            </Stage>
         </>
     );
 };
