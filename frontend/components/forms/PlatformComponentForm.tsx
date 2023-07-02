@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { PlatformProps } from "../svgParts/Platform";
+import { PlatformProps } from "../MapParts";
 
 interface Props {
     onChange: (p: PlatformProps) => void;
