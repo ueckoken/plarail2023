@@ -151,12 +151,11 @@
 <pre><code class="language-mermaid">flowchart RL
 subgraph 状態管理
 管理画面 &lt;--&gt;|&quot;connect-web&quot;| StateManager
-StateManager &lt;--&gt;|&quot;MQTT&quot;| Servo
+
 EventHandler &lt;--&gt;|&quot;connect&quot;| StateManager
 StateManager &lt;--&gt; DB1[(state_db)]
 end
 subgraph 自動運転
-Sensor --&gt;|&quot;MQTT&quot;| EventHandler
 TrainController &lt;--&gt; StateManager
 DiagramManager --&gt; PathPlanner
 PathPlanner &lt;--&gt; TrainController
@@ -164,9 +163,14 @@ DiagramManager &lt;--&gt; DB2[(diagram_db)]
 DiagramManager &lt;--&gt;|&quot;connect-web&quot;| 管理画面
 end
 subgraph 映像配信
+Webカメラ --&gt; |&quot;USB&quot;| 配信サイト
 ESP-EYE --&gt;|&quot;mjpeg&quot;| 配信サイト
 配信サイト --&gt;|&quot;WebRTC&quot;| SkyWay
 SkyWay --&gt;|&quot;WebRTC&quot;| 管理画面
+end
+subgraph エッジデバイス
+StateManager &lt;--&gt;|&quot;MQTT&quot;| Servo
+Sensor --&gt;|&quot;MQTT&quot;| EventHandler
 end
 </code></pre>
 
