@@ -1,0 +1,17 @@
+backend:
+  - any:
+      - "backend/**"
+dashboard:
+  - any:
+      - "frontend/dashboard/**"
+video-sender:
+  - any:
+      - "frontend/video-sender/**"
+infura:
+  - any:
+      - "infura/**"
+ci-cd:
+  - .github/**/*
+documentation:
+  - README.md
+  - "documents/**/*"
