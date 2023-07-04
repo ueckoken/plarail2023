@@ -8,6 +8,8 @@ on:
       - "documents/**"
 
   pull_request:
+    paths:
+      - "documents/**"
 
 jobs:
   deploy:
