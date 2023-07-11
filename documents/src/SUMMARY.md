@@ -7,6 +7,7 @@
 - [ソフトウェア](./software/software.md)
     - [アルゴリズム](./software/algorithm/algorithm.md)
 - [ハードウェア](./hardtware/hardware.md)
+    - [ラジコン](./hardware/radicon.md)
 - [2022年プラレール企画](./2022plarail/2022plarail.md)
     - [システム構成図](./2022plarail/systemDiagram.md)
     - [レイアウト](./2022plarail/layout.md)
