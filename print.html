@@ -33,6 +33,8 @@
 
         <!-- Custom theme stylesheets -->
         
+                <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
             </head>
     <body>
         <!-- Provide site root to javascript -->
@@ -83,7 +85,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="topPage.html"><strong aria-hidden="true">1.</strong> このドキュメントは何なのか</a></li><li class="chapter-item expanded "><a href="software/software.html"><strong aria-hidden="true">2.</strong> ソフトウェア</a></li><li class="chapter-item expanded "><a href="hardtware/hardware.html"><strong aria-hidden="true">3.</strong> ハードウェア</a></li><li class="chapter-item expanded "><a href="2022plarail/2022plarail.html"><strong aria-hidden="true">4.</strong> 2022年プラレール企画</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2022plarail/systemDiagram.html"><strong aria-hidden="true">4.1.</strong> システム構成図</a></li><li class="chapter-item expanded "><a href="2022plarail/layout.html"><strong aria-hidden="true">4.2.</strong> レイアウト</a></li><li class="chapter-item expanded "><a href="2022plarail/state.html"><strong aria-hidden="true">4.3.</strong> 状態管理</a></li><li class="chapter-item expanded "><a href="2022plarail/automation.html"><strong aria-hidden="true">4.4.</strong> 自動運転</a></li><li class="chapter-item expanded "><a href="2022plarail/site.html"><strong aria-hidden="true">4.5.</strong> 管理サイト</a></li><li class="chapter-item expanded "><a href="2022plarail/camera.html"><strong aria-hidden="true">4.6.</strong> カメラ配信</a></li><li class="chapter-item expanded "><a href="2022plarail/infra.html"><strong aria-hidden="true">4.7.</strong> インフラ</a></li><li class="chapter-item expanded "><a href="2022plarail/radicon.html"><strong aria-hidden="true">4.8.</strong> ラジコン</a></li></ol></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="topPage.html"><strong aria-hidden="true">1.</strong> このドキュメントは何なのか</a></li><li class="chapter-item expanded "><a href="archtecture/archtecture.html"><strong aria-hidden="true">2.</strong> アーキテクチャ</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="archtecture/auto_operation/outline.html"><strong aria-hidden="true">2.1.</strong> 自動運転システム</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="archtecture/auto_operation/algorith.html"><strong aria-hidden="true">2.1.1.</strong> アルゴリズム</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="software/software.html"><strong aria-hidden="true">3.</strong> ソフトウェア</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="software/algorithm/algorithm.html"><strong aria-hidden="true">3.1.</strong> アルゴリズム</a></li><li class="chapter-item expanded "><a href="software/protocol/protocol.html"><strong aria-hidden="true">3.2.</strong> プロトコル</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="software/protocol/protobuf.html"><strong aria-hidden="true">3.2.1.</strong> Protobuf</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="hardware/hardware.html"><strong aria-hidden="true">4.</strong> ハードウェア</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="hardware/radicon.html"><strong aria-hidden="true">4.1.</strong> ラジコン</a></li></ol></li><li class="chapter-item expanded "><a href="2022plarail/2022plarail.html"><strong aria-hidden="true">5.</strong> 2022年プラレール企画</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="2022plarail/systemDiagram.html"><strong aria-hidden="true">5.1.</strong> システム構成図</a></li><li class="chapter-item expanded "><a href="2022plarail/layout.html"><strong aria-hidden="true">5.2.</strong> レイアウト</a></li><li class="chapter-item expanded "><a href="2022plarail/state.html"><strong aria-hidden="true">5.3.</strong> 状態管理</a></li><li class="chapter-item expanded "><a href="2022plarail/automation.html"><strong aria-hidden="true">5.4.</strong> 自動運転</a></li><li class="chapter-item expanded "><a href="2022plarail/site.html"><strong aria-hidden="true">5.5.</strong> 管理サイト</a></li><li class="chapter-item expanded "><a href="2022plarail/camera.html"><strong aria-hidden="true">5.6.</strong> カメラ配信</a></li><li class="chapter-item expanded "><a href="2022plarail/infra.html"><strong aria-hidden="true">5.7.</strong> インフラ</a></li><li class="chapter-item expanded "><a href="2022plarail/radicon.html"><strong aria-hidden="true">5.8.</strong> ラジコン</a></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -157,11 +159,242 @@
 <h2 id="2023年のプラレール企画の予定"><a class="header" href="#2023年のプラレール企画の予定">2023年のプラレール企画の予定</a></h2>
 <p>2022年のプラレール企画が諸事情で爆散したので、2023年は2022年でのプラレール自動制御などを引き続きやっていくことになると思います。</p>
 <p>また、システム構成についても見直して作り直そうということになっています。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="アーキテクチャ"><a class="header" href="#アーキテクチャ">アーキテクチャ</a></h1>
+<p>2023.07.09時点での最新版のアーキテクチャ</p>
+<pre class="mermaid">flowchart RL
+subgraph 状態管理
+管理画面 &lt;--&gt;|&quot;connect-web&quot;| StateManager
+
+EventHandler &lt;--&gt;|&quot;connect&quot;| StateManager
+StateManager &lt;--&gt; DB1[(state_db)]
+end
+subgraph 自動運転
+TrainController &lt;--&gt; StateManager
+DiagramManager --&gt; PathPlanner
+PathPlanner &lt;--&gt; TrainController
+DiagramManager &lt;--&gt; DB2[(diagram_db)]
+DiagramManager &lt;--&gt;|&quot;connect-web&quot;| 管理画面
+end
+subgraph 映像配信
+Webカメラ --&gt; |&quot;USB&quot;| 配信サイト
+ESP-EYE --&gt;|&quot;mjpeg&quot;| 配信サイト
+配信サイト --&gt;|&quot;WebRTC&quot;| SkyWay
+SkyWay --&gt;|&quot;WebRTC&quot;| 管理画面
+end
+subgraph エッジデバイス
+StateManager &lt;--&gt;|&quot;MQTT&quot;| Servo
+Sensor --&gt;|&quot;MQTT&quot;| EventHandler
+end
+</pre>
+<h2 id="自動運転"><a class="header" href="#自動運転">自動運転</a></h2>
+<p>昨年度は実装できなかった部分であるので、1から実装をする必要がある。
+アルゴリズムの実装に関しては既に #7 にて議論している。路線の状態をグラフとして管理をする。
+アルゴリズムにデータを渡すために色々をしなくてはいけないので、その部分に関しては別途実装する。</p>
+<h2 id="管理サイト"><a class="header" href="#管理サイト">管理サイト</a></h2>
+<p>基本的にやりたいこととしては去年のサイトと同じだが、今回は状態を同期するためのプロトコルとしてconnect-webを採用したい。また、プラレールのレイアウトが微妙に変化することが予想されるのでフロントエンドの調整（SVG手打ち芸）が必要だが、可能ならこの部分を簡単にできるとなおよい。</p>
+<h2 id="状態管理"><a class="header" href="#状態管理">状態管理</a></h2>
+<p>これまでとは異なるアーキテクチャで、列車の状態管理をモダンなIoTのアーキテクチャに近づけていきたい。
+AWS IoTやAzureなどで利用されているアーキテクチャを模倣する感じで、MQTTでエッジの端末と通信してIOの状態の対応付けをバックエンド側で行うようにする。この部分は正直なところ、MongooseOSなどの既存の仕組みがあるが余裕があれば独自実装したい。
+これまでは、KVSで管理していたがPodが死ぬと状態が失われるためアーキテクチャとしてはあまり良くない。
+今回はアクセス頻度などを考慮して、MongoDBなどのNoSQLなDBで状態管理を行いたい。</p>
+<h2 id="列車検知"><a class="header" href="#列車検知">列車検知</a></h2>
+<p>これまでのホールセンサーやCdSでは読み飛ばしが多くあった。今回はそうしたデータの読み飛ばしをなくすために、マイクロスイッチを用いた列車の通過検知と、列車が駅に停車した際にNFCタグを用いて列車を識別するような仕組みを実装したい。
+基本手にはハードウェア側で大規模な処理をするわけではなく、イベントをhttp経由で通知してくれれば良い。（MQTTを採用するメリットは薄いような気もするがプロトコルの検討は必要かも）</p>
+<h2 id="ポイントストップレール制御"><a class="header" href="#ポイントストップレール制御">ポイント・ストップレール制御</a></h2>
+<p>昨年度と同様にESP32にサーボモータを接続して制御を行うことを検討している。
+昨年度からの違いとして、MQTTでブローカーと接続してあげることで現地会場でのサーバー構築作業がなくなるので良さそうかなと思っている。httpよりも薄い感じのプロトコルらしく、普通にESPで問題なく動きそう。
+ベースとなるコードはあるものの、実装が大きく変わるのでソースコードの変更は必要。</p>
+<h2 id="カメラ配信"><a class="header" href="#カメラ配信">カメラ配信</a></h2>
+<p>昨年度と同様にしてSkyWayを用いた映像中継を検討している。
+車載カメラにはESP-EYEを採用してmjpegなどで受け取った映像を配信用PCからSkyWayに流すことを検討。
+旧SkyWayがサービス終了するらしいので実装の変更は必要かもしれない。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="自動運転システム"><a class="header" href="#自動運転システム">自動運転システム</a></h1>
+<pre class="mermaid">flowchart TD
+
+subgraph 自動運転
+TrainController &lt;--&gt; StateManager
+DiagramManager --&gt; PathPlanner
+PathPlanner &lt;--&gt; TrainController
+DiagramManager &lt;--&gt; DB2[(diagram_db)]
+DiagramManager &lt;--&gt;|&quot;connect-web&quot;| 管理画面
+end
+
+subgraph 状態管理
+管理画面 &lt;--&gt;|&quot;connect-web&quot;| StateManager
+EventHandler &lt;--&gt;|&quot;connect&quot;| StateManager
+StateManager &lt;--&gt; DB1[(state_db)]
+end
+</pre>
+<h2 id="用語"><a class="header" href="#用語">用語</a></h2>
+<p>プラレール企画で利用する用語の定義を説明する。</p>
+<p>ここには2つのレイヤが存在し，列車の走行位置や閉塞の状態をグラフとして管理している<code>仮想レイヤ</code>と，実際のプラレール上のストップレールのON/OFFやセンサーの情報を扱う<code>物理レイヤ</code>が存在する。</p>
+<p>それぞれのレイヤは完全に独立して機能して，<code>物理レイヤ</code>の状態は<code>仮想レイヤ</code>によって決定され，<code>仮想レイヤ</code>の状態の更新は<code>物理レイヤ</code>からの情報によって行われる。</p>
+<h3 id="仮想レイヤの用語"><a class="header" href="#仮想レイヤの用語">仮想レイヤの用語</a></h3>
+<ul>
+<li>
+<p>閉塞<br />
+現実の鉄道システムからの用語。鉄道の線路を区切る単位。閉塞内には一つの列車しか存在できない。閉塞内に列車が存在する状態を<code>閉</code>，存在しない状態を<code>開</code>という。</p>
+</li>
+<li>
+<p>閉塞グラフ<br />
+閉塞の関係を表現した有向グラフ。閉塞をエッジ，駅をノードとして表現する。
+閉塞が<code>閉</code>となっている区間はエッジが存在せず，閉塞が<code>開</code>となっている区間はエッジが存在する。また，各ノードは駅の情報以外にその駅に停車している列車の情報を持つ。<br />
+上り線と下り線は別々のノードとして定義して一周するようなグラフであり，あるノードからあるノードへのパスが必ず存在する。</p>
+</li>
+<li>
+<p>列車番号<br />
+それぞれの列車に対して一意に割り当てられる番号。列車の識別に用いる。<br />
+列車IDは各列車に貼り付けられるNFCのIDと一対一対応する。</p>
+</li>
+<li>
+<p>駅のCapacity<br />
+駅に停車できる列車の数を示す。駅に存在するプラットフォームの数と一致する。</p>
+</li>
+</ul>
+<h3 id="物理レイヤの用語"><a class="header" href="#物理レイヤの用語">物理レイヤの用語</a></h3>
+<ul>
+<li>
+<p>構内閉塞<br />
+駅に2つ以上のプラットフォームが存在する場合，その駅の閉塞は構内閉塞となる。構内閉塞は駅のCapacityと一致する。なお，構内閉塞は閉塞グラフには含まれない。</p>
+</li>
+<li>
+<p>ストップレール<br />
+プラレールにおいて列車を停止させるために利用する特殊なレール。ストップレールのON/OFFを切り替えることで列車を停止させることができる。</p>
+</li>
+<li>
+<p>NFCタグ<br />
+プラレールの車両に貼り付けるIDタグ。それぞれのタグには8byte?のIDが割り振られており，このIDと列車の番号の対応付けを行うことで列車の識別を行う。</p>
+</li>
+<li>
+<p>NFCリーダー<br />
+プラレールにおいてNFCタグのIDを読み取るために利用するリーダー。それぞれのストップレールの下に設置しており，列車が停止したときにNFCタグのIDを読み取ることができる。</p>
+</li>
+<li>
+<p>通過検知センサー<br />
+プラレールにおいて列車の通過を検知するために利用するセンサー。センサーのON/OFFを切り替えることで列車の通過を検知することができる。物理的にはマイクロスイッチを用いる。</p>
+</li>
+<li>
+<p>ESP32<br />
+サーボモータの制御やNFCリーダー，通過検知センサーの制御を行うために利用するマイコン。Wi-Fiを用いて通信を行う。</p>
+</li>
+<li>
+<p>サーボモータ<br />
+プラレールのストップレールを制御するために利用するモータ。指示をした角度へ回転する。</p>
+</li>
+</ul>
+<h2 id="それぞれのサービスの機能"><a class="header" href="#それぞれのサービスの機能">それぞれのサービスの機能</a></h2>
+<h3 id="statemanager"><a class="header" href="#statemanager">StateManager</a></h3>
+<p>現在の状態を管理するためのサービス。状態をデータベース上に保存して，他のサービスや管理画面からの要求に応じて状態の更新と取得を行う。<br />
+物理レイヤの状態と仮想レイヤの2つの状態を管理する。</p>
+<h3 id="diagrammanager"><a class="header" href="#diagrammanager">DiagramManager</a></h3>
+<p>列車の目的地を決定するサービス。列車ごとに運行情報を管理して，TrainControllerからの要求に応じて目的地を返す。</p>
+<h3 id="pathplanner"><a class="header" href="#pathplanner">PathPlanner</a></h3>
+<p>列車の経路を計算するサービス。経路情報のグラフを元にして，DFSによって現在の列車の位置から目的地までの経路を算出して返す。</p>
+<h3 id="traincontroller"><a class="header" href="#traincontroller">TrainController</a></h3>
+<p>列車の運行を管理するためのサービス。列車の運行を管理するために必要な情報をStateMangerから取得して，PathPlannerによって計算された経路を元にして列車の運行を制御する。</p>
+<h3 id="eventhandler"><a class="header" href="#eventhandler">EventHandler</a></h3>
+<p>列車が通過した場合と停車中の列車からNFCタグのIDを読み取った情報をMQTTを通して受け取り，その情報を元にしてStateManagerに対して状態の更新を要求する。</p>
+<h2 id="管理画面"><a class="header" href="#管理画面">管理画面</a></h2>
+<p>現在の状態を確認するための管理画面。StateMangerから状態を取得して表示する。<br />
+また，DiagramManagerに対して運行情報の更新を要求することができる。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="自動運転アルゴリズム"><a class="header" href="#自動運転アルゴリズム">自動運転アルゴリズム</a></h1>
+<p>列車は以下のようなアルゴリズムに沿って自動運転を行う。</p>
+<h1 id="概要"><a class="header" href="#概要">概要</a></h1>
+<p>全ての列車の位置と閉塞は以下のようなグラフによって管理される。</p>
+<pre class="mermaid">flowchart LR;
+  A[&quot;A(1)&quot;]-.-|2|B;
+  B[&quot;B()&quot;]--&gt;C;
+  C[&quot;C()&quot;]--&gt;D;
+  C--&gt;E;
+  D[&quot;D(3)&quot;]--&gt;C;
+  E[&quot;E()&quot;]--&gt;C;
+  C--&gt;B;
+  B--&gt;A;
+</pre>
+<p>それぞれのノードが駅，エッジが閉塞を表している。</p>
+<p>なお，これ以外に列車は以下のような状態を持つ。</p>
+<ul>
+<li>列車の位置</li>
+<li>列車のPriority(列車の種別のようなもの)</li>
+<li>パス(列車が通るべき経路でノードのリスト)</li>
+</ul>
+<p>Priorityは0から始まる整数で，値が小さいほど優先度が高い。</p>
+<h2 id="pathplanner-1"><a class="header" href="#pathplanner-1">PathPlanner</a></h2>
+<p>ある列車の現在の位置と目的地を受け取り，その列車が目的地に到達するためのPathを返す。
+PathPlannerはDFSによってグラフを探索して，目的地に到達するまでに通る全てのノードのリスト(Path)を返す。</p>
+<h2 id="traincontroller-1"><a class="header" href="#traincontroller-1">TrainController</a></h2>
+<p>グラフ上の各ノード対して以下の処理を行う。</p>
+<p>なお，この処理はPriorityが高い順番に行う。</p>
+<pre class="mermaid">flowchart TD
+  idstart{{&quot;開始&quot;}}
+  idstart --&gt; id0{{&quot;Nodeに列車は存在するか?&quot;}}
+  id0 --&gt;|yes| idQ{{&quot;現在の駅のNodeをPathから削除する&quot;}}
+  idQ --&gt; id
+  id0 --&gt;|no| idend{{&quot;終了&quot;}}
+  id{{&quot;列車のPathの長さは0か？&quot;}}
+  id --&gt;|yes| id1{{&quot;DiagramManagerから次のPathを取得する&quot;}}
+  id1 --&gt; id6
+  id6{{&quot;Pathを取得できたか?&quot;}}
+  id6 --&gt;|no| idend
+  id6 --&gt;|yes| id7{{&quot;Pathを列車にセットする&quot;}}
+  id7 --&gt; id2
+  id --&gt;|no| id2{{&quot;Pathの最初のNodeを取得する&quot;}}
+  id2 --&gt; id3{{&quot;次の目的地までのEdgeは存在するか？&quot;}}
+  id3 --&gt;|yes| id4{{&quot;次のNodeまでのEdgeを削除する&quot;}}
+  id4 --&gt; id5{{&quot;Nodeから列車の情報を削除する&quot;}}
+  id5 --&gt; idend
+</pre>
+<p>それぞれの操作と条件について説明する。</p>
+<h3 id="nodeへの列車存在確認"><a class="header" href="#nodeへの列車存在確認">Nodeへの列車存在確認</a></h3>
+<p>列車が存在しないNodeに対しては処理をする必要がないので，呼び出された時点で終了する。この処理を実現するために，Nodeは停車している列車のIDを持っている。</p>
+<h3 id="path"><a class="header" href="#path">Path</a></h3>
+<p>列車には列車が通るべき経路(パス)が設定されている。列車があるノードに停車した際には，現在停車しているノードをパスから削除して次に停車すべきノードをパスから取得する。</p>
+<p>これを毎回のノードで実施することによって，最終的に列車は目的地に到達することができる。目的地に到達した時点でPathの長さが0となるので，DiagramPlannerへ問い合わせを行う。</p>
+<h3 id="edge"><a class="header" href="#edge">Edge</a></h3>
+<p>現在のノードから次のノードまでのEdgeは1意に定まる。列車はこのEdgeを通らないと次のノードに到達することができないため，駅から発車するためにはこのEdgeが存在する必要がある。</p>
+<p>Edgeが存在して，列車が発車しようとする際にEdgeを削除するが，この操作には以下の特例がある。
+<strong>Priorityが0の列車はさらに次のノードへのエッジも消す。つまり2つのエッジを削除する</strong></p>
+<p>ただしこの操作を行うには以下の条件がある。</p>
+<ul>
+<li>中間の駅のCapasityが1より大きいこと</li>
+</ul>
+<p>この条件を満たさない場合は，通常通り1つのエッジを削除する。</p>
+<h2 id="diagrammanager-1"><a class="header" href="#diagrammanager-1">DiagramManager</a></h2>
+<p>列車の目的地を管理するサービス。
+それぞれの列車の目的地を状態として管理しており，TrainManagerからの要求に応じて目的地とPriorityを返す。</p>
+<p>それぞれの列車に設定されているPriorityと目的地は管理画面から設定できる。また，それぞれの目的地とPriorityは優先順位付きのQueで管理されている。</p>
+<p>基本的には折り返しが可能な2区間での往復運転を行うように設定されることを想定している。ただし，物理的な制約として折り返しができるのは終点のみである。</p>
+<h2 id="車庫に関して"><a class="header" href="#車庫に関して">車庫に関して</a></h2>
+<p>車庫は1つのノードとして扱われる。具体的には以下のようなグラフになる。</p>
+<pre class="mermaid">flowchart LR;
+  A[&quot;A(1)&quot;]-.-|2|B;
+  B[&quot;B()&quot;]--&gt;C;
+  Z[&quot;車庫()&quot;]
+  B--&gt;Z;
+  Z--&gt;B;
+  C[&quot;C()&quot;]--&gt;D;
+  C--&gt;E;
+  D[&quot;D(3)&quot;]--&gt;C;
+  E[&quot;E()&quot;]--&gt;C;
+  C--&gt;B;
+  B--&gt;A;
+</pre>
+<p>列車を車庫に入れる場合と車庫から出す場合の挙動に関して説明する。
+列車を車庫に入れ得る際には，DiagramManagerで車庫を目的地を設定する。</p>
+<p>車庫内のポイントなどは操作せずに，車庫に入るタイミングで閉塞を解除する。</p>
+<p>車庫に入った状態の列車は車庫のノードに停車している状態で，車庫から出る際にはDiagramManagerで目的地を設定してあげて，閉塞が閉じられたタイミングでストップレールを解除する。</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="ソフトウェア"><a class="header" href="#ソフトウェア">ソフトウェア</a></h1>
-<h2 id="アーキテクチャ"><a class="header" href="#アーキテクチャ">アーキテクチャ</a></h2>
-<p><a href="https://mermaid.live/edit#pako:eNp9Us9LAkEU_leGORXooY4SHTShQ4GpEdFEjO5Lzd23Mo6JWId26QdJ1KGgS5DRoR_QrSg89MdMZv4XjbsK2yqdZt68733fN--9Js3bBtAY3Tbter7IhSTpJYbVWq4geKVIeqdv34et3ku7d3HE0D97l53-zR2Zi0bn95iuR4S8jNYhx-geyUguYZkjL4BgyDC5CygXORomiFDJODwYeWCyEJ_ZmKoOnreM3PQmQ0AjYO_n-KnbuuoftH46dwyzgpcwYaMUtjmSCykslLiutEYaA0CKy2LK5NqSzgcCvzzEOcYwdDm7MWX4iaHPCbDxZgX7Gf7a9_Vt1z3vH559fbYZrkFOOc_KbSv30XOtyVYz8QGJD1HOq3LulXuiW55JRZPrSeJLWjsVKEzEhR6GeK2Uzia82ZQba7yhp-KdY-n_zCvnQbmuct6Ve6zci4GA8zFhvppweSWb9dRA7NoaAli1BfmbCy6RJ0Uj1AJh8ZKhV7fJkBBGZREsYDSmrwYXZUYZ7mscr0k708A8jUlRgwitVQxtYjgeGtvmZhX2fwEbMD9H"><img src="https://mermaid.ink/img/pako:eNp9Us9LAkEU_leGORXooY4SHTShQ4GpEdFEjO5Lzd23Mo6JWId26QdJ1KGgS5DRoR_QrSg89MdMZv4XjbsK2yqdZt68733fN--9Js3bBtAY3Tbter7IhSTpJYbVWq4geKVIeqdv34et3ku7d3HE0D97l53-zR2Zi0bn95iuR4S8jNYhx-geyUguYZkjL4BgyDC5CygXORomiFDJODwYeWCyEJ_ZmKoOnreM3PQmQ0AjYO_n-KnbuuoftH46dwyzgpcwYaMUtjmSCykslLiutEYaA0CKy2LK5NqSzgcCvzzEOcYwdDm7MWX4iaHPCbDxZgX7Gf7a9_Vt1z3vH559fbYZrkFOOc_KbSv30XOtyVYz8QGJD1HOq3LulXuiW55JRZPrSeJLWjsVKEzEhR6GeK2Uzia82ZQba7yhp-KdY-n_zCvnQbmuct6Ve6zci4GA8zFhvppweSWb9dRA7NoaAli1BfmbCy6RJ0Uj1AJh8ZKhV7fJkBBGZREsYDSmrwYXZUYZ7mscr0k708A8jUlRgwitVQxtYjgeGtvmZhX2fwEbMD9H?type=png" alt="" /></a></p>
+<p>under construction</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="アルゴリズム"><a class="header" href="#アルゴリズム">アルゴリズム</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="プロトコル"><a class="header" href="#プロトコル">プロトコル</a></h1>
+<p>under construction</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="protobuf"><a class="header" href="#protobuf">Protobuf</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="ハードウェア"><a class="header" href="#ハードウェア">ハードウェア</a></h1>
 <p>under construction...</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ラジコン"><a class="header" href="#ラジコン">ラジコン</a></h1>
+<p>ラジコンに関してはTWILITEを用いた速度制御を行うことで安定性の向上を目指したい。
+基盤に関しては昨年にスバル君が作ってくれたものがあるので、今回はこれを基盤におこして小型化を目指したい。
+また重心問題にも対応できるなら尚良い。</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="2022年プラレール企画"><a class="header" href="#2022年プラレール企画">2022年プラレール企画</a></h1>
 <p>2022年のリポジトリは<a href="https://github.com/ueckoken/plarail2022">こちら</a></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="2022年のシステム構成図"><a class="header" href="#2022年のシステム構成図">2022年のシステム構成図</a></h1>
@@ -176,7 +409,7 @@
 <p>桜上水に待避線を用意して通過待ちを可能にしたり、調布駅を立体交差化したりと工夫しています。新宿駅のホームがなんで2つなんだ！というツッコミもあるかと思いますが、そこはバーチャル京王線ということで...。</p>
 <p>昨年度の反省(昨年は岩本町駅のように1つのホームに両方向の列車が来るようなパターンが存在していたためポイントの状態管理で組合せ爆発したり、列車が正面衝突する事故が多発しました...)を生かして、ソフトウェア設計が難しくならないように物理的に調整したレイアウトになっており、列車が必ず一方通行に流れるように工夫しています。</p>
 <p>プラレールに関しては、鉄道研究会から貸していただきプラレールの車両に関してはラジコン車両は主に工研で用意しました。</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="状態管理"><a class="header" href="#状態管理">状態管理</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="状態管理-1"><a class="header" href="#状態管理-1">状態管理</a></h1>
 <p>IoTシステムの基本的な機能である状態管理を担っているのが、externalとinternalの2つのサービスです。ここら辺のシステムは昨年度のものをそのまま引き継いでいます。</p>
 <p>IoTシステムにおける状態管理について簡単に説明すると、システム上の状態と現実のハードウェアの状態を一致させるということです。例えば最近よくあるようなスマホから電気をON/OFFできるようなライトがあった時に、サーバー上ではライトの現在の状態(ライトがついているのか消えているのか)を保持しており、スマホからライトを消すという指示がくるとサーバー上の状態を更新するとともに、現実のライトもOFFにします。もし状態管理がうまくいっていないと、システム上だとライトが消えているのに現実のライトは点いているというような事態に陥ってしまうのでとても重要な部分です。</p>
 <p>また、この状態管理によってシステムの状態とハードウェアの状態が一致していることが保証されていると、ソフトウェアではより抽象的にハードウェアを扱うことが可能になります。</p>
@@ -192,7 +425,7 @@
 <p>実装的な面で言うと、externalとinternalはそれぞれgolangで実装され、gRPCを用いて話すようになっており、フロントエンド側からはJSON形式のhttpでリクエストを受けつけるようになっています。ここら辺もconnectとかを使ってprotobufを使うように統一できると良さそうですね。</p>
 <p>また、internalのサーバーはESP32と同じネットワーク上に存在しており、ESP32に固定IPを割り振ってそのIPアドレスをinternal側で管理することで実装しています。最近のIoTシステムだと、ESP32から直接クラウド上のサーバーにアクセスして状態の変更を監視するみたいなパターンが多いので少し特殊かもしれません...?</p>
 <p>MongooseOSとmDashを使ってクラウドにするぞー！という計画はあったのですが、接続できる台数の制限があったり、1からこの部分のコードを書き直していると他の部分が追いつかないなどがあったので断念しました...。もし次回があればそこらへんも挑戦してみたいです。</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="自動運転"><a class="header" href="#自動運転">自動運転</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="自動運転-1"><a class="header" href="#自動運転-1">自動運転</a></h1>
 <p>今年度の大きな新たな取り組みの1つが列車の自動運転です。</p>
 <p>色々な方法があるので非常に悩んだ部分です。計画当初は、列車の位置をホールセンサを用いて把握して、その位置に基づいてポイントを切り替えるようなシステムを想定しており、ポイントと列車の状態の管理に悩んででいました。</p>
 <p>そんな中、Maker Fair Tokyoに訪れた際に「<a href="https://plarailers.com/">東京大学プラレーラーズ</a>」さんという団体がまさにプラレールの自動運転を行なっていたので色々とお話を伺っていたところ、コラボのお誘いを受け調布祭でのコラボが実現しました。</p>
@@ -204,7 +437,7 @@
 <p><img src="2022plarail/./img/simulration.jpeg" alt="シミュレーション" /></p>
 <p>プラレーラーズさん側のシステムと工研のシステムでは扱っている情報や処理が異なるのですが、インターフェース部分や内部での値の取り扱いを工夫することによって連携を行っています。</p>
 <p>ホールセンサは、プラレールの車両の底の部分に取り付けられたネオジウム磁石の磁気を検知するセンサです。このセンサを用いることによって、列車がセンサを通過したことを検知しています。検知したということを、jsonフォーマットのhttp経由でjson2grpcに送信してサーバーでgRPCに変換してauto operationに通知を行うようになっています。</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="管理サイト"><a class="header" href="#管理サイト">管理サイト</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="管理サイト-1"><a class="header" href="#管理サイト-1">管理サイト</a></h1>
 <p>昨年は完全オンライン開催だったため、観客側がポイントを遠隔で操作するために操作用のサイトを用意していました。しかし、今年度は対面開催かつ自動運転であるため基本的に来場者がポイントを操作することはありません。そのため、メンテナンスとモニタリング用にポイント・ストップレールの状態の確認と把握、カメラ映像の確認ができるサイトを構築しました。</p>
 <p><img src="2022plarail/./img/club.png" alt="配信画面" /></p>
 <p><img src="2022plarail/./img/map.png" alt="列車の状態表示" /></p>
@@ -226,7 +459,7 @@
   isClosed={blockState[&quot;hachioji_b2&quot;]}
 /&gt;
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="カメラ配信"><a class="header" href="#カメラ配信">カメラ配信</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="カメラ配信-1"><a class="header" href="#カメラ配信-1">カメラ配信</a></h1>
 <h2 id="車載カメラ配信"><a class="header" href="#車載カメラ配信">車載カメラ配信</a></h2>
 <p>ESP-EYE（図¥ref{fig:eye}）というマイコンボードを一部のラジコン化したプラレールの先頭に取り付けており、車両からの映像を見れるように実装を行いました。ESP-EYEは、小さいながら単体でWi-Fi接続できてWebカメラとして利用することができる便利なボードです。</p>
 <p>今回はプログラムとして<a href="https://github.com/arkhipenko/esp32-cam-mjpeg">esp32-cam-mjpeg</a>を利用したのですが、これはESP-CAM側でストリーミングサーバーを建ててそこにアクセスするとmjpeg形式で動画がストリーミングされるというものです。そのため、単体ではWebRTCに直接配信できないので、canvasに描画されたmjpegをcaptureしてstreamを生成して、そのstreamをSkyWayに配信する配信用のサイトを構築して配信を行いました。これにより、ESP-CAMに接続されるクライアントが1つに限定されることでESP-CAMへの負荷も軽減されています。</p>
@@ -374,10 +607,14 @@ esp32の電源供給の必要電圧のラインは7~12Vとなっているので9
         <script src="book.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- Custom JS scripts -->
+                <script type="text/javascript" src="mermaid.min.js"></script>
+                <script type="text/javascript" src="mermaid-init.js"></script>
         
                         <script type="text/javascript">
         window.addEventListener('load', function() {
-            window.setTimeout(window.print, 100);
+            MathJax.Hub.Register.StartupHook('End', function() {
+                window.setTimeout(window.print, 100);
+            });
         });
         </script>
                 

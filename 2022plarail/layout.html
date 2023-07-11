@@ -32,6 +32,8 @@
 
         <!-- Custom theme stylesheets -->
         
+                <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
             </head>
     <body>
         <!-- Provide site root to javascript -->
@@ -82,7 +84,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../topPage.html"><strong aria-hidden="true">1.</strong> このドキュメントは何なのか</a></li><li class="chapter-item expanded "><a href="../software/software.html"><strong aria-hidden="true">2.</strong> ソフトウェア</a></li><li class="chapter-item expanded "><a href="../hardtware/hardware.html"><strong aria-hidden="true">3.</strong> ハードウェア</a></li><li class="chapter-item expanded "><a href="../2022plarail/2022plarail.html"><strong aria-hidden="true">4.</strong> 2022年プラレール企画</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../2022plarail/systemDiagram.html"><strong aria-hidden="true">4.1.</strong> システム構成図</a></li><li class="chapter-item expanded "><a href="../2022plarail/layout.html" class="active"><strong aria-hidden="true">4.2.</strong> レイアウト</a></li><li class="chapter-item expanded "><a href="../2022plarail/state.html"><strong aria-hidden="true">4.3.</strong> 状態管理</a></li><li class="chapter-item expanded "><a href="../2022plarail/automation.html"><strong aria-hidden="true">4.4.</strong> 自動運転</a></li><li class="chapter-item expanded "><a href="../2022plarail/site.html"><strong aria-hidden="true">4.5.</strong> 管理サイト</a></li><li class="chapter-item expanded "><a href="../2022plarail/camera.html"><strong aria-hidden="true">4.6.</strong> カメラ配信</a></li><li class="chapter-item expanded "><a href="../2022plarail/infra.html"><strong aria-hidden="true">4.7.</strong> インフラ</a></li><li class="chapter-item expanded "><a href="../2022plarail/radicon.html"><strong aria-hidden="true">4.8.</strong> ラジコン</a></li></ol></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../topPage.html"><strong aria-hidden="true">1.</strong> このドキュメントは何なのか</a></li><li class="chapter-item expanded "><a href="../archtecture/archtecture.html"><strong aria-hidden="true">2.</strong> アーキテクチャ</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../archtecture/auto_operation/outline.html"><strong aria-hidden="true">2.1.</strong> 自動運転システム</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../archtecture/auto_operation/algorith.html"><strong aria-hidden="true">2.1.1.</strong> アルゴリズム</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../software/software.html"><strong aria-hidden="true">3.</strong> ソフトウェア</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../software/algorithm/algorithm.html"><strong aria-hidden="true">3.1.</strong> アルゴリズム</a></li><li class="chapter-item expanded "><a href="../software/protocol/protocol.html"><strong aria-hidden="true">3.2.</strong> プロトコル</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../software/protocol/protobuf.html"><strong aria-hidden="true">3.2.1.</strong> Protobuf</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../hardware/hardware.html"><strong aria-hidden="true">4.</strong> ハードウェア</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../hardware/radicon.html"><strong aria-hidden="true">4.1.</strong> ラジコン</a></li></ol></li><li class="chapter-item expanded "><a href="../2022plarail/2022plarail.html"><strong aria-hidden="true">5.</strong> 2022年プラレール企画</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../2022plarail/systemDiagram.html"><strong aria-hidden="true">5.1.</strong> システム構成図</a></li><li class="chapter-item expanded "><a href="../2022plarail/layout.html" class="active"><strong aria-hidden="true">5.2.</strong> レイアウト</a></li><li class="chapter-item expanded "><a href="../2022plarail/state.html"><strong aria-hidden="true">5.3.</strong> 状態管理</a></li><li class="chapter-item expanded "><a href="../2022plarail/automation.html"><strong aria-hidden="true">5.4.</strong> 自動運転</a></li><li class="chapter-item expanded "><a href="../2022plarail/site.html"><strong aria-hidden="true">5.5.</strong> 管理サイト</a></li><li class="chapter-item expanded "><a href="../2022plarail/camera.html"><strong aria-hidden="true">5.6.</strong> カメラ配信</a></li><li class="chapter-item expanded "><a href="../2022plarail/infra.html"><strong aria-hidden="true">5.7.</strong> インフラ</a></li><li class="chapter-item expanded "><a href="../2022plarail/radicon.html"><strong aria-hidden="true">5.8.</strong> ラジコン</a></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -201,6 +203,8 @@
         <script src="../book.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- Custom JS scripts -->
+                <script type="text/javascript" src="../mermaid.min.js"></script>
+                <script type="text/javascript" src="../mermaid-init.js"></script>
         
         
     </body>

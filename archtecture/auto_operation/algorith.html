@@ -1,0 +1,289 @@
+<!DOCTYPE HTML>
+<html lang="ja" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>アルゴリズム - ueckoken-plarail-documents</title>
+                
+
+        <!-- Custom HTML head -->
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+                <link rel="icon" href="../../favicon.svg">
+                        <link rel="shortcut icon" href="../../favicon.png">
+                <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+                <link rel="stylesheet" href="../../css/print.css" media="print">
+        
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+                <link rel="stylesheet" href="../../fonts/fonts.css">
+        
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+                <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+            </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../../topPage.html"><strong aria-hidden="true">1.</strong> このドキュメントは何なのか</a></li><li class="chapter-item expanded "><a href="../../archtecture/archtecture.html"><strong aria-hidden="true">2.</strong> アーキテクチャ</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../archtecture/auto_operation/outline.html"><strong aria-hidden="true">2.1.</strong> 自動運転システム</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../archtecture/auto_operation/algorith.html" class="active"><strong aria-hidden="true">2.1.1.</strong> アルゴリズム</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../software/software.html"><strong aria-hidden="true">3.</strong> ソフトウェア</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../software/algorithm/algorithm.html"><strong aria-hidden="true">3.1.</strong> アルゴリズム</a></li><li class="chapter-item expanded "><a href="../../software/protocol/protocol.html"><strong aria-hidden="true">3.2.</strong> プロトコル</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../software/protocol/protobuf.html"><strong aria-hidden="true">3.2.1.</strong> Protobuf</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../../hardware/hardware.html"><strong aria-hidden="true">4.</strong> ハードウェア</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../hardware/radicon.html"><strong aria-hidden="true">4.1.</strong> ラジコン</a></li></ol></li><li class="chapter-item expanded "><a href="../../2022plarail/2022plarail.html"><strong aria-hidden="true">5.</strong> 2022年プラレール企画</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../2022plarail/systemDiagram.html"><strong aria-hidden="true">5.1.</strong> システム構成図</a></li><li class="chapter-item expanded "><a href="../../2022plarail/layout.html"><strong aria-hidden="true">5.2.</strong> レイアウト</a></li><li class="chapter-item expanded "><a href="../../2022plarail/state.html"><strong aria-hidden="true">5.3.</strong> 状態管理</a></li><li class="chapter-item expanded "><a href="../../2022plarail/automation.html"><strong aria-hidden="true">5.4.</strong> 自動運転</a></li><li class="chapter-item expanded "><a href="../../2022plarail/site.html"><strong aria-hidden="true">5.5.</strong> 管理サイト</a></li><li class="chapter-item expanded "><a href="../../2022plarail/camera.html"><strong aria-hidden="true">5.6.</strong> カメラ配信</a></li><li class="chapter-item expanded "><a href="../../2022plarail/infra.html"><strong aria-hidden="true">5.7.</strong> インフラ</a></li><li class="chapter-item expanded "><a href="../../2022plarail/radicon.html"><strong aria-hidden="true">5.8.</strong> ラジコン</a></li></ol></li></ol>            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                                                <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                                            </div>
+
+                    <h1 class="menu-title">ueckoken-plarail-documents</h1>
+
+                    <div class="right-buttons">
+                                                <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                                                                        <a href="https://github.com/ueckoken/plarail2023" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                                                
+                    </div>
+                </div>
+
+                                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="自動運転アルゴリズム"><a class="header" href="#自動運転アルゴリズム">自動運転アルゴリズム</a></h1>
+<p>列車は以下のようなアルゴリズムに沿って自動運転を行う。</p>
+<h1 id="概要"><a class="header" href="#概要">概要</a></h1>
+<p>全ての列車の位置と閉塞は以下のようなグラフによって管理される。</p>
+<pre class="mermaid">flowchart LR;
+  A[&quot;A(1)&quot;]-.-|2|B;
+  B[&quot;B()&quot;]--&gt;C;
+  C[&quot;C()&quot;]--&gt;D;
+  C--&gt;E;
+  D[&quot;D(3)&quot;]--&gt;C;
+  E[&quot;E()&quot;]--&gt;C;
+  C--&gt;B;
+  B--&gt;A;
+</pre>
+<p>それぞれのノードが駅，エッジが閉塞を表している。</p>
+<p>なお，これ以外に列車は以下のような状態を持つ。</p>
+<ul>
+<li>列車の位置</li>
+<li>列車のPriority(列車の種別のようなもの)</li>
+<li>パス(列車が通るべき経路でノードのリスト)</li>
+</ul>
+<p>Priorityは0から始まる整数で，値が小さいほど優先度が高い。</p>
+<h2 id="pathplanner"><a class="header" href="#pathplanner">PathPlanner</a></h2>
+<p>ある列車の現在の位置と目的地を受け取り，その列車が目的地に到達するためのPathを返す。
+PathPlannerはDFSによってグラフを探索して，目的地に到達するまでに通る全てのノードのリスト(Path)を返す。</p>
+<h2 id="traincontroller"><a class="header" href="#traincontroller">TrainController</a></h2>
+<p>グラフ上の各ノード対して以下の処理を行う。</p>
+<p>なお，この処理はPriorityが高い順番に行う。</p>
+<pre class="mermaid">flowchart TD
+  idstart{{&quot;開始&quot;}}
+  idstart --&gt; id0{{&quot;Nodeに列車は存在するか?&quot;}}
+  id0 --&gt;|yes| idQ{{&quot;現在の駅のNodeをPathから削除する&quot;}}
+  idQ --&gt; id
+  id0 --&gt;|no| idend{{&quot;終了&quot;}}
+  id{{&quot;列車のPathの長さは0か？&quot;}}
+  id --&gt;|yes| id1{{&quot;DiagramManagerから次のPathを取得する&quot;}}
+  id1 --&gt; id6
+  id6{{&quot;Pathを取得できたか?&quot;}}
+  id6 --&gt;|no| idend
+  id6 --&gt;|yes| id7{{&quot;Pathを列車にセットする&quot;}}
+  id7 --&gt; id2
+  id --&gt;|no| id2{{&quot;Pathの最初のNodeを取得する&quot;}}
+  id2 --&gt; id3{{&quot;次の目的地までのEdgeは存在するか？&quot;}}
+  id3 --&gt;|yes| id4{{&quot;次のNodeまでのEdgeを削除する&quot;}}
+  id4 --&gt; id5{{&quot;Nodeから列車の情報を削除する&quot;}}
+  id5 --&gt; idend
+</pre>
+<p>それぞれの操作と条件について説明する。</p>
+<h3 id="nodeへの列車存在確認"><a class="header" href="#nodeへの列車存在確認">Nodeへの列車存在確認</a></h3>
+<p>列車が存在しないNodeに対しては処理をする必要がないので，呼び出された時点で終了する。この処理を実現するために，Nodeは停車している列車のIDを持っている。</p>
+<h3 id="path"><a class="header" href="#path">Path</a></h3>
+<p>列車には列車が通るべき経路(パス)が設定されている。列車があるノードに停車した際には，現在停車しているノードをパスから削除して次に停車すべきノードをパスから取得する。</p>
+<p>これを毎回のノードで実施することによって，最終的に列車は目的地に到達することができる。目的地に到達した時点でPathの長さが0となるので，DiagramPlannerへ問い合わせを行う。</p>
+<h3 id="edge"><a class="header" href="#edge">Edge</a></h3>
+<p>現在のノードから次のノードまでのEdgeは1意に定まる。列車はこのEdgeを通らないと次のノードに到達することができないため，駅から発車するためにはこのEdgeが存在する必要がある。</p>
+<p>Edgeが存在して，列車が発車しようとする際にEdgeを削除するが，この操作には以下の特例がある。
+<strong>Priorityが0の列車はさらに次のノードへのエッジも消す。つまり2つのエッジを削除する</strong></p>
+<p>ただしこの操作を行うには以下の条件がある。</p>
+<ul>
+<li>中間の駅のCapasityが1より大きいこと</li>
+</ul>
+<p>この条件を満たさない場合は，通常通り1つのエッジを削除する。</p>
+<h2 id="diagrammanager"><a class="header" href="#diagrammanager">DiagramManager</a></h2>
+<p>列車の目的地を管理するサービス。
+それぞれの列車の目的地を状態として管理しており，TrainManagerからの要求に応じて目的地とPriorityを返す。</p>
+<p>それぞれの列車に設定されているPriorityと目的地は管理画面から設定できる。また，それぞれの目的地とPriorityは優先順位付きのQueで管理されている。</p>
+<p>基本的には折り返しが可能な2区間での往復運転を行うように設定されることを想定している。ただし，物理的な制約として折り返しができるのは終点のみである。</p>
+<h2 id="車庫に関して"><a class="header" href="#車庫に関して">車庫に関して</a></h2>
+<p>車庫は1つのノードとして扱われる。具体的には以下のようなグラフになる。</p>
+<pre class="mermaid">flowchart LR;
+  A[&quot;A(1)&quot;]-.-|2|B;
+  B[&quot;B()&quot;]--&gt;C;
+  Z[&quot;車庫()&quot;]
+  B--&gt;Z;
+  Z--&gt;B;
+  C[&quot;C()&quot;]--&gt;D;
+  C--&gt;E;
+  D[&quot;D(3)&quot;]--&gt;C;
+  E[&quot;E()&quot;]--&gt;C;
+  C--&gt;B;
+  B--&gt;A;
+</pre>
+<p>列車を車庫に入れる場合と車庫から出す場合の挙動に関して説明する。
+列車を車庫に入れ得る際には，DiagramManagerで車庫を目的地を設定する。</p>
+<p>車庫内のポイントなどは操作せずに，車庫に入るタイミングで閉塞を解除する。</p>
+<p>車庫に入った状態の列車は車庫のノードに停車している状態で，車庫から出る際にはDiagramManagerで目的地を設定してあげて，閉塞が閉じられたタイミングでストップレールを解除する。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                                                    <a rel="prev" href="../../archtecture/auto_operation/outline.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+                                                    <a rel="next" href="../../software/software.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                                    <a rel="prev" href="../../archtecture/auto_operation/outline.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+                                    <a rel="next" href="../../software/software.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                            </nav>
+
+        </div>
+
+        
+        
+        
+                <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+        
+                <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+                <script type="text/javascript" src="../../mermaid.min.js"></script>
+                <script type="text/javascript" src="../../mermaid-init.js"></script>
+        
+        
+    </body>
+</html>
