@@ -52,7 +52,7 @@ flowchart TD
   id6 -->|no| idend
   id6 -->|yes| id7{{"Pathを列車にセットする"}}
   id7 --> id2
-  id -->|no| id2{{"Pathの最初のNoを取得する"}}
+  id -->|no| id2{{"Pathの最初のNodeを取得する"}}
   id2 --> id3{{"次の目的地までのEdgeは存在するか？"}}
   id3 -->|yes| id4{{"次のNodeまでのEdgeを削除する"}}
   id4 --> id5{{"Nodeから列車の情報を削除する"}}
