@@ -150,7 +150,7 @@
                     <main>
                         <h1 id="カメラ配信"><a class="header" href="#カメラ配信">カメラ配信</a></h1>
 <h2 id="車載カメラ配信"><a class="header" href="#車載カメラ配信">車載カメラ配信</a></h2>
-<p>ESP-EYE（図¥ref{fig:eye}）というマイコンボードを一部のラジコン化したプラレールの先頭に取り付けており、車両からの映像を見れるように実装を行いました。ESP-EYEは、小さいながら単体でWi-Fi接続できてWebカメラとして利用することができる便利なボードです。</p>
+<p>ESP-EYEというマイコンボードを一部のラジコン化したプラレールの先頭に取り付けており、車両からの映像を見られるように実装を行いました。ESP-EYEは、小さいながら単体でWi-Fi接続できてWebカメラとして利用することができる便利なボードです。</p>
 <p>今回はプログラムとして<a href="https://github.com/arkhipenko/esp32-cam-mjpeg">esp32-cam-mjpeg</a>を利用したのですが、これはESP-CAM側でストリーミングサーバーを建ててそこにアクセスするとmjpeg形式で動画がストリーミングされるというものです。そのため、単体ではWebRTCに直接配信できないので、canvasに描画されたmjpegをcaptureしてstreamを生成して、そのstreamをSkyWayに配信する配信用のサイトを構築して配信を行いました。これにより、ESP-CAMに接続されるクライアントが1つに限定されることでESP-CAMへの負荷も軽減されています。</p>
 <p><img src="./img/eye.jpeg" alt="ESP-EYE" /></p>
 <h2 id="webカメラ配信"><a class="header" href="#webカメラ配信">Webカメラ配信</a></h2>

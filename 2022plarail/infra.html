@@ -149,11 +149,11 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="インフラ"><a class="header" href="#インフラ">インフラ</a></h1>
-<p>externalやinternalなどのサーバー群はすべてKubernetes基盤上にデプロイされます。Fluxcdを用いてGitOpsを実現しており、Githubにてmanifestsを管理しています。</p>
-<p>また、Github Actionと組み合わせてCI/CDを行っておりdeploymentのbranchにmergeされるとイメージがビルドされます。イメージの更新を検知するプログラムが走っているため、自動的にデプロイが更新されるようになっています。</p>
+<p>externalやinternalなどのサーバー群はすべてKubernetes基盤上にデプロイされます。Fluxcdを用いてGitOpsを実現しており、GitHubにてmanifestsを管理しています。</p>
+<p>また、GitHub Actionと組み合わせてCI/CDを行っておりdeploymentのbranchにmergeされるとイメージがビルドされます。イメージの更新を検知するプログラムが走っているため、自動的にデプロイが更新されるようになっています。</p>
 <p><img src="./img/infura.png" alt="インフラ構成" /></p>
 <p>インフラの物理的な構成の概略を図に示します。</p>
-<p>ここでは大きく、現地会場であるA402教室と多摩川DCに分かれています。現地会場では、デスクトップPCを配置しており、UbuntuのVM上でk3sを動かしています。多摩川DCは、20のごっちさんに提供していただいた自宅サーバー環境です。基本的にESP32と同一ネットワーク内に存在する必要があるinternalを除いて、externalやフロントエンド、auto operationなどは全て多摩川DCに配置されています。</p>
+<p>ここでは大きく、現地会場であるA402教室と多摩川DCに分かれています。現地会場では、デスクトップPCを配置しており、UbuntuのVM上でk3sを動かしています。多摩川DCは、20のごっちさんに提供していただいた自宅サーバー環境です。基本的にESP32と同一ネットワーク内に存在する必要があるinternalを除いて、externalやフロントエンド、auto operationなどはすべて多摩川DCに配置されています。</p>
 <p>A402側でinternalサーバーをホスティングするために、大学に申請してグローバルIPを提供していただき、教室に設置したRTX1210をルータとしてネットワークを構築しています。</p>
 <p>大まかなインフラ構成自体は昨年のプラレール企画とあまり変わっていないので、詳しくは昨年度のプラレール企画の記事や<a href="https://gotti.dev">ごっちさんのブログ</a>を参考にしていただければ幸いです。</p>
 
