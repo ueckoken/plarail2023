@@ -1,6 +1,6 @@
 ---
 name: Question
-about: 質問
+about: 確認事項や質問など
 labels: question
 ---
 
