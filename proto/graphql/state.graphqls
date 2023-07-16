@@ -29,7 +29,11 @@ type Point {
 }
 
 type Query {
-  trains: [Train!]!
-  edges: [Edge!]!
-  points: [Point!]!
+  points: [Point]
+  edges: [Edge]
+  trains: [Train]
+}
+
+type Mutation {
+  setPointState(id: String!, state: PointState!): Point
 }
