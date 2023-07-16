@@ -8,9 +8,11 @@ package state_sync.v1;
 service StateManagerService {
   rpc UpdatePointState(UpdatePointStateRequest) returns (UpdatePointStateResponse) {}
   rpc GetTrainState(GetTrainStateRequest) returns (GetTrainStateResponse) {}
+  rpc GetNodeState(GetNodeStateRequest) returns (GetNodeStateResponse) {}
   rpc GetBlockState(GetBlockStateRequest) returns (GetBlockStateResponse) {}
   rpc UpdateTrainState(UpdateTrainStateRequest) returns (UpdateTrainStateResponse) {}
   rpc UpdateBlockState(UpdateBlockStateRequest) returns (UpdateBlockStateResponse) {}
+  rpc UpdateNodeState(UpdateNodeStateRequest) returns (UpdateNodeStateResponse) {}
 }
 
 service PointStateNotification {
@@ -58,6 +60,12 @@ message BlockStateNode {
 message BlockState {
   // 連結リストによって表現された閉塞の状態
   repeated BlockStateNode nodes = 1;
+}
+
+message NodeState {
+  Node node = 1;
+  int64 max_capacity = 2;
+  int64 current_capacity = 3;
 }
 
 enum PointStateEnum {
@@ -113,4 +121,16 @@ message UpdateBlockStateRequest{
 message UpdateBlockStateResponse{
 }
 
+message GetNodeStateRequest{
+}
 
+message GetNodeStateResponse{
+  repeated NodeState state = 1;
+}
+
+message UpdateNodeStateRequest{
+  NodeState state = 1;
+}
+
+message UpdateNodeStateResponse{
+}
