@@ -35,5 +35,6 @@ type Query {
 }
 
 type Mutation {
+  # フロントエンドからポイントの状態を変更のみを許可する
   setPointState(id: String!, state: PointState!): Point
 }
