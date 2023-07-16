@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+option go_package = "pkg/grpc";
+
+package state_sync.v1;
+
+// StateManagerが提供するサービス
+service StateManagerService {
+  rpc UpdatePointState(UpdatePointStateRequest) returns (UpdatePointStateResponse) {}
+  rpc GetTrainState(GetTrainStateRequest) returns (GetTrainStateResponse) {}
+  rpc GetBlockState(GetBlockStateRequest) returns (GetBlockStateResponse) {}
+  rpc UpdateTrainState(UpdateTrainStateRequest) returns (UpdateTrainStateResponse) {}
+  rpc UpdateBlockState(UpdateBlockStateRequest) returns (UpdateBlockStateResponse) {}
+}
+
+service PointStateNotification {
+  // NotifyPointStateはStateManagerからMQTT Brokerに対して状態の通知を伝える
+  rpc NotifyPointState(NotifyPointStateRequest) returns (NotifyPointStateResponse) {}
+}
+
+enum Priority {
+  PRIORITY_UNSPECIFIED = 0;
+  PRIORITY_LOW = 1;
+  PRIORITY_HIGH = 2;
+}
+
+message Node {
+  string id = 1;
+};
+
+message Edge {
+  string id = 1;
+}
+
+message Train {
+  // 列車の位置
+  oneof position {
+    Node node = 1;
+    Edge edge = 2;
+  }
+  // パス
+  repeated Node path = 3;
+  // 列車の優先度
+  Priority priority = 4;
+}
+
+message TrainState {
+  repeated Train trains = 1;
+}
+
+message BlockStateNode {
+  // 閉塞が存在しているNodeのID
+  repeated Node nodes = 1;
+}
+
+// 閉塞の状態
+message BlockState {
+  // 連結リストによって表現された閉塞の状態
+  repeated BlockStateNode nodes = 1;
+}
+
+enum PointStateEnum {
+  POINTSTATE_UNKNOWN = 0;
+  POINTSTATE_ON = 1;
+  POINTSTATE_OFF = 2;
+}
+
+message PointAndState {
+  string id = 1;
+  PointStateEnum state = 2;
+}
+
+message UpdatePointStateRequest{
+  PointAndState state = 1;
+}
+
+message UpdatePointStateResponse{
+}
+
+message NotifyPointStateRequest{
+  PointAndState state = 1;
+}
+
+message NotifyPointStateResponse{
+}
+
+message GetTrainStateRequest{
+}
+
+message GetTrainStateResponse{
+  TrainState state = 1;
+}
+
+message GetBlockStateRequest{
+}
+
+message GetBlockStateResponse{
+  BlockState state = 1;
+}
+
+message UpdateTrainStateRequest{
+  TrainState state = 1;
+}
+
+message UpdateTrainStateResponse{
+}
+
+message UpdateBlockStateRequest{
+  BlockState state = 1;
+}
+
+message UpdateBlockStateResponse{
+}
+
+
