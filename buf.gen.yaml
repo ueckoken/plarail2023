@@ -1,0 +1,6 @@
+version: v1
+plugins:
+  - name: connect-go
+    out: backend
+    opt:
+      - paths=source_relative
