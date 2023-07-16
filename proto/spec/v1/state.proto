@@ -20,15 +20,16 @@ service PointStateNotification {
   rpc NotifyPointState(NotifyPointStateRequest) returns (NotifyPointStateResponse) {}
 }
 
+service UpdateStateNotification {
+  // 状態の更新をTrainControllerに通知する
+  rpc UpdateState(UpdateStateRequest) returns (UpdateStateResponse) {}
+}
+
 enum Priority {
   PRIORITY_UNSPECIFIED = 0;
   PRIORITY_LOW = 1;
   PRIORITY_HIGH = 2;
 }
-
-message Node {
-  string id = 1;
-};
 
 message Edge {
   Node from = 1;
@@ -53,7 +54,7 @@ message TrainState {
 
 message BlockStateNode {
   // 閉塞が存在しているNodeのID
-  repeated Node nodes = 1;
+  repeated string nodes = 1;
 }
 
 // 閉塞の状態
@@ -62,10 +63,14 @@ message BlockState {
   repeated BlockStateNode nodes = 1;
 }
 
-message NodeState {
-  Node node = 1;
+message Node {
+  string id = 1;
   int64 max_capacity = 2;
   int64 current_capacity = 3;
+}
+
+message NodeState {
+  repeated Node node = 1;
 }
 
 enum PointStateEnum {
@@ -133,4 +138,13 @@ message UpdateNodeStateRequest{
 }
 
 message UpdateNodeStateResponse{
+}
+
+message UpdateStateRequest{
+  TrainState train_state = 1;
+  BlockState block_state = 2;
+  NodeState node_state = 3;
+}
+
+message UpdateStateResponse{
 }
