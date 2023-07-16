@@ -29,7 +29,8 @@ message Node {
 };
 
 message Edge {
-  string id = 1;
+  Node from = 1;
+  Node to = 2;
 }
 
 message Train {
