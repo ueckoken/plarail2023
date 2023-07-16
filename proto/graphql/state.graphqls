@@ -1,0 +1,35 @@
+
+type Train {
+  position: String!
+  path: [String!]
+  priority: Int
+}
+
+enum EdgeState {
+  UNKNOWN
+  OPEN 
+  CLOSE
+}
+
+enum PointState {
+  UNKNOWN
+  ON
+  OFF
+}
+
+type Edge {
+  from: String!
+  to: String!
+  state: EdgeState
+}
+
+type Point {
+  id: String!
+  state: PointState!
+}
+
+type Query {
+  trains: [Train!]!
+  edges: [Edge!]!
+  points: [Point!]!
+}
