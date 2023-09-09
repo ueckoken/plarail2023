@@ -1,0 +1,150 @@
+syntax = "proto3";
+
+option go_package = "pkg/grpc";
+
+package state_sync.v1;
+
+// StateManagerが提供するサービス
+service StateManagerService {
+  rpc UpdatePointState(UpdatePointStateRequest) returns (UpdatePointStateResponse) {}
+  rpc GetTrainState(GetTrainStateRequest) returns (GetTrainStateResponse) {}
+  rpc GetNodeState(GetNodeStateRequest) returns (GetNodeStateResponse) {}
+  rpc GetBlockState(GetBlockStateRequest) returns (GetBlockStateResponse) {}
+  rpc UpdateTrainState(UpdateTrainStateRequest) returns (UpdateTrainStateResponse) {}
+  rpc UpdateBlockState(UpdateBlockStateRequest) returns (UpdateBlockStateResponse) {}
+  rpc UpdateNodeState(UpdateNodeStateRequest) returns (UpdateNodeStateResponse) {}
+}
+
+service PointStateNotification {
+  // NotifyPointStateはStateManagerからMQTT Brokerに対して状態の通知を伝える
+  rpc NotifyPointState(NotifyPointStateRequest) returns (NotifyPointStateResponse) {}
+}
+
+service UpdateStateNotification {
+  // 状態の更新をTrainControllerに通知する
+  rpc UpdateState(UpdateStateRequest) returns (UpdateStateResponse) {}
+}
+
+enum Priority {
+  PRIORITY_UNSPECIFIED = 0;
+  PRIORITY_LOW = 1;
+  PRIORITY_HIGH = 2;
+}
+
+message Edge {
+  Node from = 1;
+  Node to = 2;
+}
+
+message Train {
+  // 列車の位置
+  oneof position {
+    Node node = 1;
+    Edge edge = 2;
+  }
+  // パス
+  repeated Node path = 3;
+  // 列車の優先度
+  Priority priority = 4;
+}
+
+message TrainState {
+  repeated Train trains = 1;
+}
+
+message BlockStateNode {
+  // 閉塞が存在しているNodeのID
+  repeated string nodes = 1;
+}
+
+// 閉塞の状態
+message BlockState {
+  // 連結リストによって表現された閉塞の状態
+  repeated BlockStateNode nodes = 1;
+}
+
+message Node {
+  string id = 1;
+  int64 max_capacity = 2;
+  int64 current_capacity = 3;
+}
+
+message NodeState {
+  repeated Node node = 1;
+}
+
+enum PointStateEnum {
+  POINTSTATE_UNKNOWN = 0;
+  POINTSTATE_ON = 1;
+  POINTSTATE_OFF = 2;
+}
+
+message PointAndState {
+  string id = 1;
+  PointStateEnum state = 2;
+}
+
+message UpdatePointStateRequest{
+  PointAndState state = 1;
+}
+
+message UpdatePointStateResponse{
+}
+
+message NotifyPointStateRequest{
+  PointAndState state = 1;
+}
+
+message NotifyPointStateResponse{
+}
+
+message GetTrainStateRequest{
+}
+
+message GetTrainStateResponse{
+  TrainState state = 1;
+}
+
+message GetBlockStateRequest{
+}
+
+message GetBlockStateResponse{
+  BlockState state = 1;
+}
+
+message UpdateTrainStateRequest{
+  TrainState state = 1;
+}
+
+message UpdateTrainStateResponse{
+}
+
+message UpdateBlockStateRequest{
+  BlockState state = 1;
+}
+
+message UpdateBlockStateResponse{
+}
+
+message GetNodeStateRequest{
+}
+
+message GetNodeStateResponse{
+  repeated NodeState state = 1;
+}
+
+message UpdateNodeStateRequest{
+  NodeState state = 1;
+}
+
+message UpdateNodeStateResponse{
+}
+
+message UpdateStateRequest{
+  TrainState train_state = 1;
+  BlockState block_state = 2;
+  NodeState node_state = 3;
+}
+
+message UpdateStateResponse{
+}
