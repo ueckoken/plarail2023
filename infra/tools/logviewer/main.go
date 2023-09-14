@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/ueckoken/plarail2022/infra/logviewer/client"
+	"github.com/ueckoken/plarail2023/infra/tools/logviewer/client"
 )
 
 type logHandler struct {

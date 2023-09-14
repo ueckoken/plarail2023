@@ -1,4 +1,4 @@
-module github.com/ueckoken/plarail2022/infra/logviewer
+module github.com/ueckoken/plarail2023/infra/tools/logviewer
 
 go 1.19
 
