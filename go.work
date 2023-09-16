@@ -1,3 +1,7 @@
 go 1.21.1
 
-use ./backend/device-manager
+use (
+	./backend/mqtt-handler
+	./infra/tools/logviewer
+	./backend/proto
+)
