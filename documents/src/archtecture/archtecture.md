@@ -1,6 +1,6 @@
 # アーキテクチャ
 
-2023.07.09時点での最新版のアーキテクチャ
+2023.10.00時点での最新版のアーキテクチャ
 
 ```mermaid
 flowchart RL
@@ -13,7 +13,6 @@ end
 subgraph 状態管理
 管理画面 <-->|"connect"| StateManager
 MQTTHandler <--> StateManager
-EventHandler <-->|"connect"| StateManager
 StateManager <--> DB1[(state_db)]
 end
 
