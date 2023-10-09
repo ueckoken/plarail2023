@@ -160,31 +160,35 @@
 <p>2022年のプラレール企画が諸事情で爆散したので、2023年は2022年でのプラレール自動制御などを引き続きやっていくことになると思います。</p>
 <p>また、システム構成についても見直して作り直そうということになっています。</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="アーキテクチャ"><a class="header" href="#アーキテクチャ">アーキテクチャ</a></h1>
-<p>2023.07.09時点での最新版のアーキテクチャ</p>
+<p>2023.10.00時点での最新版のアーキテクチャ</p>
 <pre class="mermaid">flowchart RL
-subgraph 状態管理
-管理画面 &lt;--&gt;|&quot;connect-web&quot;| StateManager
 
-EventHandler &lt;--&gt;|&quot;connect&quot;| StateManager
+subgraph エッジデバイス
+MQTTHandler &lt;--&gt;|&quot;MQTT&quot;| 通過在線検知センサー
+MQTTHandler &lt;--&gt;|&quot;MQTT&quot;| ポイント制御器
+end
+
+subgraph 状態管理
+管理画面 &lt;--&gt;|&quot;connect&quot;| StateManager
+MQTTHandler &lt;--&gt; StateManager
 StateManager &lt;--&gt; DB1[(state_db)]
 end
+
 subgraph 自動運転
-TrainController &lt;--&gt; StateManager
-DiagramManager --&gt; PathPlanner
-PathPlanner &lt;--&gt; TrainController
-DiagramManager &lt;--&gt; DB2[(diagram_db)]
-DiagramManager &lt;--&gt;|&quot;connect-web&quot;| 管理画面
+AutoOperater &lt;--&gt;|&quot;connect&quot;| StateManager
+AutoOperater &lt;--&gt; DB2[(diagram_db)]
+AutoOperater &lt;--&gt;|&quot;connect&quot;| 管理画面
 end
+
 subgraph 映像配信
 Webカメラ --&gt; |&quot;USB&quot;| 配信サイト
 ESP-EYE --&gt;|&quot;mjpeg&quot;| 配信サイト
 配信サイト --&gt;|&quot;WebRTC&quot;| SkyWay
 SkyWay --&gt;|&quot;WebRTC&quot;| 管理画面
 end
-subgraph エッジデバイス
-StateManager &lt;--&gt;|&quot;MQTT&quot;| Servo
-Sensor --&gt;|&quot;MQTT&quot;| EventHandler
-end
+
+
+
 </pre>
 <h2 id="自動運転"><a class="header" href="#自動運転">自動運転</a></h2>
 <p>昨年度は実装できなかった部分であるので、1から実装をする必要がある。
