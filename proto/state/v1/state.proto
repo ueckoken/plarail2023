@@ -1,8 +1,7 @@
 syntax = "proto3";
 
-option go_package = "pkg/grpc";
-
-package state_sync.v1;
+package state.v1;
+option go_package = "github.com/ueckoken/plarail2023/backend/proto/state/v1;statev1";
 
 // StateManagerが提供するサービス
 service StateManagerService {
