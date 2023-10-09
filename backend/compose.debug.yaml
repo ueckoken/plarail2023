@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  mqtt-broker:
+    image: eclipse-mosquitto
+    expose:
+      - 1883
+    ports:
+      - 1883:1883
+    restart: unless-stopped
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
