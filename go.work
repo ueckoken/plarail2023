@@ -1,6 +1,7 @@
 go 1.21.1
 
 use (
-	./infra/tools/logviewer
 	./backend/proto
+	./backend/state-manager
+	./infra/tools/logviewer
 )
