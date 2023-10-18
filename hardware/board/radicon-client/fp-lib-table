@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "mono-wireless")(type "KiCad")(uri "${KIPRJMOD}/mono-wireless.pretty")(options "")(descr ""))
+)
