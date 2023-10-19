@@ -7,9 +7,7 @@ service StateManagerService {
   rpc UpdatePointState(UpdatePointStateRequest) returns (UpdatePointStateResponse) {}
   rpc GetTrainState(GetTrainStateRequest) returns (GetTrainStateResponse) {}
   rpc GetNodeState(GetNodeStateRequest) returns (GetNodeStateResponse) {}
-  rpc GetBlockState(GetBlockStateRequest) returns (GetBlockStateResponse) {}
   rpc UpdateTrainState(UpdateTrainStateRequest) returns (UpdateTrainStateResponse) {}
-  rpc UpdateBlockState(UpdateBlockStateRequest) returns (UpdateBlockStateResponse) {}
   rpc UpdateNodeState(UpdateNodeStateRequest) returns (UpdateNodeStateResponse) {}
 }
 
@@ -48,17 +46,6 @@ message Train {
 
 message TrainState {
   repeated Train trains = 1;
-}
-
-message BlockStateNode {
-  // 閉塞が存在しているNodeのID
-  repeated string nodes = 1;
-}
-
-// 閉塞の状態
-message BlockState {
-  // 連結リストによって表現された閉塞の状態
-  repeated BlockStateNode nodes = 1;
 }
 
 message Node {
@@ -103,25 +90,11 @@ message GetTrainStateResponse{
   TrainState state = 1;
 }
 
-message GetBlockStateRequest{
-}
-
-message GetBlockStateResponse{
-  BlockState state = 1;
-}
-
 message UpdateTrainStateRequest{
   TrainState state = 1;
 }
 
 message UpdateTrainStateResponse{
-}
-
-message UpdateBlockStateRequest{
-  BlockState state = 1;
-}
-
-message UpdateBlockStateResponse{
 }
 
 message GetNodeStateRequest{
@@ -140,7 +113,6 @@ message UpdateNodeStateResponse{
 
 message UpdateStateRequest{
   TrainState train_state = 1;
-  BlockState block_state = 2;
   NodeState node_state = 3;
 }
 
