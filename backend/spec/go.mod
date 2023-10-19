@@ -1,6 +1,6 @@
-module github.com/ueckoken/plarail2023/backend/proto
+module github.com/ueckoken/plarail2023/backend/spec
 
-go 1.21.1
+go 1.21.3
 
 require (
 	github.com/bufbuild/connect-go v1.10.0

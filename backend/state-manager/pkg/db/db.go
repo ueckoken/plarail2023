@@ -17,9 +17,25 @@ import (
 // mongodb connection
 var client *mongo.Client
 
-type Book struct {
-	Title  string
-	Author string
+type point_state int
+type rail_state int
+
+const (
+	NORMAL point_state = iota
+	REVERSE
+)
+
+const (
+	GO point_state = iota
+	STOP
+)
+
+type PointRail struct {
+	id    string
+	state point_state
+}
+
+type StopRail struct {
 }
 
 func open() {
