@@ -1,7 +1,6 @@
 syntax = "proto3";
 
 package state.v1;
-option go_package = "github.com/ueckoken/plarail2023/backend/proto/state/v1;statev1";
 
 // StateManagerが提供するサービス
 service StateManagerService {
@@ -74,8 +73,8 @@ message NodeState {
 
 enum PointStateEnum {
   POINTSTATE_UNKNOWN = 0;
-  POINTSTATE_ON = 1;
-  POINTSTATE_OFF = 2;
+  POINTSTATE_NORMAL = 1; // ポイントがまっすぐな状態
+  POINTSTATE_REVERSE = 2; // ポイントが移動している状態
 }
 
 message PointAndState {
