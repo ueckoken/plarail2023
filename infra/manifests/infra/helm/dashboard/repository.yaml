@@ -1,8 +1,8 @@
-apiVersion: source.toolkit.fluxcd.io/v1beta
+apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
   name: dashboard
   namespace: flux-system
 spec:
   url: https://kubernetes.github.io/dashboard
-  interval: 10m
+  interval: 1m
