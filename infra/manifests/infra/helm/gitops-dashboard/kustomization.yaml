@@ -1,3 +1,2 @@
 resources:
-  - ./release.yaml
-  - ./repository.yaml
+  - ./gitops-dashboard.yaml
