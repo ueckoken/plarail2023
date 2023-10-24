@@ -9,7 +9,8 @@ spec:
   tls:
     - secretName: tls-secret
   rules:
-    - http:
+    - host: dashboard.mqtt.plarail.k1h.dev
+      http:
         paths:
           - path: /
             pathType: Prefix
@@ -18,7 +19,8 @@ spec:
                 name: emqx
                 port:
                   number: 18083
-    - http:
+    - host: mqtt.plarail.k1h.dev
+      http:
         paths:
           - path: /
             pathType: Prefix
