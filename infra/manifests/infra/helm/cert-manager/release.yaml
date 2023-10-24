@@ -2,12 +2,11 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: cert-manager
-  namespace: flux-system
+  namespace: cert-manager
 spec:
   interval: 10m
   values:
     installCRDs: true
-  targetNamespace: cert-manager
   chart:
     spec:
       chart: cert-manager
