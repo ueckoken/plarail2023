@@ -1,0 +1,15 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: emqx
+  namespace: mqtt-broker
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: emqx
+      sourceRef:
+        kind: HelmRepository
+        name: emqx
+        namespace: flux-system
+      interval: 1m
