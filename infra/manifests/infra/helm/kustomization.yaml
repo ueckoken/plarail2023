@@ -1,3 +1,4 @@
 resources:
   - ./dashboard
   - ./gitops-dashboard
+  - ./cert-manager
