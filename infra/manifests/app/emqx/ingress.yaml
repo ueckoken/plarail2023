@@ -17,7 +17,7 @@ spec:
               service:
                 name: emqx
                 port:
-                  number: 8081
+                  number: 18083
     - http:
         paths:
           - path: /
