@@ -6,10 +6,10 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
-#  tls:
-#    - secretName: tls-secret
+  tls:
+    - secretName: tls-secret
   rules:
-    - host: dashboard.mqtt.plarail.k1h.dev
+    - host: mqtt.plarail.k1h.dev
       http:
         paths:
           - path: /
