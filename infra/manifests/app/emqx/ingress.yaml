@@ -19,9 +19,6 @@ spec:
                 name: emqx
                 port:
                   number: 18083
-    - host: mqtt.plarail.k1h.dev
-      http:
-        paths:
           - path: /
             pathType: Prefix
             backend:
