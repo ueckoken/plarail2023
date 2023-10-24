@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mqtt-broker
+  namespace: mqtt-broker
+  annotations:
+    oci.oraclecloud.com/load-balancer-type: "lb"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: emqx
+                port:
+                  number: 8081
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: emqx
+                port:
+                  number: 1883
