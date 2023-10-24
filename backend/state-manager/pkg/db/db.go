@@ -6,37 +6,17 @@ package main
 
 import (
 	"context"
+	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
+	"go.mongodb.org/mongo-driver/bson"
 	"log"
 	"os"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // mongodb connection
 var client *mongo.Client
-
-type point_state int
-type rail_state int
-
-const (
-	NORMAL point_state = iota
-	REVERSE
-)
-
-const (
-	GO point_state = iota
-	STOP
-)
-
-type PointRail struct {
-	id    string
-	state point_state
-}
-
-type StopRail struct {
-}
 
 func open() {
 	var err error
@@ -52,7 +32,7 @@ func open() {
 	log.Println("Connected to DB!")
 }
 
-func close() {
+func c() {
 	log.Println("Closing connection to DB...")
 	if err := client.Disconnect(context.TODO()); err != nil {
 		panic(err)
@@ -60,44 +40,64 @@ func close() {
 	log.Println("Connection closed!")
 }
 
-func addBook(book Book) error {
-	collection := client.Database("test").Collection("books")
-	_, err := collection.InsertOne(context.TODO(), book)
-	return err
-}
-
-func getBooks() ([]Book, error) {
-	collection := client.Database("test").Collection("books")
-	cursor, err := collection.Find(context.TODO(), bson.D{})
+func setPoint(PointAndState *statev1.PointAndState) {
+	collection := client.Database("state-manager").Collection("points")
+	_, err := collection.InsertOne(context.Background(), PointAndState)
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
-	defer cursor.Close(context.TODO())
-	var books []Book
-	for cursor.Next(context.TODO()) {
-		var book Book
-		if err := cursor.Decode(&book); err != nil {
-			return nil, err
-		}
-		books = append(books, book)
-	}
-	return books, nil
 }
 
-func getBook(title string) (Book, error) {
-	var book Book
-	collection := client.Database("test").Collection("books")
-	err := collection.FindOne(context.TODO(), bson.M{
-		"title": title,
-	}).Decode(&book)
-	return book, err
+func getPoint(pointId string) *statev1.PointAndState {
+	collection := client.Database("state-manager").Collection("points")
+	var result *statev1.PointAndState
+	err := collection.FindOne(context.Background(), bson.M{"id": pointId}).Decode(&result)
+	if err != nil {
+		panic(err)
+	}
+	return result
 }
 
-func deleteBook(book Book) error {
-	collection := client.Database("test").Collection("books")
-	_, err := collection.DeleteOne(context.TODO(), bson.M{
-		"title":  book.Title,
-		"author": book.Author,
-	})
-	return err
+func getPoints() []*statev1.PointAndState {
+	collection := client.Database("state-manager").Collection("points")
+	cursor, err := collection.Find(context.Background(), bson.M{})
+	if err != nil {
+		panic(err)
+	}
+	var result []*statev1.PointAndState
+	if err = cursor.All(context.Background(), &result); err != nil {
+		panic(err)
+	}
+	return result
+}
+
+func setStop(stop *statev1.StopAndState) {
+	collection := client.Database("state-manager").Collection("stops")
+	_, err := collection.InsertOne(context.Background(), stop)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func getStop(stopId string) *statev1.StopAndState {
+	collection := client.Database("state-manager").Collection("stops")
+	var result *statev1.StopAndState
+	err := collection.FindOne(context.Background(), bson.M{"id": stopId}).Decode(&result)
+	if err != nil {
+		panic(err)
+	}
+	return result
+}
+
+func getStops() []*statev1.StopAndState {
+	collection := client.Database("state-manager").Collection("stops")
+	cursor, err := collection.Find(context.Background(), bson.M{})
+	if err != nil {
+		panic(err)
+	}
+	var result []*statev1.StopAndState
+	if err = cursor.All(context.Background(), &result); err != nil {
+		panic(err)
+	}
+	return result
 }
