@@ -17,4 +17,4 @@ spec:
     ingress:
       enabled: true
       annotations:
-        - oci.oraclecloud.com/load-balancer-type: "lb"
+        oci.oraclecloud.com/load-balancer-type: "lb"
