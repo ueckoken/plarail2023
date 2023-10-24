@@ -13,3 +13,8 @@ spec:
         name: k8s-dashboard
         namespace: flux-system
       interval: 1m
+    values:
+        ingress:
+            enabled: true
+            annotations:
+            oci.oraclecloud.com/load-balancer-type: "lb"
