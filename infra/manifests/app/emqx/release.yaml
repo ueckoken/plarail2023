@@ -13,3 +13,9 @@ spec:
         name: emqx
         namespace: flux-system
       interval: 1m
+    values:
+      ingress:
+        dashboard:
+          enabled: true
+          annotations:
+            oci.oraclecloud.com/load-balancer-type: "lb"
