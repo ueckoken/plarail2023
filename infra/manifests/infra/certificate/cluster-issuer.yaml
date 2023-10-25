@@ -13,6 +13,6 @@ spec:
       - dns01:
           cloudflare:
             email: admin@k1h.dev
-            apiKeySecretRef:
+            apiTokenSecretRef:
               name: cloudflare-api-token-secret
               key: api-token
