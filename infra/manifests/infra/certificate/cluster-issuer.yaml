@@ -13,5 +13,5 @@ spec:
           cloudflare:
             email: admin@k1h.dev
             apiKeySecretRef:
-              name: cloudflare-apikey
-              key: apikey
+              name: cloudflare-api-token-secret
+              key: api-token
