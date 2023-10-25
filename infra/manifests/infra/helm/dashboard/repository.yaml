@@ -4,5 +4,5 @@ metadata:
   name: k8s-dashboard
   namespace: flux-system
 spec:
-  url: https://kubernetes.github.io/dashboard
+  url: https://kubernetes.github.io/dashboard/
   interval: 1m
