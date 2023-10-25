@@ -9,11 +9,13 @@ spec:
     service:
       type: LoadBalancer
     ingress:
-      ingressClassName: nginx
       annotations:
         kubernetes.io/ingress.class: "nginx"
       dashboard:
         enabled: true
+        annotations:
+          kubernetes.io/ingress.class: "nginx"
+        ingressClassName: nginx
         hosts:
           - emqx.plarail.k1h.dev
         path: /
