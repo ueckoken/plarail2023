@@ -6,8 +6,8 @@ metadata:
 spec:
   secretName: cloudflare-cert
   dnsNames:
-    - "*.plarail.k1h.dev"
     - "plarail.k1h.dev"
+    - "*.plarail.k1h.dev"
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
