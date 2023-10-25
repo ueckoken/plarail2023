@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: k8s-dashboard
+  namespace: flux-system
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+    - hosts:
+        - "*.plarail.k1h.dev"
+        - "plarail.k1h.dev"
+      secretName: cloudflare-cert
+  ingressClassName: nginx
+  rules:
+    - host: flux.infra.plarail.k1h.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ww-gitops-weave-gitops
+                port:
+                  number: 9001
