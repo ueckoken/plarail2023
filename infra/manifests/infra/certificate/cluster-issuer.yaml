@@ -12,7 +12,7 @@ spec:
     solvers:
       - dns01:
           cloudflare:
-            email: admin@k1h.dev
+            email: kouichi.hirachi@gmail.com
             apiKeySecretRef:
               name: cloudflare-api-key-secret
               key: api-key
