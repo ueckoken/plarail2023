@@ -23,10 +23,3 @@ spec:
                 name: emqx
                 port:
                   number: 18083
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: emqx
-                port:
-                  number: 1883
