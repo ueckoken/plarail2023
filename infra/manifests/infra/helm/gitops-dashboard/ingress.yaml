@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: k8s-dashboard
+  name: ww-gitops-weave-gitops
   namespace: flux-system
   annotations:
     kubernetes.io/ingress.class: "nginx"
@@ -13,7 +13,7 @@ spec:
       secretName: cloudflare-cert
   ingressClassName: nginx
   rules:
-    - host: flux.infra.plarail.k1h.dev
+    - host: flux.plarail.k1h.dev
       http:
         paths:
           - path: /
