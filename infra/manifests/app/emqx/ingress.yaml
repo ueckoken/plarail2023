@@ -2,15 +2,15 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: mqtt-broker
-  namespace: plarail2023
+  namespace: mqtt-broker
   annotations:
     kubernetes.io/ingress.class: "nginx"
 spec:
-  tls:
-    - hosts:
-        - "*.plarail.k1h.dev"
-        - "plarail.k1h.dev"
-      secretName: cloudflare-cert
+#  tls:
+#    - hosts:
+#        - "*.plarail.k1h.dev"
+#        - "plarail.k1h.dev"
+#      secretName: cloudflare-cert
   ingressClassName: nginx
   rules:
     - host: mqtt.plarail.k1h.dev
