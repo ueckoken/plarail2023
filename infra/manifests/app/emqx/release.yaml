@@ -4,7 +4,7 @@ metadata:
   name: emqx
   namespace: mqtt-broker
 spec:
-  interval: 1m
+  interval: 10m
   chart:
     spec:
       chart: emqx
@@ -12,4 +12,4 @@ spec:
         kind: HelmRepository
         name: emqx
         namespace: flux-system
-      interval: 1m
+      interval: 10m
