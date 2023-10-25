@@ -13,3 +13,10 @@ spec:
         name: k8s-dashboard
         namespace: flux-system
       interval: 1m
+    values:
+      ingress:
+        enabled: true
+        hosts:
+          - host: k8s.infra.plarail.k1h.dev
+        ingressClassName: nginx
+        secretName: cloudflare-cert
