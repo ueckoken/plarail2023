@@ -10,4 +10,4 @@ spec:
     - "plarail.k1h.dev"
   issuerRef:
     name: letsencrypt-prod
-    kind: ClusterIssuer
+    kind: Issuer
