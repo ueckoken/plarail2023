@@ -2,3 +2,4 @@ resources:
   - ./dashboard
   - ./gitops-dashboard
   - ./cert-manager
+  - ./kubernetes-reflector
