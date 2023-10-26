@@ -35,6 +35,9 @@ spec:
         kind: HelmRepository
         name: ww-gitops
   interval: 1h0m0s
+  envVars:
+    - name: WEAVE_GITOPS_FEATURE_OIDC_BUTTON_LABEL
+      value: "Login with ACME"
   values:
     WEAVE_GITOPS_FEATURE_TELEMETRY: "true"
     adminUser:
