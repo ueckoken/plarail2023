@@ -1,3 +1,2 @@
 resources:
   - ./gitops-dashboard.yaml
-  - ./ingress.yaml
