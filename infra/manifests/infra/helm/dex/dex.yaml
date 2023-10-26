@@ -83,4 +83,4 @@ spec:
       tls:
         - hosts:
             - dex.plarail2023.k1h.dev
-          secretName: dex-dev-example-tld
+          secretName: cloudflare-cert

@@ -3,3 +3,4 @@ resources:
   - ./gitops-dashboard
   - ./cert-manager
   - ./kubernetes-reflector
+  - ./dex
