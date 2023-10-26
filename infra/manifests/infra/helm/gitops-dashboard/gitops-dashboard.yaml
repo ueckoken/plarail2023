@@ -41,3 +41,18 @@ spec:
       create: true
       passwordHash: $2a$10$uzVGRDANRLdnFE8X9vLrAeWvmfcwneD9ntYyuU8ehT54HzwIj6cq.
       username: admin
+    serverTLS:
+      enabled: true
+      secretName: cloudflare-cert
+    ingress:
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+      className: nginx
+      enabled: true
+      hosts:
+        - flux.plarail.k1h.dev
+      tls:
+        - hosts:
+            - "*.plarail.k1h.dev"
+            - "plarail.k1h.dev"
+          secretName: cloudflare-cert
