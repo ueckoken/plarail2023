@@ -13,7 +13,7 @@ spec:
       secretName: cloudflare-cert
   ingressClassName: nginx
   rules:
-    - host: mqtt.plarail.k1h.dev
+    - host: mqtt_handler.plarail.k1h.dev
       http:
         paths:
           - path: /

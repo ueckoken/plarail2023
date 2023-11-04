@@ -1,4 +1,4 @@
-package mqtt
+package mqtt_handler
 
 import (
 	"github.com/joho/godotenv"
@@ -6,7 +6,7 @@ import (
 )
 
 func Test_SendMsg(t *testing.T) {
-	err := godotenv.Load(".env")
+	err := godotenv.Load("../../cmd/.env")
 	if err != nil {
 		panic(err)
 	}

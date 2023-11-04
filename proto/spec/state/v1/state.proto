@@ -14,7 +14,7 @@ import "state/v1/train.proto";
 service StateManagerService {
   /* Block */
   rpc GetBlockStates(GetBlockStatesRequest) returns (GetBlockStatesResponse);
-  rpc UpdateBLockStates(UpdateBlockStateRequest) returns (UpdateBlockStateResponse);
+  rpc UpdateBlockState(UpdateBlockStateRequest) returns (UpdateBlockStateResponse);
   /* Point */
   rpc UpdatePointState(UpdatePointStateRequest) returns (UpdatePointStateResponse);
   rpc GetPointStates(GetPointStatesRequest) returns (GetPointStatesResponse);
