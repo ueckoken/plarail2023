@@ -13,15 +13,10 @@ enum BlockStateEnum {
   BLOCK_STATE_CLOSE = 2;    // 閉塞が閉の状態(列車がいない)
 }
 
-message BlockStateNode {
-  // 閉塞が存在しているNodeのID
-  repeated string nodes = 1;
-}
-
 // 閉塞の状態
 message BlockState {
-  // 連結リストによって表現された閉塞の状態
-  repeated BlockStateNode nodes = 1;
+  string block_id = 1;      // 閉塞のID
+  BlockStateEnum state = 2; // 閉塞の状態
 }
 
 /*
@@ -35,7 +30,7 @@ message GetBlockStatesResponse{
 }
 
 /*
-  UpdateBLockStates: 閉塞の状態を更新するAPI
+  UpdateBLockState: 閉塞の状態を更新するAPI
 */
 message UpdateBlockStateRequest{
   BlockState state = 1;

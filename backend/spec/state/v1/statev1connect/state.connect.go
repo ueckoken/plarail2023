@@ -36,9 +36,9 @@ const (
 	// StateManagerServiceGetBlockStatesProcedure is the fully-qualified name of the
 	// StateManagerService's GetBlockStates RPC.
 	StateManagerServiceGetBlockStatesProcedure = "/state.v1.StateManagerService/GetBlockStates"
-	// StateManagerServiceUpdateBLockStatesProcedure is the fully-qualified name of the
-	// StateManagerService's UpdateBLockStates RPC.
-	StateManagerServiceUpdateBLockStatesProcedure = "/state.v1.StateManagerService/UpdateBLockStates"
+	// StateManagerServiceUpdateBlockStateProcedure is the fully-qualified name of the
+	// StateManagerService's UpdateBlockState RPC.
+	StateManagerServiceUpdateBlockStateProcedure = "/state.v1.StateManagerService/UpdateBlockState"
 	// StateManagerServiceUpdatePointStateProcedure is the fully-qualified name of the
 	// StateManagerService's UpdatePointState RPC.
 	StateManagerServiceUpdatePointStateProcedure = "/state.v1.StateManagerService/UpdatePointState"
@@ -63,7 +63,7 @@ const (
 type StateManagerServiceClient interface {
 	// Block
 	GetBlockStates(context.Context, *connect_go.Request[v1.GetBlockStatesRequest]) (*connect_go.Response[v1.GetBlockStatesResponse], error)
-	UpdateBLockStates(context.Context, *connect_go.Request[v1.UpdateBlockStateRequest]) (*connect_go.Response[v1.UpdateBlockStateResponse], error)
+	UpdateBlockState(context.Context, *connect_go.Request[v1.UpdateBlockStateRequest]) (*connect_go.Response[v1.UpdateBlockStateResponse], error)
 	// Point
 	UpdatePointState(context.Context, *connect_go.Request[v1.UpdatePointStateRequest]) (*connect_go.Response[v1.UpdatePointStateResponse], error)
 	GetPointStates(context.Context, *connect_go.Request[v1.GetPointStatesRequest]) (*connect_go.Response[v1.GetPointStatesResponse], error)
@@ -90,9 +90,9 @@ func NewStateManagerServiceClient(httpClient connect_go.HTTPClient, baseURL stri
 			baseURL+StateManagerServiceGetBlockStatesProcedure,
 			opts...,
 		),
-		updateBLockStates: connect_go.NewClient[v1.UpdateBlockStateRequest, v1.UpdateBlockStateResponse](
+		updateBlockState: connect_go.NewClient[v1.UpdateBlockStateRequest, v1.UpdateBlockStateResponse](
 			httpClient,
-			baseURL+StateManagerServiceUpdateBLockStatesProcedure,
+			baseURL+StateManagerServiceUpdateBlockStateProcedure,
 			opts...,
 		),
 		updatePointState: connect_go.NewClient[v1.UpdatePointStateRequest, v1.UpdatePointStateResponse](
@@ -130,14 +130,14 @@ func NewStateManagerServiceClient(httpClient connect_go.HTTPClient, baseURL stri
 
 // stateManagerServiceClient implements StateManagerServiceClient.
 type stateManagerServiceClient struct {
-	getBlockStates    *connect_go.Client[v1.GetBlockStatesRequest, v1.GetBlockStatesResponse]
-	updateBLockStates *connect_go.Client[v1.UpdateBlockStateRequest, v1.UpdateBlockStateResponse]
-	updatePointState  *connect_go.Client[v1.UpdatePointStateRequest, v1.UpdatePointStateResponse]
-	getPointStates    *connect_go.Client[v1.GetPointStatesRequest, v1.GetPointStatesResponse]
-	updateStopState   *connect_go.Client[v1.UpdateStopStateRequest, v1.UpdateStopStateResponse]
-	getStopStates     *connect_go.Client[v1.GetStopStatesRequest, v1.GetStopStatesResponse]
-	getTrains         *connect_go.Client[v1.GetTrainsRequest, v1.GetTrainsResponse]
-	updateTrainUUID   *connect_go.Client[v1.UpdateTrainUUIDRequest, v1.UpdateTrainUUIDResponse]
+	getBlockStates   *connect_go.Client[v1.GetBlockStatesRequest, v1.GetBlockStatesResponse]
+	updateBlockState *connect_go.Client[v1.UpdateBlockStateRequest, v1.UpdateBlockStateResponse]
+	updatePointState *connect_go.Client[v1.UpdatePointStateRequest, v1.UpdatePointStateResponse]
+	getPointStates   *connect_go.Client[v1.GetPointStatesRequest, v1.GetPointStatesResponse]
+	updateStopState  *connect_go.Client[v1.UpdateStopStateRequest, v1.UpdateStopStateResponse]
+	getStopStates    *connect_go.Client[v1.GetStopStatesRequest, v1.GetStopStatesResponse]
+	getTrains        *connect_go.Client[v1.GetTrainsRequest, v1.GetTrainsResponse]
+	updateTrainUUID  *connect_go.Client[v1.UpdateTrainUUIDRequest, v1.UpdateTrainUUIDResponse]
 }
 
 // GetBlockStates calls state.v1.StateManagerService.GetBlockStates.
@@ -145,9 +145,9 @@ func (c *stateManagerServiceClient) GetBlockStates(ctx context.Context, req *con
 	return c.getBlockStates.CallUnary(ctx, req)
 }
 
-// UpdateBLockStates calls state.v1.StateManagerService.UpdateBLockStates.
-func (c *stateManagerServiceClient) UpdateBLockStates(ctx context.Context, req *connect_go.Request[v1.UpdateBlockStateRequest]) (*connect_go.Response[v1.UpdateBlockStateResponse], error) {
-	return c.updateBLockStates.CallUnary(ctx, req)
+// UpdateBlockState calls state.v1.StateManagerService.UpdateBlockState.
+func (c *stateManagerServiceClient) UpdateBlockState(ctx context.Context, req *connect_go.Request[v1.UpdateBlockStateRequest]) (*connect_go.Response[v1.UpdateBlockStateResponse], error) {
+	return c.updateBlockState.CallUnary(ctx, req)
 }
 
 // UpdatePointState calls state.v1.StateManagerService.UpdatePointState.
@@ -184,7 +184,7 @@ func (c *stateManagerServiceClient) UpdateTrainUUID(ctx context.Context, req *co
 type StateManagerServiceHandler interface {
 	// Block
 	GetBlockStates(context.Context, *connect_go.Request[v1.GetBlockStatesRequest]) (*connect_go.Response[v1.GetBlockStatesResponse], error)
-	UpdateBLockStates(context.Context, *connect_go.Request[v1.UpdateBlockStateRequest]) (*connect_go.Response[v1.UpdateBlockStateResponse], error)
+	UpdateBlockState(context.Context, *connect_go.Request[v1.UpdateBlockStateRequest]) (*connect_go.Response[v1.UpdateBlockStateResponse], error)
 	// Point
 	UpdatePointState(context.Context, *connect_go.Request[v1.UpdatePointStateRequest]) (*connect_go.Response[v1.UpdatePointStateResponse], error)
 	GetPointStates(context.Context, *connect_go.Request[v1.GetPointStatesRequest]) (*connect_go.Response[v1.GetPointStatesResponse], error)
@@ -207,9 +207,9 @@ func NewStateManagerServiceHandler(svc StateManagerServiceHandler, opts ...conne
 		svc.GetBlockStates,
 		opts...,
 	)
-	stateManagerServiceUpdateBLockStatesHandler := connect_go.NewUnaryHandler(
-		StateManagerServiceUpdateBLockStatesProcedure,
-		svc.UpdateBLockStates,
+	stateManagerServiceUpdateBlockStateHandler := connect_go.NewUnaryHandler(
+		StateManagerServiceUpdateBlockStateProcedure,
+		svc.UpdateBlockState,
 		opts...,
 	)
 	stateManagerServiceUpdatePointStateHandler := connect_go.NewUnaryHandler(
@@ -246,8 +246,8 @@ func NewStateManagerServiceHandler(svc StateManagerServiceHandler, opts ...conne
 		switch r.URL.Path {
 		case StateManagerServiceGetBlockStatesProcedure:
 			stateManagerServiceGetBlockStatesHandler.ServeHTTP(w, r)
-		case StateManagerServiceUpdateBLockStatesProcedure:
-			stateManagerServiceUpdateBLockStatesHandler.ServeHTTP(w, r)
+		case StateManagerServiceUpdateBlockStateProcedure:
+			stateManagerServiceUpdateBlockStateHandler.ServeHTTP(w, r)
 		case StateManagerServiceUpdatePointStateProcedure:
 			stateManagerServiceUpdatePointStateHandler.ServeHTTP(w, r)
 		case StateManagerServiceGetPointStatesProcedure:
@@ -273,8 +273,8 @@ func (UnimplementedStateManagerServiceHandler) GetBlockStates(context.Context, *
 	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("state.v1.StateManagerService.GetBlockStates is not implemented"))
 }
 
-func (UnimplementedStateManagerServiceHandler) UpdateBLockStates(context.Context, *connect_go.Request[v1.UpdateBlockStateRequest]) (*connect_go.Response[v1.UpdateBlockStateResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("state.v1.StateManagerService.UpdateBLockStates is not implemented"))
+func (UnimplementedStateManagerServiceHandler) UpdateBlockState(context.Context, *connect_go.Request[v1.UpdateBlockStateRequest]) (*connect_go.Response[v1.UpdateBlockStateResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("state.v1.StateManagerService.UpdateBlockState is not implemented"))
 }
 
 func (UnimplementedStateManagerServiceHandler) UpdatePointState(context.Context, *connect_go.Request[v1.UpdatePointStateRequest]) (*connect_go.Response[v1.UpdatePointStateResponse], error) {

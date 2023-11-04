@@ -2,7 +2,8 @@ package main
 
 import (
 	"github.com/joho/godotenv"
-	mqtt "github.com/ueckoken/plarail2023/backend/state-manager/pkg/mqtt"
+	connectHandler "github.com/ueckoken/plarail2023/backend/state-manager/pkg/connect"
+	"github.com/ueckoken/plarail2023/backend/state-manager/pkg/mqtt_handler"
 )
 
 func main() {
@@ -10,5 +11,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	mqtt.StartHandler()
+	go connectHandler.StartHandler()
+	//go operation.Handler()
+	mqtt_handler.StartHandler()
 }
