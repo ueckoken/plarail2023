@@ -12,4 +12,3 @@ plugins:
     out: ../backend/state-manager/spec
     opt:
       - paths=source_relative
-      - module=github.com/ueckoken/plarail2023/backend/state-manager/spec
