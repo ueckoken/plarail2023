@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "@types/node": "^20.3.2",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
+    "canvas": "^2.11.2",
+    "konva": "^9.2.0",
+    "next": "^14.0.0",
+    "prettier": "^3.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-konva": "^18.2.10",
+    "typescript": "^5.1.6"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "prettier": "prettier --write \"./**/*.{ts,tsx}\" --tab-width 4"
+  }
+}
