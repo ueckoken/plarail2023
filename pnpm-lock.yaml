@@ -12,59 +12,60 @@ importers:
         specifier: 14.0.1
         version: 14.0.1(react-dom@18.2.0)(react@18.2.0)
       react:
-        specifier: ^18
+        specifier: 18.2.0
         version: 18.2.0
       react-dom:
-        specifier: ^18
+        specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@types/node':
-        specifier: ^20
+        specifier: 20.9.0
         version: 20.9.0
       '@types/react':
-        specifier: ^18
+        specifier: 18.2.37
         version: 18.2.37
       '@types/react-dom':
-        specifier: ^18
+        specifier: 18.2.15
         version: 18.2.15
       typescript:
-        specifier: ^5
+        specifier: 5.2.2
         version: 5.2.2
 
   frontend/editor:
     dependencies:
-      '@types/node':
-        specifier: ^20.3.2
-        version: 20.9.0
-      '@types/react':
-        specifier: ^18.2.14
-        version: 18.2.37
-      '@types/react-dom':
-        specifier: ^18.2.6
-        version: 18.2.15
       canvas:
-        specifier: ^2.11.2
+        specifier: 2.11.2
         version: 2.11.2
       konva:
-        specifier: ^9.2.0
+        specifier: 9.2.3
         version: 9.2.3
       next:
-        specifier: ^14.0.0
+        specifier: 14.0.1
         version: 14.0.1(react-dom@18.2.0)(react@18.2.0)
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.3
       react:
-        specifier: ^18.2.0
+        specifier: 18.2.0
         version: 18.2.0
       react-dom:
-        specifier: ^18.2.0
+        specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       react-konva:
-        specifier: ^18.2.10
+        specifier: 18.2.10
         version: 18.2.10(konva@9.2.3)(react-dom@18.2.0)(react@18.2.0)
+    devDependencies:
+      '@types/node':
+        specifier: 20.9.0
+        version: 20.9.0
+      '@types/react':
+        specifier: 18.2.37
+        version: 18.2.37
+      '@types/react-dom':
+        specifier: 18.2.15
+        version: 18.2.15
+      prettier:
+        specifier: 3.0.3
+        version: 3.0.3
       typescript:
-        specifier: ^5.1.6
+        specifier: 5.2.2
         version: 5.2.2
 
   frontend/video-sender:
@@ -347,6 +348,7 @@ packages:
     resolution: {integrity: sha512-nekiGu2NDb1BcVofVcEKMIwzlx4NjHlcjhoxxKBNLtz15Y1z7MYf549DFvkHSId02Ax6kGwWntIBPC3l/JZcmw==}
     dependencies:
       undici-types: 5.26.5
+    dev: true
 
   /@types/prop-types@15.7.10:
     resolution: {integrity: sha512-mxSnDQxPqsZxmeShFH+uwQ4kO4gcJcGahjjMFeLbKE95IAZiiZyiEepGZjtXJ7hN/yfu0bu9xN2ajcU0JcxX6A==}
@@ -363,6 +365,7 @@ packages:
     resolution: {integrity: sha512-HWMdW+7r7MR5+PZqJF6YFNSCtjz1T0dsvo/f1BV6HkV+6erD/nA7wd9NM00KVG83zf2nJ7uATPO9ttdIPvi3gg==}
     dependencies:
       '@types/react': 18.2.37
+    dev: true
 
   /@types/react-reconciler@0.28.8:
     resolution: {integrity: sha512-SN9c4kxXZonFhbX4hJrZy37yw9e7EIxcpHCxQv5JUS18wDE5ovkQKlqQEkufdJCCMfuI9BnjUJvhYeJ9x5Ra7g==}
@@ -2132,6 +2135,7 @@ packages:
     resolution: {integrity: sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==}
     engines: {node: '>=14'}
     hasBin: true
+    dev: true
 
   /process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
@@ -2779,9 +2783,11 @@ packages:
     resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
     engines: {node: '>=14.17'}
     hasBin: true
+    dev: true
 
   /undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
+    dev: true
 
   /unpipe@1.0.0:
     resolution: {integrity: sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==}
