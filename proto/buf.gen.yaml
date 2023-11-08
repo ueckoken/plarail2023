@@ -2,13 +2,13 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: github.com/ueckoken/plarail2023/backend/spec
+    default: github.com/ueckoken/plarail2023/backend
 plugins:
   - plugin: go
-    out: ../backend/spec
+    out: ../backend/state-manager/spec
     opt:
       - paths=source_relative
   - plugin: connect-go
-    out: ../backend/spec
+    out: ../backend/state-manager/spec
     opt:
       - paths=source_relative
