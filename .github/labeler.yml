@@ -4,6 +4,7 @@ backend:
 dashboard:
   - any:
       - "frontend/dashboard/**"
+      - "frontend/editor/**"
 video-sender:
   - any:
       - "frontend/video-sender/**"
