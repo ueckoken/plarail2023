@@ -5,10 +5,10 @@ managed:
     default: github.com/ueckoken/plarail2023
 plugins:
   - plugin: go
-    out: ../backend/state-manager/spec
+    out: ../backend/spec
     opt:
       - paths=source_relative
   - plugin: connect-go
-    out: ../backend/state-manager/spec
+    out: ../backend/spec
     opt:
       - paths=source_relative
