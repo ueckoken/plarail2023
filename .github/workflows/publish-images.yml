@@ -48,7 +48,8 @@ jobs:
           TAG: ${{ steps.generate_tag.outputs.tag }}
         with:
           files: ./docker-bake.hcl
-          push: ${{ github.event_name == 'push' && startsWith( steps.extract_branch.outputs.branch , 'deployment' ) }}
+        #   push: ${{ github.event_name == 'push' && startsWith( steps.extract_branch.outputs.branch , 'deployment' ) }}
+          push: ${{ github.event_name == 'push' }}
           set: |
             *.cache-from=type=local,src=/tmp/.buildx-cache
             *.cache-to=type=local,mode=min,dest=/tmp/.buildx-cache-new
