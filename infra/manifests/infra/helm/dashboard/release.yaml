@@ -7,10 +7,10 @@ spec:
   interval: 1m
   chart:
     spec:
-      chart: kubernetes-editor
+      chart: kubernetes-dashboard
       sourceRef:
         kind: HelmRepository
-        name: k8s-editor
+        name: k8s-dashboard
         namespace: flux-system
       interval: 1m
   values:
