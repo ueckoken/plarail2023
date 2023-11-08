@@ -3,7 +3,7 @@ package connect_handler
 import (
 	"context"
 	"errors"
-	"github.com/bufbuild/connect-go"
+	"connectrpc.com/connect"
 	statev1 "github.com/ueckoken/plarail2023/backend/state-manager/spec/state/v1"
 	"github.com/ueckoken/plarail2023/backend/state-manager/spec/state/v1/statev1connect"
 	db "github.com/ueckoken/plarail2023/backend/state-manager/pkg/db"
