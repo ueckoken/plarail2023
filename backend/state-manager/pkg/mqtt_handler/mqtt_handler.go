@@ -2,17 +2,15 @@ package mqtt_handler
 
 import (
 	"encoding/json"
+	"fmt"
+	"log"
+	"os"
+	"os/signal"
+	"strings"
+
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
 	"github.com/ueckoken/plarail2023/backend/state-manager/pkg/db"
-	"log"
-	"os"
-	"strings"
-)
-
-import (
-	"fmt"
-	"os/signal"
 )
 
 var cc mqtt.Client

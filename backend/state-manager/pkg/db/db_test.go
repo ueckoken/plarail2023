@@ -1,9 +1,10 @@
 package db
 
 import (
+	"testing"
+
 	"github.com/joho/godotenv"
 	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
-	"testing"
 )
 
 func Test_ConnectDB(t *testing.T) {
