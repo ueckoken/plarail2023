@@ -49,7 +49,7 @@ jobs:
         with:
           files: ./docker-bake.hcl
         #   push: ${{ github.event_name == 'push' && startsWith( steps.extract_branch.outputs.branch , 'deployment' ) }}
-          push: ${{ github.event_name == 'push' }}
+          push: true
           set: |
             *.cache-from=type=local,src=/tmp/.buildx-cache
             *.cache-to=type=local,mode=min,dest=/tmp/.buildx-cache-new
