@@ -1,0 +1,11 @@
+stations:
+  - yamashita
+  - umishita
+stop_rails:
+  - yamashita_s1
+  - yamashita_s2
+  - umishita_s1
+point_rails:
+  - yamashita_p1
+blocks:
+  - yamashita_b1
