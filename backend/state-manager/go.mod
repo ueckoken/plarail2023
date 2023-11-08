@@ -1,6 +1,6 @@
 module github.com/ueckoken/plarail2023/backend/state-manager
 
-go 1.21.1
+go 1.21.3
 
 require (
 	github.com/joho/godotenv v1.5.1
