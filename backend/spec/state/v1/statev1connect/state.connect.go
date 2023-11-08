@@ -8,7 +8,7 @@ import (
 	connect "connectrpc.com/connect"
 	context "context"
 	errors "errors"
-	v1 "github.com/ueckoken/plarail2023/state/v1"
+	v1 "github.com/ueckoken/plarail2023/spec/state/v1"
 	http "net/http"
 	strings "strings"
 )
