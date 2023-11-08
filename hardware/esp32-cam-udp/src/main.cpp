@@ -11,7 +11,7 @@
 WiFiUDP udp;
 IPAddress host;
 
-static camera_config_t cam_cfg = {
+static camera_config_t cam_cfg={// https://github.com/espressif/esp-who/blob/master/docs/en/Camera_connections.md
 	.pin_pwdn=-1,.pin_reset=-1,
 	.pin_xclk=4,.pin_sccb_sda=18,.pin_sccb_scl=23,
 
@@ -54,7 +54,7 @@ void loop(){
 
 	udp.beginPacket(host,PORT);udp.printf("STRT");udp.write(t,4);udp.write(n);udp.endPacket();
 	for(uint8_t i=0;i<n;i++){
-			udp.beginPacket(host,PORT);udp.printf("DATA");udp.write(t,4);udp.write(i);udp.write(fb->buf+SIZE*i,i+1==n?fb->len-SIZE*i:SIZE);udp.endPacket();
+		udp.beginPacket(host,PORT);udp.printf("DATA");udp.write(t,4);udp.write(i);udp.write(fb->buf+SIZE*i,i+1==n?fb->len-SIZE*i:SIZE);udp.endPacket();
 	}
 	esp_camera_fb_return(fb);
 }
