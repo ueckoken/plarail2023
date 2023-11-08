@@ -1,0 +1,40 @@
+/*
+   Block Proto
+   閉塞の状態を扱うプロトコル
+*/
+
+syntax = "proto3";
+
+package state.v1;
+
+enum BlockStateEnum {
+  BLOCK_STATE_UNKNOWN = 0;
+  BLOCK_STATE_OPEN = 1;     // 閉塞が開の状態(列車がいない)
+  BLOCK_STATE_CLOSE = 2;    // 閉塞が閉の状態(列車がいない)
+}
+
+// 閉塞の状態
+message BlockState {
+  string block_id = 1;      // 閉塞のID
+  BlockStateEnum state = 2; // 閉塞の状態
+}
+
+/*
+  GetBlockStates : 閉塞の状態を取得するAPI
+*/
+message GetBlockStatesRequest{
+}
+
+message GetBlockStatesResponse{
+  repeated BlockState states = 1;
+}
+
+/*
+  UpdateBLockState: 閉塞の状態を更新するAPI
+*/
+message UpdateBlockStateRequest{
+  BlockState state = 1;
+}
+
+message UpdateBlockStateResponse{
+}

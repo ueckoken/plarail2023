@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package state.v1;
+
+import "state/v1/block.proto";
+import "state/v1/point.proto";
+import "state/v1/stop.proto";
+import "state/v1/train.proto";
+
+/*
+  StateManagerが提供するサービス
+  AutoOperationとフロントエンド間の通信に利用される
+*/
+service StateManagerService {
+  /* Block */
+  rpc GetBlockStates(GetBlockStatesRequest) returns (GetBlockStatesResponse);
+  rpc UpdateBlockState(UpdateBlockStateRequest) returns (UpdateBlockStateResponse);
+  /* Point */
+  rpc UpdatePointState(UpdatePointStateRequest) returns (UpdatePointStateResponse);
+  rpc GetPointStates(GetPointStatesRequest) returns (GetPointStatesResponse);
+  /* Stop */
+  rpc UpdateStopState(UpdateStopStateRequest) returns (UpdateStopStateResponse);
+  rpc GetStopStates(GetStopStatesRequest) returns (GetStopStatesResponse);
+  /* Train */
+  rpc GetTrains(GetTrainsRequest) returns (GetTrainsResponse);
+  rpc UpdateTrainUUID(UpdateTrainUUIDRequest) returns (UpdateTrainUUIDResponse);
+}

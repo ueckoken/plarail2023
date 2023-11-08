@@ -1,6 +1,7 @@
-go 1.21.1
+go 1.21.3
 
 use (
+	./backend/spec
+	./backend/state-manager
 	./infra/tools/logviewer
-	./backend/proto
 )
