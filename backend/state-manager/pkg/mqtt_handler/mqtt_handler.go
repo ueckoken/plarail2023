@@ -3,7 +3,7 @@ package mqtt_handler
 import (
 	"encoding/json"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
+	statev1 "github.com/ueckoken/plarail2023/backend/state-manager/spec/state/v1"
 	"github.com/ueckoken/plarail2023/backend/state-manager/pkg/db"
 	"log"
 	"os"
