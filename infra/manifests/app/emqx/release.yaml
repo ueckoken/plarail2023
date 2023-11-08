@@ -37,7 +37,7 @@ spec:
           nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
           nginx.ingress.kubernetes.io/use-proxy-protocol: "false"
           nginx.ingress.kubernetes.io/proxy-protocol-header-timeout: "5s"
-        path: /mqtt_handler
+        path: /mqtt
         hosts:
           - wss.plarail.k1h.dev
         tls:
