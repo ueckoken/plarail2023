@@ -35,7 +35,7 @@ func Open() {
 func C() {
 	//log.Println("Closing connection to DB...")
 	if err := client.Disconnect(context.TODO()); err != nil {
-		panic(err)
+		log.Println(err)
 	}
 	//log.Println("Connection closed!")
 }
