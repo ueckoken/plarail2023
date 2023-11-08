@@ -3,15 +3,16 @@ package connect_handler
 import (
 	"context"
 	"errors"
+	"log"
+	"net/http"
+
 	"connectrpc.com/connect"
-	statev1 "github.com/ueckoken/plarail2023/backend/state-manager/spec/state/v1"
-	"github.com/ueckoken/plarail2023/backend/state-manager/spec/state/v1/statev1connect"
+	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
+	"github.com/ueckoken/plarail2023/backend/spec/state/v1/statev1connect"
 	db "github.com/ueckoken/plarail2023/backend/state-manager/pkg/db"
 	"github.com/ueckoken/plarail2023/backend/state-manager/pkg/mqtt_handler"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
-	"log"
-	"net/http"
 )
 
 type StateManagerServer struct{}

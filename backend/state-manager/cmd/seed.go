@@ -4,7 +4,7 @@ package main
 
 import (
 	"github.com/joho/godotenv"
-	statev1 "github.com/ueckoken/plarail2023/backend/state-manager/spec/state/v1"
+	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
 	"github.com/ueckoken/plarail2023/backend/state-manager/pkg/db"
 	"gopkg.in/yaml.v3"
 	"os"
