@@ -6,10 +6,11 @@ package db
 
 import (
 	"context"
-	statev1 "github.com/ueckoken/plarail2023/backend/state-manager/spec/state/v1"
-	"go.mongodb.org/mongo-driver/bson"
 	"log"
 	"os"
+
+	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
+	"go.mongodb.org/mongo-driver/bson"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
