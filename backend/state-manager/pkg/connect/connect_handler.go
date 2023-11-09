@@ -7,7 +7,6 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"sync"
 	"time"
 
 	"connectrpc.com/connect"
