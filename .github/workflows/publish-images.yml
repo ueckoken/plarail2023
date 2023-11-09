@@ -42,13 +42,24 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
+      - name: push detector
+        id: push_detector
+        run: |
+          if [[ "${{ github.event_name == 'push' && startsWith(steps.extract_branch.outputs.branch , 'deployment') }}" == "true" ]]; then
+            echo "push_detector=true" >> $GITHUB_OUTPUT
+          else
+            if [[ `gh pr view --json files |jq -e '[.files.[].path] | contains([".github/workflows/publish-images.yml", "docker-bake.hcl"])'` ]]; then
+              echo "push_detector=true" >> $GITHUB_OUTPUT
+            fi
+          fi
+          echo "push_detector=false" >> $GITHUB_OUTPUT
       - name: Bake images
         uses: docker/bake-action@v4
         env:
           TAG: ${{ steps.generate_tag.outputs.tag }}
         with:
           files: ./docker-bake.hcl
-          push: ${{ github.event_name == 'push' && startsWith( steps.extract_branch.outputs.branch , 'deployment' ) }}
+          push: ${{ steps.push_detector.outputs.push_detector == 'true' }}
           set: |
             *.cache-from=type=local,src=/tmp/.buildx-cache
             *.cache-to=type=local,mode=min,dest=/tmp/.buildx-cache-new

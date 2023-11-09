@@ -1,6 +1,7 @@
 group "default" {
   targets = [
     "state-manager"
+    "dashboard"
   ]
 }
 
@@ -26,4 +27,12 @@ target "state-manager" {
         "linux/amd64",
         "linux/arm64"
     ]
+}
+
+target "dashboard" {
+  dockerfile = "docker/frontend/dashboard/Dockerfile"
+  tags = [
+    GET_TAG("dashboard")
+  ]
+  target = "dashboard-runner"
 }
