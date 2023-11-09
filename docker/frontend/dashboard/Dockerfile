@@ -15,7 +15,8 @@ RUN pnpm run --filter=./frontend/dashboard -r build
 RUN pnpm deploy --filter=./frontend/dashboard --prod dist/dashboard
 WORKDIR /dashboard/dist/dashboard
 RUN cp -r .next/static .next/standalone/frontend/dashboard/.next/
+RUN cp -r public .next/standalone/frontend/dashboard/
 
-FROM gcr.io/distroless/nodejs20-debian12:debug-nonroot AS dashboard-runner
+FROM gcr.io/distroless/nodejs20-debian12:nonroot AS dashboard-runner
 COPY --from=dashboard-builder --chown=nonroot:nonroot /dashboard/dist/dashboard /dashboard
 CMD ["/dashboard/.next/standalone/frontend/dashboard/server.js"]
