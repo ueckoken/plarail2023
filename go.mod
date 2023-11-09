@@ -5,6 +5,7 @@ go 1.21.4
 require (
 	connectrpc.com/connect v1.12.0
 	github.com/eclipse/paho.mqtt.golang v1.4.3
+	github.com/go-chi/chi/v5 v5.0.10
 	github.com/joho/godotenv v1.5.1
 	go.mongodb.org/mongo-driver v1.13.0
 	golang.org/x/net v0.18.0
