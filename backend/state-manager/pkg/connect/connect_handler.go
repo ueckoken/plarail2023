@@ -176,8 +176,10 @@ func StartHandler(ctx context.Context) error {
 	path, handler := statev1connect.NewStateManagerServiceHandler(server)
 	mux.Handle(path, handler)
 	srv := &http.Server{
-		Addr:    net.JoinHostPort("0.0.0.0", "8080"),
-		Handler: h2c.NewHandler(mux, &http2.Server{}),
+		Addr:              net.JoinHostPort("0.0.0.0", "8080"),
+		Handler:           h2c.NewHandler(mux, &http2.Server{}),
+		ReadHeaderTimeout: 60 * time.Second,
+		BaseContext:       func(net.Listener) context.Context { return ctx },
 	}
 	errC := make(chan error)
 	go func() {
