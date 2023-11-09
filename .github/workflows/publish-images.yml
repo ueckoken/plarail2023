@@ -47,13 +47,17 @@ jobs:
         run: |
 
           if [[ "${{ github.event_name == 'push' && startsWith(steps.extract_branch.outputs.branch , 'deployment') }}" == "true" ]]; then
+            echo "push to deployment branch"
             echo "push_detector=true" >> $GITHUB_OUTPUT
           else
-            if `gh pr view --json files --jq '[.files.[].path]'|jq -e 'map(. == ".github/workflows/publish-images.yml" or . == 'docker-bake.hcl')) |any'`; then
+            if `gh pr view --json files --jq '[.files.[].path]'|jq -e 'map(. == ".github/workflows/publish-images.yml" or . == "docker-bake.hcl")) |any'`; then
+              echo "push to development branch and changed docker-bake.hcl or .github/workflows/publish-images.yml"
               echo "push_detector=true" >> $GITHUB_OUTPUT
             fi
           fi
+          echo "push to development branch and not changed docker-bake.hcl or .github/workflows/publish-images.yml"
           echo "push_detector=false" >> $GITHUB_OUTPUT
+
       - name: Bake images
         uses: docker/bake-action@v4
         env:
