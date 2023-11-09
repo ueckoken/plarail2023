@@ -48,7 +48,7 @@ jobs:
           if [[ "${{ github.event_name == 'push' && startsWith(steps.extract_branch.outputs.branch , 'deployment') }}" == "true" ]]; then
             echo "push_detector=true" >> $GITHUB_OUTPUT
           else
-            if [[ `gh pr view --json files |jq -e '[.files.[].path] | contains([".github/workflows/publish-images.yml", "docker-bake.hcl"])'` ]]; then
+            if `gh pr view --json files --jq '[.files.[].path]'|jq -e ' contains([".github/workflows/publish-images.yml", "docker-bake.hcl"])'`; then
               echo "push_detector=true" >> $GITHUB_OUTPUT
             fi
           fi
