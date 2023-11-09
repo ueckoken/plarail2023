@@ -57,6 +57,9 @@ jobs:
           fi
           echo "push to development branch and not changed docker-bake.hcl or .github/workflows/publish-images.yml"
           echo "push_detector=false" >> $GITHUB_OUTPUT
+        
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Bake images
         uses: docker/bake-action@v4
