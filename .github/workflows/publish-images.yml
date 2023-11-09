@@ -49,10 +49,7 @@ jobs:
           if [[ "${{ github.event_name == 'push' && startsWith(steps.extract_branch.outputs.branch , 'deployment') }}" == "true" ]]; then
             echo "push_detector=true" >> $GITHUB_OUTPUT
           else
-            FILES_TO_CHECK=(".github/workflows/publish-images.yml" "docker-bake.hcl")
-            CHECK_COMMAND=$(printf ' . == "%s" or' "${FILES_TO_CHECK[@]}")
-            CHECK_COMMAND=${CHECK_COMMAND%or}
-            if `gh pr view --json files --jq '[.files.[].path]'|jq -e 'map(${CHECK_COMMAND})) |any'`; then
+            if `gh pr view --json files --jq '[.files.[].path]'|jq -e 'map(. == ".github/workflows/publish-images.yml" or . == 'docker-bake.hcl')) |any'`; then
               echo "push_detector=true" >> $GITHUB_OUTPUT
             fi
           fi
