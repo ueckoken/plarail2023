@@ -1,6 +1,5 @@
 name: Lint and Test golang
 
-
 on:
   pull_request:
   push:
@@ -8,7 +7,7 @@ on:
       - main
       - develop
 
- jobs:
+jobs:
   golangci:
     name: lint
     runs-on: ubuntu-latest
