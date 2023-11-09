@@ -50,7 +50,7 @@ jobs:
             echo "push to deployment branch"
             echo "push_detector=true" >> $GITHUB_OUTPUT
           else
-            if `gh pr view --json files --jq '[.files.[].path]'|jq -e 'map(. == ".github/workflows/publish-images.yml" or . == "docker-bake.hcl")) |any'`; then
+            if `gh pr view --json files --jq '[.files.[].path]'|jq -e 'map(. == ".github/workflows/publish-images.yml" or . == "docker-bake.hcl") |any'`; then
               echo "push to development branch and changed docker-bake.hcl or .github/workflows/publish-images.yml"
               echo "push_detector=true" >> $GITHUB_OUTPUT
             fi
