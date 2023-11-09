@@ -1,12 +1,13 @@
 package mqtt_handler
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"os"
-	"os/signal"
 	"strings"
+	"sync"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
@@ -50,7 +51,7 @@ func Send(cc mqtt.Client, topic string, payload string) {
 	token.Wait()
 }
 
-func StartHandler() {
+func StartHandler(ctx context.Context) error {
 	msgCh := make(chan mqtt.Message)
 	var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
 		msgCh <- msg
@@ -58,19 +59,16 @@ func StartHandler() {
 	cc := MakeClient()
 	Subscribe(cc, []string{"point/#", "stop/#", "block/#", "train/#"}, f)
 
-	signalCh := make(chan os.Signal, 1)
-	signal.Notify(signalCh, os.Interrupt)
-
 	for {
 		select {
 		case msg := <-msgCh:
 			// if topic start with "point/"
 			log.Printf("Received message: %s from topic: %s\n", msg.Payload(), msg.Topic())
 			topicHandler(cc, msg)
-		case <-signalCh:
+		case <-ctx.Done():
 			fmt.Println("Interrupted")
 			cc.Disconnect(1000)
-			return
+			return nil
 		}
 	}
 }
