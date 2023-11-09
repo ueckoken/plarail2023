@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"sync"
 	"time"
 
 	"connectrpc.com/connect"
@@ -170,7 +171,7 @@ func (s *StateManagerServer) UpdateTrainUUID(
 	return nil, err
 }
 
-func StartHandler(ctx context.Context) {
+func StartHandler(ctx context.Context) error {
 	server := &StateManagerServer{}
 	mux := http.NewServeMux()
 	path, handler := statev1connect.NewStateManagerServiceHandler(server)
@@ -189,11 +190,10 @@ func StartHandler(ctx context.Context) {
 		case <-ctx.Done():
 			newCtx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 			defer cancel()
-			srv.Shutdown(newCtx)
-			return
+			return srv.Shutdown(newCtx)
+
 		case err := <-errC:
-			log.Println(fmt.Errorf("failed to start http server: %w", err))
-			return
+			return fmt.Errorf("failed to start http server: %w", err)
 		}
 	}
 }
