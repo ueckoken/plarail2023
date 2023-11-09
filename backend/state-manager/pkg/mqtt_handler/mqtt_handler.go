@@ -7,7 +7,6 @@ import (
 	"log"
 	"os"
 	"strings"
-	"sync"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
