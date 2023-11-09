@@ -1,6 +1,6 @@
 group "default" {
   targets = [
-    "state-manager"
+    "state-manager",
     "dashboard"
   ]
 }
