@@ -42,13 +42,35 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
+      - name: push detector
+        id: push_detector
+        run: |
+
+          if [[ "${{ github.event_name == 'push' && startsWith(steps.extract_branch.outputs.branch , 'deployment') }}" == "true" ]]; then
+            echo "push to deployment branch"
+            echo "push_detector=true" >> $GITHUB_OUTPUT
+            exit 0
+          else
+            if `gh pr view --json files --jq '[.files.[].path]'|jq -e 'map(. == ".github/workflows/publish-images.yml" or . == "docker-bake.hcl") |any'`; then
+              echo "push to development branch and changed docker-bake.hcl or .github/workflows/publish-images.yml"
+              echo "push_detector=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+          fi
+          echo "push to development branch and not changed docker-bake.hcl or .github/workflows/publish-images.yml"
+          echo "push_detector=false" >> $GITHUB_OUTPUT
+          exit 0
+        
+        env:
+          GH_TOKEN: ${{ github.token }}
+
       - name: Bake images
         uses: docker/bake-action@v4
         env:
           TAG: ${{ steps.generate_tag.outputs.tag }}
         with:
           files: ./docker-bake.hcl
-          push: ${{ github.event_name == 'push' && startsWith( steps.extract_branch.outputs.branch , 'deployment' ) }}
+          push: ${{ steps.push_detector.outputs.push_detector == 'true' }}
           set: |
             *.cache-from=type=local,src=/tmp/.buildx-cache
             *.cache-to=type=local,mode=min,dest=/tmp/.buildx-cache-new
