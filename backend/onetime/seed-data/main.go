@@ -23,13 +23,14 @@ type Seed struct {
 }
 
 func main() {
-	err := godotenv.Load(".env")
-	defer db.C()
+	if err := godotenv.Load(".env"); err != nil {
+		panic(err)
+	}
 	db.Open()
+	defer db.C()
 	data := &Seed{}
 	b, _ := os.ReadFile("./data/nt-tokyo.yaml")
-	err = yaml.Unmarshal(b, data)
-	if err != nil {
+	if err := yaml.Unmarshal(b, data); err != nil {
 		panic(err)
 	}
 
