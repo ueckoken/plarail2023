@@ -3,8 +3,11 @@ package connect_handler
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
+	"net"
 	"net/http"
+	"time"
 
 	"connectrpc.com/connect"
 	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
@@ -167,18 +170,31 @@ func (s *StateManagerServer) UpdateTrainUUID(
 	return nil, err
 }
 
-func StartHandler() {
+func StartHandler(ctx context.Context) error {
 	server := &StateManagerServer{}
 	mux := http.NewServeMux()
 	path, handler := statev1connect.NewStateManagerServiceHandler(server)
 	mux.Handle(path, handler)
-	err := http.ListenAndServe(
-		"0.0.0.0:8080",
-		// Use h2c so we can serve HTTP/2 without TLS.
-		h2c.NewHandler(mux, &http2.Server{}),
-	)
-	if err != nil {
-		log.Fatalln(err)
-		return
+	srv := &http.Server{
+		Addr:              net.JoinHostPort("0.0.0.0", "8080"),
+		Handler:           h2c.NewHandler(mux, &http2.Server{}),
+		ReadHeaderTimeout: 60 * time.Second,
+		BaseContext:       func(net.Listener) context.Context { return ctx },
+	}
+	errC := make(chan error)
+	go func() {
+		err := srv.ListenAndServe()
+		errC <- err
+	}()
+	for {
+		select {
+		case <-ctx.Done():
+			newCtx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+			defer cancel()
+			return srv.Shutdown(newCtx)
+
+		case err := <-errC:
+			return fmt.Errorf("failed to start http server: %w", err)
+		}
 	}
 }
