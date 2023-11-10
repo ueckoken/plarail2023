@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"connectrpc.com/connect"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
 	"github.com/ueckoken/plarail2023/backend/spec/state/v1/statev1connect"
 	db "github.com/ueckoken/plarail2023/backend/state-manager/pkg/db"
@@ -171,13 +173,17 @@ func (s *StateManagerServer) UpdateTrainUUID(
 }
 
 func StartHandler(ctx context.Context) error {
-	server := &StateManagerServer{}
-	mux := http.NewServeMux()
-	path, handler := statev1connect.NewStateManagerServiceHandler(server)
-	mux.Handle(path, handler)
+	r := chi.NewRouter()
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.Heartbeat("/debug/ping"))
+	// TODO: slogとかでいい感じにログを吐くハンドラを入れる
+
+	r.Mount("/debug", middleware.Profiler())
+	r.Handle(statev1connect.NewStateManagerServiceHandler(&StateManagerServer{}))
+
 	srv := &http.Server{
 		Addr:              net.JoinHostPort("0.0.0.0", "8080"),
-		Handler:           h2c.NewHandler(mux, &http2.Server{}),
+		Handler:           h2c.NewHandler(r, &http2.Server{}),
 		ReadHeaderTimeout: 60 * time.Second,
 		BaseContext:       func(net.Listener) context.Context { return ctx },
 	}
