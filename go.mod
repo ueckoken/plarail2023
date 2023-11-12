@@ -6,8 +6,10 @@ require (
 	connectrpc.com/connect v1.12.0
 	github.com/eclipse/paho.mqtt.golang v1.4.3
 	github.com/go-chi/chi/v5 v5.0.10
+	github.com/go-chi/httplog/v2 v2.0.7
 	github.com/joho/godotenv v1.5.1
 	go.mongodb.org/mongo-driver v1.13.0
+	golang.org/x/exp v0.0.0-20231108232855-2478ac86f678
 	golang.org/x/net v0.18.0
 	golang.org/x/sync v0.5.0
 	google.golang.org/protobuf v1.31.0
