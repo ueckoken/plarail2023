@@ -120,6 +120,7 @@ func (s *StateManagerServer) UpdateStopState(
 			connect.CodeUnknown,
 			errors.New("db error"),
 		)
+		slog.Default().Error("db connection error", err)
 		return nil, err
 	}
 	mqtt_handler.NotifyStateUpdate("stop", req.Msg.State.Id, req.Msg.State.State.String())

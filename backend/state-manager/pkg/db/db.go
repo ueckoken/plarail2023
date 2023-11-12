@@ -7,6 +7,7 @@ package db
 import (
 	"context"
 	"log"
+	"log/slog"
 	"os"
 
 	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
@@ -21,24 +22,29 @@ var client *mongo.Client
 
 func Open() {
 	var err error
-	//log.Println("Connecting to MongoDB...")
+	slog.Default().Debug("Connecting to MongoDB...")
 	uri := os.Getenv("MONGODB_URI")
 	if uri == "" {
 		log.Fatal("No MONGODB_URI set")
 	}
+	// TODO: Open関数がctxを受けるようにして、そのctxの子contextをDBのコネクションに使う
 	client, err = mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
 	if err != nil {
+		// TODO: return err, do not panic!
+		slog.Default().Error("database connection failed", slog.Any("err", err))
 		panic(err)
 	}
-	//log.Println("Connected to DB!")
+	slog.Default().Debug("connected to DB")
 }
 
 func C() {
-	//log.Println("Closing connection to DB...")
+	slog.Default().Debug("Closing connection to DB...")
+	// TODO: contextを受けて、その子contextをDBクライアントに渡す
 	if err := client.Disconnect(context.TODO()); err != nil {
+		slog.Default().Error("DB Connection Closing failed")
 		log.Println(err)
 	}
-	//log.Println("Connection closed!")
+	slog.Default().Debug("DB Connection is successfully closed")
 }
 
 /*
@@ -81,6 +87,7 @@ func GetPoints() []*statev1.PointAndState {
 	collection := client.Database("state-manager").Collection("points")
 	cursor, err := collection.Find(context.Background(), bson.M{})
 	if err != nil {
+		slog.Default().Warn("Get Points failed", slog.Any("err", err))
 		panic(err)
 	}
 	var result []*statev1.PointAndState
