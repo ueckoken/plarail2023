@@ -10,6 +10,7 @@
 
 WiFiUDP udp;
 IPAddress host;
+uint8_t t=0;
 
 static camera_config_t cam_cfg={// https://github.com/espressif/esp-who/blob/master/docs/en/Camera_connections.md
 	.pin_pwdn=-1,.pin_reset=-1,
@@ -22,7 +23,7 @@ static camera_config_t cam_cfg={// https://github.com/espressif/esp-who/blob/mas
 	.ledc_timer=LEDC_TIMER_0,.ledc_channel=LEDC_CHANNEL_0,
 
 	.pixel_format=PIXFORMAT_JPEG,//YUV422,GRAYSCALE,RGB565,JPEG
-	.frame_size=FRAMESIZE_VGA,//QQVGA-UXGA, For ESP32, do not use sizes above QVGA when not JPEG. The performance of the ESP32-S series has improved a lot, but JPEG mode always gives better frame rates.
+	.frame_size=FRAMESIZE_SVGA,//QQVGA-UXGA, For ESP32, do not use sizes above QVGA when not JPEG. The performance of the ESP32-S series has improved a lot, but JPEG mode always gives better frame rates.
 
 	.jpeg_quality=12, //0-63, for OV series camera sensors, lower number means higher quality
 	.fb_count=2, //When jpeg mode is used, if fb_count more than one, the driver will work in continuous mode.
@@ -49,12 +50,9 @@ void setup(){
 
 void loop(){
 	camera_fb_t *fb=esp_camera_fb_get();
-	const uint8_t *t=(uint8_t*)(&fb->timestamp.tv_usec);
-	uint8_t n=(fb->len+SIZE-1)/SIZE;
-
-	udp.beginPacket(host,PORT);udp.printf("STRT");udp.write(t,4);udp.write(n);udp.endPacket();
-	for(uint8_t i=0;i<n;i++){
-		udp.beginPacket(host,PORT);udp.printf("DATA");udp.write(t,4);udp.write(i);udp.write(fb->buf+SIZE*i,i+1==n?fb->len-SIZE*i:SIZE);udp.endPacket();
+	for(uint8_t n=(fb->len+SIZE-1)/SIZE,i=0;i<n;i++){
+		udp.beginPacket(host,PORT);udp.write(t);udp.write(n);udp.write(i);udp.write(fb->buf+SIZE*i,i+1==n?fb->len-SIZE*i:SIZE);udp.endPacket();
 	}
+	t++;
 	esp_camera_fb_return(fb);
 }
