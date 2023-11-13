@@ -1,8 +1,9 @@
-import * as DGRAM from 'dgram';
-import * as HTTP from 'http';
+import * as DGRAM from 'node:dgram';
+import * as HTTP from 'node:http';
 import * as WS from 'ws';
 
 const
+fb={},
 udp=DGRAM.createSocket('udp4'),
 svr=HTTP.createServer((req,res)=>(
 	res.writeHead(200,{'Content-Type':'text/html'}),
@@ -42,25 +43,20 @@ wss=new WS.WebSocketServer({server:svr,path:'/ws'});
 
 wss.on('connection',_=>ws.add(_));
 wss.on('close',_=>ws.delete(_));
-
-let fb={},t;
 udp.on('message',(x,i)=>(
 	x={
-		tag:x.subarray(0,4)+'',
-		t:x.readUInt32LE(4),
-		i:x[8],
-		x:x.subarray(9)
+		t:x[0],
+		n:x[1],
+		i:x[2],
+		x:x.subarray(3)
 	},
-	({
-		STRT:_=>(fb[x.t]=[...Array(x.i)],setTimeout(_=>delete fb[x.t],500)),
-		DATA:_=>fb[x.t]&&(
-			fb[x.t][x.i]=x.x,
-			fb[x.t].every(_=>_)&&(
-				_=Buffer.concat(fb[x.t]),delete fb[x.t],ws.forEach(x=>x.send(_)),
-				console.log({fps:Math.round(1000/(-t+(t=Date.now()))),size:_.length,t:x.t})
-			)
-		),
-	}[x.tag])()
+	fb[x.t]||(fb[x.t]=[...Array(x.n)],setTimeout(_=>delete fb[x.t],500)),
+	fb[x.t][x.i]=x.x,
+	fb[x.t].every(_=>_)&&((_=Buffer.concat(fb[x.t]))=>(
+		ws.forEach(x=>x.send(_)),
+		console.log({size:_.length,t:x.t,packets:fb[x.t].length}),
+		delete fb[x.t]
+	))()
 	// console.log(x+'',i.address,i.port)
 ));
 udp.on('listening',_=>console.log(`port ${udp.address().port} ...`));
