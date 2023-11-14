@@ -3,21 +3,13 @@ package connect_handler
 import (
 	"context"
 	"errors"
-	"fmt"
-	"log"
-	"net"
-	"net/http"
-	"time"
+	"log/slog"
 
 	"connectrpc.com/connect"
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+
 	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
-	"github.com/ueckoken/plarail2023/backend/spec/state/v1/statev1connect"
 	db "github.com/ueckoken/plarail2023/backend/state-manager/pkg/db"
 	"github.com/ueckoken/plarail2023/backend/state-manager/pkg/mqtt_handler"
-	"golang.org/x/net/http2"
-	"golang.org/x/net/http2/h2c"
 )
 
 type StateManagerServer struct{}
@@ -93,12 +85,12 @@ func (s *StateManagerServer) UpdatePointState(
 			connect.CodeUnknown,
 			errors.New("db error"),
 		)
-		log.Println(err)
+		slog.Default().Error("db error", err)
 		return nil, err
 	}
 	mqtt_handler.NotifyStateUpdate("point", req.Msg.State.Id, req.Msg.State.State.String())
-	res := connect.NewResponse(&statev1.UpdatePointStateResponse{})
-	return res, nil
+
+	return connect.NewResponse(&statev1.UpdatePointStateResponse{}), nil
 }
 
 func (s *StateManagerServer) GetPointStates(
@@ -120,19 +112,19 @@ func (s *StateManagerServer) UpdateStopState(
 	ctx context.Context,
 	req *connect.Request[statev1.UpdateStopStateRequest],
 ) (*connect.Response[statev1.UpdateStopStateResponse], error) {
-	defer db.C()
 	db.Open()
+	defer db.C()
 	err := db.UpdateStop(req.Msg.State)
 	if err != nil {
 		err = connect.NewError(
 			connect.CodeUnknown,
 			errors.New("db error"),
 		)
+		slog.Default().Error("db connection error", err)
 		return nil, err
 	}
-	res := connect.NewResponse(&statev1.UpdateStopStateResponse{})
 	mqtt_handler.NotifyStateUpdate("stop", req.Msg.State.Id, req.Msg.State.State.String())
-	return res, nil
+	return connect.NewResponse(&statev1.UpdateStopStateResponse{}), nil
 }
 
 func (s *StateManagerServer) GetStopStates(
@@ -170,37 +162,4 @@ func (s *StateManagerServer) UpdateTrainUUID(
 		errors.New("not implemented"),
 	)
 	return nil, err
-}
-
-func StartHandler(ctx context.Context) error {
-	r := chi.NewRouter()
-	r.Use(middleware.Recoverer)
-	r.Use(middleware.Heartbeat("/debug/ping"))
-	// TODO: slogとかでいい感じにログを吐くハンドラを入れる
-
-	r.Mount("/debug", middleware.Profiler())
-	r.Handle(statev1connect.NewStateManagerServiceHandler(&StateManagerServer{}))
-
-	srv := &http.Server{
-		Addr:              net.JoinHostPort("0.0.0.0", "8080"),
-		Handler:           h2c.NewHandler(r, &http2.Server{}),
-		ReadHeaderTimeout: 60 * time.Second,
-		BaseContext:       func(net.Listener) context.Context { return ctx },
-	}
-	errC := make(chan error)
-	go func() {
-		err := srv.ListenAndServe()
-		errC <- err
-	}()
-	for {
-		select {
-		case <-ctx.Done():
-			newCtx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-			defer cancel()
-			return srv.Shutdown(newCtx)
-
-		case err := <-errC:
-			return fmt.Errorf("failed to start http server: %w", err)
-		}
-	}
 }
