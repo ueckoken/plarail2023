@@ -1,0 +1,13 @@
+{
+  "files.associations": {
+    "thread": "cpp",
+    "*.ipp": "cpp",
+    "texture": "cpp",
+    "*.tcc": "cpp",
+    "boundingbox": "cpp",
+    "boundingsphere": "cpp",
+    "timer": "cpp",
+    "numeric": "cpp",
+    "config": "cpp"
+  }
+}

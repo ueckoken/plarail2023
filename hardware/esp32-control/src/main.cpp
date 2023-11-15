@@ -3,52 +3,17 @@
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 #include <ESP32Servo.h>
+#include "switch.hpp"
 
 // WiFi
 const char *ssid = "plarail-2g";
 const char *password = "plarail2023";
 
-// MQTT Broker
-const char *mqtt_broker = "p390e24a.ala.us-east-1.emqxsl.com"; // broker address
-const char *topic = "stop/#";                                  // define topic
-const char *mqtt_username = "test";                            // username for authentication
-const char *mqtt_password = "password";                        // password for authentication
-const int mqtt_port = 8883;                                    // port of MQTT over TLS
-const char *root_ca =
-    "-----BEGIN CERTIFICATE-----\n"
-    "MIIEqjCCA5KgAwIBAgIQAnmsRYvBskWr+YBTzSybsTANBgkqhkiG9w0BAQsFADBh\n"
-    "MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3\n"
-    "d3cuZGlnaWNlcnQuY29tMSAwHgYDVQQDExdEaWdpQ2VydCBHbG9iYWwgUm9vdCBD\n"
-    "QTAeFw0xNzExMjcxMjQ2MTBaFw0yNzExMjcxMjQ2MTBaMG4xCzAJBgNVBAYTAlVT\n"
-    "MRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5j\n"
-    "b20xLTArBgNVBAMTJEVuY3J5cHRpb24gRXZlcnl3aGVyZSBEViBUTFMgQ0EgLSBH\n"
-    "MTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALPeP6wkab41dyQh6mKc\n"
-    "oHqt3jRIxW5MDvf9QyiOR7VfFwK656es0UFiIb74N9pRntzF1UgYzDGu3ppZVMdo\n"
-    "lbxhm6dWS9OK/lFehKNT0OYI9aqk6F+U7cA6jxSC+iDBPXwdF4rs3KRyp3aQn6pj\n"
-    "pp1yr7IB6Y4zv72Ee/PlZ/6rK6InC6WpK0nPVOYR7n9iDuPe1E4IxUMBH/T33+3h\n"
-    "yuH3dvfgiWUOUkjdpMbyxX+XNle5uEIiyBsi4IvbcTCh8ruifCIi5mDXkZrnMT8n\n"
-    "wfYCV6v6kDdXkbgGRLKsR4pucbJtbKqIkUGxuZI2t7pfewKRc5nWecvDBZf3+p1M\n"
-    "pA8CAwEAAaOCAU8wggFLMB0GA1UdDgQWBBRVdE+yck/1YLpQ0dfmUVyaAYca1zAf\n"
-    "BgNVHSMEGDAWgBQD3lA1VtFMu2bwo+IbG8OXsj3RVTAOBgNVHQ8BAf8EBAMCAYYw\n"
-    "HQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMBIGA1UdEwEB/wQIMAYBAf8C\n"
-    "AQAwNAYIKwYBBQUHAQEEKDAmMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdp\n"
-    "Y2VydC5jb20wQgYDVR0fBDswOTA3oDWgM4YxaHR0cDovL2NybDMuZGlnaWNlcnQu\n"
-    "Y29tL0RpZ2lDZXJ0R2xvYmFsUm9vdENBLmNybDBMBgNVHSAERTBDMDcGCWCGSAGG\n"
-    "/WwBAjAqMCgGCCsGAQUFBwIBFhxodHRwczovL3d3dy5kaWdpY2VydC5jb20vQ1BT\n"
-    "MAgGBmeBDAECATANBgkqhkiG9w0BAQsFAAOCAQEAK3Gp6/aGq7aBZsxf/oQ+TD/B\n"
-    "SwW3AU4ETK+GQf2kFzYZkby5SFrHdPomunx2HBzViUchGoofGgg7gHW0W3MlQAXW\n"
-    "M0r5LUvStcr82QDWYNPaUy4taCQmyaJ+VB+6wxHstSigOlSNF2a6vg4rgexixeiV\n"
-    "4YSB03Yqp2t3TeZHM9ESfkus74nQyW7pRGezj+TC44xCagCQQOzzNmzEAP2SnCrJ\n"
-    "sNE2DpRVMnL8J6xBRdjmOsC3N6cQuKuRXbzByVBjCqAA8t1L0I+9wXJerLPyErjy\n"
-    "rMKWaBFLmfK/AHNF4ZihwPGOc7w6UHczBZXH5RFzJNnww+WnKuTPI0HfnVH8lg==\n"
-    "-----END CERTIFICATE-----\n";
+#include "mqtt_settings.h"
 
+// MQTT Broker
 WiFiClientSecure espClient;
 PubSubClient client(espClient);
-
-// 接続されているStopRailとServoの設定
-
-// target: stop, point, pin: [0-9]*, id: str
 
 typedef struct
 {
@@ -64,45 +29,13 @@ typedef struct
   String state; // OPEN or CLOSE
 } switch_item;
 
-/*
-  Stations:
-    yamashita_station
-    umishita_station
-  StopRail:
-    yamashita_s1
-    yamashita_s2
-    umishita_s1
-  PointRail:
-    yamashita_p1
-  PassDetector:
-    yamashita_d1
-    umishita_d1
-*/
-
-#define STOP_ON_ANGLE 45
-#define STOP_OFF_ANGLE 5
-
-#define POINT_STRAIGHT_ANGLE 165
-#define POINT_REVERSE_ANGLE 180
-
-#define SERVO_SETTING_LENGTH 4
-#define SWITCH_SETTING_LENGTH 2
-
-servo_item ServoSetting[] = {
-    {"stop", 26, "yamashita_s1"},  // 26
-    {"stop", 27, "yamashita_s2"},  // 27
-    {"point", 14, "yamashita_p1"}, // 14
-    {"stop", 12, "umishita_s1"}    // 12
-};
-
-switch_item SwitchSetting[] = {
-    {16, "yamashita_b1", "OPEN"},
-    {17, "yamashita_b1", "CLOSE"}};
+#include "settings.hpp"
 
 void callback(char *topic, byte *payload, unsigned int length);
-void init_switch();
 void init_servo();
 void get_init_state();
+
+BlockSwitch switches[4];
 
 void setup()
 {
@@ -142,10 +75,14 @@ void setup()
   client.subscribe("point/+/delta");
 
   // 各種センサー類の初期化
-  init_switch();
   init_servo();
   // 初期状態の取得
   get_init_state();
+
+  for (int i = 0; i < SWITCH_SETTING_LENGTH; i++)
+  {
+    switches[i].init(SwitchSetting[i].id, SwitchSetting[i].state, SwitchSetting[i].pin, client);
+  }
 }
 
 void get_init_state()
@@ -165,14 +102,6 @@ void get_init_state()
       client.publish(topic, "");
       continue;
     }
-  }
-}
-
-void init_switch()
-{
-  for (int i = 0; i < SWITCH_SETTING_LENGTH; i++)
-  {
-    pinMode(SwitchSetting[i].pin, INPUT_PULLUP);
   }
 }
 
@@ -289,28 +218,11 @@ void callback(char *topic, byte *payload, unsigned int length)
   }
 }
 
-unsigned long LAST_SWITCH_TIME[SWITCH_SETTING_LENGTH] = {0};
-
-void switch_check()
-{
-  for (int i = 0; i < SWITCH_SETTING_LENGTH; i++)
-  {
-    if (digitalRead(SwitchSetting[i].pin) == LOW)
-    {
-      if (millis() - LAST_SWITCH_TIME[i] < 3000)
-      {
-        continue;
-      }
-      char topic[100] = "";
-      sprintf(topic, "block/%s/update", SwitchSetting[i].id.c_str());
-      client.publish(topic, SwitchSetting[i].state.c_str());
-      LAST_SWITCH_TIME[i] = millis();
-    }
-  }
-}
-
 void loop()
 {
   client.loop();
-  switch_check();
+  for (int i = 0; i < SWITCH_SETTING_LENGTH; i++)
+  {
+    switches[i].loop();
+  }
 }
