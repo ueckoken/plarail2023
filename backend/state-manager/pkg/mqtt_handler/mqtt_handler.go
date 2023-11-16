@@ -24,6 +24,7 @@ func NewHandler(clientOpts *mqtt.ClientOptions, dbHandler *db.DBHandler) (*Handl
 
 	if token := cc.Connect(); token.Wait() && token.Error() != nil {
 		return nil, fmt.Errorf("mqtt error: %w", token.Error())
+		return nil, fmt.Errorf("mqtt error: %w", token.Error())
 	}
 	return &Handler{client: cc, dbHandler: dbHandler}, nil
 }
