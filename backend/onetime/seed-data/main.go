@@ -3,11 +3,14 @@
 package main
 
 import (
+	"context"
+	"os"
+
 	"github.com/joho/godotenv"
 	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
-	"github.com/ueckoken/plarail2023/backend/state-manager/pkg/db"
+	dbhandler "github.com/ueckoken/plarail2023/backend/state-manager/pkg/db"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"gopkg.in/yaml.v3"
-	"os"
 )
 
 type Station string
@@ -26,8 +29,11 @@ func main() {
 	if err := godotenv.Load(".env"); err != nil {
 		panic(err)
 	}
-	db.Open()
-	defer db.C()
+	db, err := dbhandler.Open(context.TODO(), options.Client().ApplyURI(os.Getenv("MONGODB_URI")))
+	if err != nil {
+		return
+	}
+	defer db.Close()
 	data := &Seed{}
 	b, _ := os.ReadFile("./data/nt-tokyo.yaml")
 	if err := yaml.Unmarshal(b, data); err != nil {
