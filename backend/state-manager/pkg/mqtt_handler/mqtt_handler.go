@@ -23,7 +23,7 @@ func NewHandler(clientOpts *mqtt.ClientOptions, dbHandler *db.DBHandler) (*Handl
 	cc := mqtt.NewClient(clientOpts)
 
 	if token := cc.Connect(); token.Wait() && token.Error() != nil {
-		return nil, fmt.Errorf("Mqtt error: %w", token.Error())
+		return nil, fmt.Errorf("mqtt error: %w", token.Error())
 	}
 	return &Handler{client: cc, dbHandler: dbHandler}, nil
 }
@@ -50,15 +50,6 @@ func (h *Handler) Start(ctx context.Context) error {
 	}
 }
 
-// func MakeClient() mqtt.Client {
-// 	var opts = mqtt.NewClientOptions()
-// 	opts.AddBroker(os.Getenv("MQTT_BROKER_ADDR"))
-// 	opts.Username = os.Getenv("MQTT_USERNAME")
-// 	opts.Password = os.Getenv("MQTT_PASSWORD")
-// 	opts.ClientID = os.Getenv("MQTT_CLIENT_ID")
-
-// }
-
 func (h *Handler) Subscribe(topic []string, f mqtt.MessageHandler) {
 	qos := byte(1)
 
@@ -77,28 +68,6 @@ func (h *Handler) Send(topic string, payload string) {
 	token := h.client.Publish(topic, 0, false, payload)
 	token.Wait()
 }
-
-// func StartHandler(ctx context.Context) error {
-// 	msgCh := make(chan mqtt.Message)
-// 	var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
-// 		msgCh <- msg
-// 	}
-// 	cc := MakeClient()
-// 	Subscribe(cc, []string{"point/#", "stop/#", "block/#", "train/#"}, f)
-
-// 	for {
-// 		select {
-// 		case msg := <-msgCh:
-// 			// if topic start with "point/"
-// 			log.Printf("Received message: %s from topic: %s\n", msg.Payload(), msg.Topic())
-// 			topicHandler(cc, msg)
-// 		case <-ctx.Done():
-// 			fmt.Println("Interrupted")
-// 			cc.Disconnect(1000)
-// 			return nil
-// 		}
-// 	}
-// }
 
 /*
 	Endpoint
@@ -159,6 +128,9 @@ func (h *Handler) getState(target string, id string) {
 			log.Fatal(err)
 		}
 		res, err := json.Marshal(block)
+		if err != nil {
+			slog.Default().Info("invaild json marshaled in mqtt_handler.NotifyStateUpdate", slog.Any("err", err))
+		}
 		token := h.client.Publish("block/"+id+"/get/accepted", 0, false, res)
 		token.Wait()
 
