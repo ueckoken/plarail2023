@@ -27,7 +27,7 @@ jobs:
           echo "$RUNNER_TEMP/protoc/bin" >> $GITHUB_PATH
           echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
       - name: bufbuild/install
-        uses: bufbuild/buf-setup-action@v1.28.0
+        uses: bufbuild/buf-setup-action@v1.28.1
         with:
           version: v1.27.2
           github_token: ${{ secrets.GITHUB_TOKEN }}
