@@ -16,14 +16,14 @@ func Test_ConnectDB(t *testing.T) {
 	Open()
 }
 
-func Test_SetPoint(t *testing.T) {
+func Test_UpdatePoint(t *testing.T) {
 	defer C()
 	err := godotenv.Load("../../cmd/.env")
 	if err != nil {
 		panic(err)
 	}
 	Open()
-	SetPoint(&statev1.PointAndState{
+	UpdatePoint(&statev1.PointAndState{
 		Id:    "test",
 		State: statev1.PointStateEnum_POINT_STATE_REVERSE,
 	})
@@ -36,14 +36,14 @@ func Test_SetPoint(t *testing.T) {
 	}
 }
 
-func Test_SetStop(t *testing.T) {
+func Test_UpdateStop(t *testing.T) {
 	defer C()
 	err := godotenv.Load("../../cmd/.env")
 	if err != nil {
 		panic(err)
 	}
 	Open()
-	SetStop(&statev1.StopAndState{
+	UpdateStop(&statev1.StopAndState{
 		Id:    "test",
 		State: statev1.StopStateEnum_STOP_STATE_GO,
 	})
@@ -63,11 +63,11 @@ func Test_GetPoints(t *testing.T) {
 		panic(err)
 	}
 	Open()
-	SetPoint(&statev1.PointAndState{
+	UpdatePoint(&statev1.PointAndState{
 		Id:    "test",
 		State: statev1.PointStateEnum_POINT_STATE_REVERSE,
 	})
-	SetPoint(&statev1.PointAndState{
+	UpdatePoint(&statev1.PointAndState{
 		Id:    "test2",
 		State: statev1.PointStateEnum_POINT_STATE_NORMAL,
 	})
@@ -84,11 +84,11 @@ func Test_GetStops(t *testing.T) {
 		panic(err)
 	}
 	Open()
-	SetStop(&statev1.StopAndState{
+	UpdateStop(&statev1.StopAndState{
 		Id:    "test",
 		State: statev1.StopStateEnum_STOP_STATE_GO,
 	})
-	SetStop(&statev1.StopAndState{
+	UpdateStop(&statev1.StopAndState{
 		Id:    "test2",
 		State: statev1.StopStateEnum_STOP_STATE_STOP,
 	})
@@ -105,14 +105,14 @@ func Test_GetBlocks(t *testing.T) {
 		panic(err)
 	}
 	Open()
-	err = SetBlock(&statev1.BlockState{
+	err = UpdateBlock(&statev1.BlockState{
 		BlockId: "test",
 		State:   statev1.BlockStateEnum_BLOCK_STATE_OPEN,
 	})
 	if err != nil {
 		t.Fatal("error")
 	}
-	err = SetBlock(&statev1.BlockState{
+	err = UpdateBlock(&statev1.BlockState{
 		BlockId: "test2",
 		State:   statev1.BlockStateEnum_BLOCK_STATE_CLOSE,
 	})
