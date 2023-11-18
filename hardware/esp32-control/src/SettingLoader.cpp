@@ -22,7 +22,7 @@ void readFile(fs::FS &fs, const char *path, char *buf)
   file.close();
 }
 
-void loadSetting(char *input, IOManager manager)
+void loadSetting(char *input, IOManager *manager)
 {
   StaticJsonDocument<384> doc;
 
@@ -45,7 +45,7 @@ void loadSetting(char *input, IOManager manager)
     const char *stop_id = v["stop_id"];
     int pin = v["pin"];
     Serial.printf("stop_id: %s, pin: %d\n", stop_id, pin);
-    manager.addStop(pin, stop_id);
+    manager->addStop(pin, stop_id);
   }
 
   // POINTS
@@ -55,7 +55,7 @@ void loadSetting(char *input, IOManager manager)
     const char *point_id = v["point_id"];
     int pin = v["pin"];
     Serial.printf("point_id: %s, pin: %d\n", point_id, pin);
-    manager.addPoint(pin, point_id);
+    manager->addPoint(pin, point_id);
   }
 
   // DETECTORS
@@ -80,9 +80,9 @@ void loadSetting(char *input, IOManager manager)
   SETTING_LOADED = true;
 }
 
-void getSetting(IOManager manager)
+void getSetting(IOManager *manager)
 {
-  char json_buf[1000];
+  char json_buf[4096];
   readFile(LittleFS, "/setting.json", json_buf); // jsonファイル読み込み
   loadSetting(json_buf, manager);
 }

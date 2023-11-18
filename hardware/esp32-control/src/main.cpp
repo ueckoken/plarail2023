@@ -66,18 +66,13 @@ void setup()
   client.subscribe("stop/+/delta");
   client.subscribe("point/+/delta");
 
-  // 各種センサー類の初期化
-  // init_servo();
-  // 初期状態の取得
-  // get_init_state();
-
   // LittleFS初期化
   if (!LittleFS.begin(FORMAT_LITTLEFS_IF_FAILED))
   {
     Serial.println("LittleFS Mount Failed");
     return;
   }
-  getSetting(manager);
+  getSetting(&manager);
 }
 
 void callback(char *topic, byte *payload, unsigned int length)

@@ -10,8 +10,8 @@
 
 #define FORMAT_LITTLEFS_IF_FAILED true
 
-void getSetting(IOManager manager);
-void loadSetting(char *input, IOManager manager);
+void getSetting(IOManager *manager);
+void loadSetting(char *input, IOManager *manager);
 extern bool SETTING_LOADED;
 
 #endif
