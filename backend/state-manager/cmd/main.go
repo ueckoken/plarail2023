@@ -82,8 +82,6 @@ func main() {
 	r := chi.NewRouter()
 	// r.Use(middleware.Recoverer)
 	r.Use(middleware.Heartbeat("/debug/ping"))
-	r.Mount("/debug", middleware.Profiler())
-	r.Handle(statev1connect.NewStateManagerServiceHandler(&connectHandler.StateManagerServer{}))
 	r.Use(httplog.RequestLogger(
 		httplog.NewLogger(
 			"http_server",
@@ -101,6 +99,8 @@ func main() {
 		),
 	),
 	)
+	r.Mount("/debug", middleware.Profiler())
+	r.Handle(statev1connect.NewStateManagerServiceHandler(&connectHandler.StateManagerServer{}))
 
 	srv := &http.Server{
 		Addr:              net.JoinHostPort("0.0.0.0", "8080"),
@@ -121,5 +121,5 @@ func main() {
 	newCtx, srvTimeOutCancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer srvTimeOutCancel()
 	srv.Shutdown(newCtx)
-  <-newCtx.Done()
+	<-newCtx.Done()
 }

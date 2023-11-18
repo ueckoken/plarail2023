@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -56,7 +57,7 @@ func StartHandler(ctx context.Context) error {
 		msgCh <- msg
 	}
 	cc := MakeClient()
-	Subscribe(cc, []string{"point/#", "stop/#", "block/#", "train/#"}, f)
+	Subscribe(cc, []string{"point/#", "stop/#", "block/#", "train/#", "setting/#"}, f)
 
 	for {
 		select {
@@ -135,6 +136,28 @@ func getState(cc mqtt.Client, target string, id string) {
 		}
 		res, err := json.Marshal(block)
 		token := cc.Publish("block/"+id+"/get/accepted", 0, false, res)
+		token.Wait()
+
+	case "setting":
+		// read from /setting/esp/{id}.json
+		// check file exists
+		_, err := os.Stat("../settings/esp/" + id + ".json")
+		if err != nil {
+			log.Println(err.Error())
+			// Return error message
+			token := cc.Publish("setting/"+id+"/get/accepted", 0, false, "error")
+			token.Wait()
+			return
+		}
+		raw, err := ioutil.ReadFile("../settings/esp/" + id + ".json")
+		if err != nil {
+			log.Println(err.Error())
+			return
+		}
+		// remove \n code
+		raw = []byte(strings.Replace(string(raw), "\n", "", -1))
+		raw = []byte(strings.Replace(string(raw), " ", "", -1))
+		token := cc.Publish("setting/"+id+"/get/accepted", 0, false, string(raw))
 		token.Wait()
 
 	case "train":
