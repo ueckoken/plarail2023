@@ -11,12 +11,12 @@ private:
   String state;
   int pin;
   unsigned long last_switch_time = 0;
-  PubSubClient client;
+  PubSubClient *client;
 
 public:
   PassDetector();
   void loop();
-  void init(String id, String state, int pin, PubSubClient client);
+  void init(String id, String state, int pin, PubSubClient *client);
 };
 
 #endif

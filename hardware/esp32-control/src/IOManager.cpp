@@ -6,7 +6,7 @@ IOManager::IOManager(PubSubClient client)
   POINT_LIST_INDEX = 0;
   STOP_LIST_INDEX = 0;
   DETECTOR_LIST_INDEX = 0;
-  // NFC_LIST_INDEX = 0;
+  NFC_LIST_INDEX = 0;
 }
 
 void IOManager::addPoint(uint8_t pin, String point_id)
@@ -23,8 +23,14 @@ void IOManager::addStop(uint8_t pin, String stop_id)
 
 void IOManager::addDetector(uint8_t pin, String block_id, String target)
 {
-  DETECTOR_LIST[DETECTOR_LIST_INDEX].init(block_id, target, pin, client);
+  DETECTOR_LIST[DETECTOR_LIST_INDEX].init(block_id, target, pin, &client);
   DETECTOR_LIST_INDEX++;
+}
+
+void IOManager::addNfc(uint8_t pin, String nfc_id)
+{
+  NFC_LIST[NFC_LIST_INDEX].init(nfc_id, pin, &client);
+  NFC_LIST_INDEX++;
 }
 
 void IOManager::setPointState(String point_id, POINT_STATE state)
@@ -57,8 +63,8 @@ void IOManager::loop()
   {
     DETECTOR_LIST[i].loop();
   }
-  // for (int i = 0; i < NFC_LIST_INDEX; i++)
-  // {
-  //   NFC_LIST[i].loop();
-  // }
+  for (int i = 0; i < NFC_LIST_INDEX; i++)
+  {
+    NFC_LIST[i].loop();
+  }
 }

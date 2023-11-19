@@ -42,7 +42,27 @@ void setup()
   }
   Serial.printf("\nIP address: %s\n", WiFi.localIP().toString().c_str());
 
+  // LittleFS初期化
+  if (!LittleFS.begin(FORMAT_LITTLEFS_IF_FAILED))
+  {
+    Serial.println("LittleFS Mount Failed");
+    return;
+  }
+
+  // 設定ファイルを読み込む
+  getSetting(&manager);
+
+  if (!SETTING_LOADED)
+  {
+    Serial.println("Setting File Not Found");
+    return;
+  }
+
+  // MDNSを開始
   MDNS.begin(HOST);
+
+  // SPIを初期化
+  SPI.begin();
 
   espClient.setCACert(root_ca);
   client.setServer(mqtt_broker, mqtt_port);
@@ -60,19 +80,11 @@ void setup()
     }
   }
 
-  // Subscribe Topics
+  // 必要なTopicをSubscribeする
   client.subscribe("stop/+/get/accepted");
   client.subscribe("point/+/get/accepted");
   client.subscribe("stop/+/delta");
   client.subscribe("point/+/delta");
-
-  // LittleFS初期化
-  if (!LittleFS.begin(FORMAT_LITTLEFS_IF_FAILED))
-  {
-    Serial.println("LittleFS Mount Failed");
-    return;
-  }
-  getSetting(&manager);
 }
 
 void callback(char *topic, byte *payload, unsigned int length)

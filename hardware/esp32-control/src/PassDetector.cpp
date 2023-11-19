@@ -2,7 +2,7 @@
 
 PassDetector::PassDetector() {}
 
-void PassDetector::init(String id, String state, int pin, PubSubClient client)
+void PassDetector::init(String id, String state, int pin, PubSubClient *client)
 {
   this->id = id;
   this->pin = pin;
@@ -18,9 +18,8 @@ void PassDetector::loop()
     {
       return;
     }
-    char topic[100] = "";
-    sprintf(topic, "block/%s/update", id.c_str());
-    client.publish(topic, state.c_str());
+    String topic = "pass/" + id + "/update";
+    client->publish(topic.c_str(), state.c_str());
     last_switch_time = millis();
   }
 }
