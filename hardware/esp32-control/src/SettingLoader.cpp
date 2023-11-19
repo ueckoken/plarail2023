@@ -36,7 +36,8 @@ void loadSetting(char *input, IOManager *manager)
   }
 
   // 端末名
-  const char *name = doc["name"];
+  const char* host_name = doc["name"];
+  strcpy(HOST, host_name);
 
   // STOPS
   JsonArray stops = doc["stops"];
