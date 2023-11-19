@@ -1,4 +1,4 @@
-name: PlatformIO CI
+name: ESP32 Control CI
 
 on:
   push:
@@ -6,10 +6,10 @@ on:
       - "main"
       - "deployment"
     paths:
-      - "hardware/**"
+      - "hardware/esp32-control/**"
   pull_request:
     paths:
-      - "hardware/**"
+      - "hardware/esp32-control/**"
   workflow_dispatch:
 
 jobs:
