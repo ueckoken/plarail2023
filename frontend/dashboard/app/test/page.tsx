@@ -2,6 +2,7 @@
 import {createPromiseClient} from "@connectrpc/connect";
 import {StateManagerService} from "@/proto/state/v1/state_connectweb";
 import {createConnectTransport} from "@bufbuild/connect-web";
+import {GetBlockStatesRequest} from "@/proto/state/v1/block_pb";
 
 export default function Test() {
 
@@ -13,7 +14,7 @@ export default function Test() {
     const sendData = () => {
         (async () => {
             const client = createPromiseClient(StateManagerService, transport);
-            const res = await client.getBlockStates({});
+            const res = await client.getBlockStates(new GetBlockStatesRequest({}));
             console.log(res);
         })();
     }

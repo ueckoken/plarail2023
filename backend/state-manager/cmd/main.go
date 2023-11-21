@@ -15,6 +15,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/httplog/v2"
 	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 	"github.com/ueckoken/plarail2023/backend/spec/state/v1/statev1connect"
 	connectHandler "github.com/ueckoken/plarail2023/backend/state-manager/pkg/connect"
 	"github.com/ueckoken/plarail2023/backend/state-manager/pkg/db"
@@ -145,7 +146,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:              net.JoinHostPort("0.0.0.0", "8080"),
-		Handler:           h2c.NewHandler(r, &http2.Server{}),
+		Handler:           cors.Default().Handler(h2c.NewHandler(r, &http2.Server{})),
 		ReadHeaderTimeout: 60 * time.Second,
 		BaseContext:       func(net.Listener) context.Context { return ctx },
 	}
