@@ -42,7 +42,8 @@ jobs:
           mkdir -p $GITHUB_WORKSPACE/backend/spec
       - name: prepare proto for node
         run: |-
-          npm install
+          curl -fsSL https://get.pnpm.io/install.sh | sh -
+          pnpm install
         working-directory: frontend/dashboard
       - name: gen proto
         run: |-
