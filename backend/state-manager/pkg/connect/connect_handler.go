@@ -12,9 +12,8 @@ import (
 	"github.com/ueckoken/plarail2023/backend/state-manager/pkg/mqtt_handler"
 )
 
-
 type StateManagerServer struct {
-	DBHandler *db.DBHandler
+	DBHandler   *db.DBHandler
 	MqttHandler *mqtt_handler.Handler
 }
 
@@ -110,7 +109,7 @@ func (s *StateManagerServer) UpdateStopState(
 	ctx context.Context,
 	req *connect.Request[statev1.UpdateStopStateRequest],
 ) (*connect.Response[statev1.UpdateStopStateResponse], error) {
-	err := s.DBHandler.UpdateStop(ctx,req.Msg.State)
+	err := s.DBHandler.UpdateStop(ctx, req.Msg.State)
 	if err != nil {
 		err = connect.NewError(
 			connect.CodeUnknown,
