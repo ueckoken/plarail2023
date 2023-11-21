@@ -24,7 +24,6 @@ func NewHandler(clientOpts *mqtt.ClientOptions, dbHandler *db.DBHandler) (*Handl
 
 	if token := cc.Connect(); token.Wait() && token.Error() != nil {
 		return nil, fmt.Errorf("mqtt error: %w", token.Error())
-		return nil, fmt.Errorf("mqtt error: %w", token.Error())
 	}
 	return &Handler{client: cc, dbHandler: dbHandler}, nil
 }
@@ -149,12 +148,12 @@ func (h *Handler) getState(ctx context.Context, target string, id string) error 
 			// Return error message
 			token := h.client.Publish("setting/"+id+"/get/accepted", 0, false, "error")
 			token.Wait()
-			return
+			return fmt.Errorf("setting file not found: %w", err)
 		}
 		raw, err := os.ReadFile("../settings/esp/" + id + ".json")
 		if err != nil {
-			log.Println(err.Error())
-			return
+			slog.Default().Error("setting file read error", slog.Any("err", err))
+			return fmt.Errorf("setting file read error: %w", err)
 		}
 		// remove \n code
 		raw = []byte(strings.Replace(string(raw), "\n", "", -1))
