@@ -135,7 +135,7 @@ func main() {
 					"version": version,
 					"commit":  commit,
 				},
-				LogLevel: slog.LevelInfo,
+				LogLevel: slog.LevelDebug,
 			},
 		),
 	),
@@ -166,7 +166,7 @@ func main() {
 			return ctx.Err()
 		}
 	})
-	//go operation.Handler()
+	// go operation.Handler()
 	eg.Go(func() error {
 		slog.Default().Info("start mqtt handler")
 		err := mqttHandler.Start(ctx)
