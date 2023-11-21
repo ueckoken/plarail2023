@@ -16,9 +16,9 @@ plugins:
     path: ../frontend/dashboard/node_modules/.bin/protoc-gen-es
     out: ../frontend/dashboard/proto
     opt:
-      - target=ts
+      - target=dts+js
   - plugin: connect-es
     path: ../frontend/dashboard/node_modules/.bin/protoc-gen-connect-web
     out: ../frontend/dashboard/proto
     opt:
-      - target=ts
+      - target=dts+js
