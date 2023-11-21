@@ -142,8 +142,6 @@ func main() {
 		),
 	),
 	)
-	r.Mount("/debug", middleware.Profiler())
-	r.Handle(statev1connect.NewStateManagerServiceHandler(&connectHandler.StateManagerServer{}))
 
 	srv := &http.Server{
 		Addr:              net.JoinHostPort("0.0.0.0", "8080"),
@@ -151,6 +149,7 @@ func main() {
 		ReadHeaderTimeout: 60 * time.Second,
 		BaseContext:       func(net.Listener) context.Context { return ctx },
 	}
+
 	eg.Go(func() error {
 		errC := make(chan error)
 		go func() {
@@ -168,6 +167,7 @@ func main() {
 			return ctx.Err()
 		}
 	})
+
 	//go operation.Handler()
 	eg.Go(func() error {
 		slog.Default().Info("start mqtt handler")

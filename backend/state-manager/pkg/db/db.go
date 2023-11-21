@@ -7,7 +7,6 @@ package db
 import (
 	"context"
 	"fmt"
-	"log"
 	"log/slog"
 
 	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
@@ -40,12 +39,11 @@ func Open(ctx context.Context, opts *options.ClientOptions) (*DBHandler, error) 
 	}, nil
 }
 
-func (db *DBHandler) Close() {
+func (db *DBHandler) Close(ctx context.Context) {
 	slog.Default().Debug("Closing connection to DB...")
-	// TODO: contextを受けて、その子contextをDBクライアントに渡す
-	if err := db.stateManagerDB.Client().Disconnect(context.TODO()); err != nil {
+	if err := db.stateManagerDB.Client().Disconnect(ctx); err != nil {
 		slog.Default().Error("DB Connection Closing failed")
-		log.Println(err)
+		return
 	}
 	slog.Default().Debug("DB Connection is successfully closed")
 }
@@ -54,148 +52,145 @@ func (db *DBHandler) Close() {
 	Point
 */
 
-func (db *DBHandler) UpdatePoint(PointAndState *statev1.PointAndState) error {
+func (db *DBHandler) UpdatePoint(ctx context.Context, PointAndState *statev1.PointAndState) error {
 	collection := db.stateManagerDB.Collection("points")
 	_, err := collection.UpdateOne(
-		context.Background(),
+		ctx,
 		bson.M{"id": PointAndState.Id},
 		bson.M{"$set": bson.M{"state": PointAndState.State}},
 	)
-	if err != nil {
-		return err
-	}
-	return nil
+	return fmt.Errorf("update point failed `%w`", err)
 }
 
-func (db *DBHandler) AddPoint(PointAndState *statev1.PointAndState) error {
+func (db *DBHandler) AddPoint(ctx context.Context, PointAndState *statev1.PointAndState) error {
 	collection := db.stateManagerDB.Collection("points")
-	_, err := collection.InsertOne(context.Background(), PointAndState)
+	_, err := collection.InsertOne(ctx, PointAndState)
 	if err != nil {
-		return err
+		return fmt.Errorf("insert point failed `%w`", err)
 	}
 	return nil
 }
 
-func (db *DBHandler) GetPoint(pointId string) (*statev1.PointAndState, error) {
+func (db *DBHandler) GetPoint(ctx context.Context, pointId string) (*statev1.PointAndState, error) {
 	collection := db.stateManagerDB.Collection("points")
 	var result *statev1.PointAndState
-	err := collection.FindOne(context.Background(), bson.M{"id": pointId}).Decode(&result)
+	err := collection.FindOne(ctx, bson.M{"id": pointId}).Decode(&result)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("get point failed `%w`", err)
 	}
 	return result, nil
 }
 
-func (db *DBHandler) GetPoints() []*statev1.PointAndState {
+func (db *DBHandler) GetPoints(ctx context.Context) ([]*statev1.PointAndState, error) {
 	collection := db.stateManagerDB.Collection("points")
-	cursor, err := collection.Find(context.Background(), bson.M{})
+	cursor, err := collection.Find(ctx, bson.M{})
 	if err != nil {
 		slog.Default().Warn("Get Points failed", slog.Any("err", err))
-		panic(err)
+		return nil, fmt.Errorf("get points failed `%w`", err)
 	}
 	var result []*statev1.PointAndState
-	if err = cursor.All(context.Background(), &result); err != nil {
-		panic(err)
+	if err := cursor.All(ctx, &result); err != nil {
+		slog.Default().Warn("Get Points failed", slog.Any("err", err))
+		return nil, fmt.Errorf("get points failed `%w`", err)
 	}
-	return result
+	return result, nil
 }
 
 /*
 	Stop
 */
 
-func (db *DBHandler) UpdateStop(stop *statev1.StopAndState) error {
+func (db *DBHandler) UpdateStop(ctx context.Context, stop *statev1.StopAndState) error {
 	collection := db.stateManagerDB.Collection("stops")
-
 	_, err := collection.UpdateOne(
-		context.Background(),
+		ctx,
 		bson.M{"id": stop.Id},
 		bson.M{"$set": bson.M{"state": stop.State}},
 	)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("update stop failed `%w`", err)
 	}
 	return nil
 }
 
-func (db *DBHandler) AddStop(stop *statev1.StopAndState) error {
+func (db *DBHandler) AddStop(ctx context.Context, stop *statev1.StopAndState) error {
 	collection := db.stateManagerDB.Collection("stops")
-	_, err := collection.InsertOne(context.Background(), stop)
+	_, err := collection.InsertOne(ctx, stop)
 	if err != nil {
-		return err
+		return fmt.Errorf("insert stop failed `%w`", err)
 	}
 	return nil
 }
 
-func (db *DBHandler) GetStop(stopId string) (*statev1.StopAndState, error) {
+func (db *DBHandler) GetStop(ctx context.Context, stopId string) (*statev1.StopAndState, error) {
 	collection := db.stateManagerDB.Collection("stops")
 	var result *statev1.StopAndState
-	err := collection.FindOne(context.Background(), bson.M{"id": stopId}).Decode(&result)
+	err := collection.FindOne(ctx, bson.M{"id": stopId}).Decode(&result)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("get stop failed `%w`", err)
 	}
 	return result, nil
 }
 
-func (db *DBHandler) GetStops() []*statev1.StopAndState {
+func (db *DBHandler) GetStops(ctx context.Context) ([]*statev1.StopAndState, error) {
 	collection := db.stateManagerDB.Collection("stops")
-	cursor, err := collection.Find(context.Background(), bson.M{})
+	cursor, err := collection.Find(ctx, bson.M{})
 	if err != nil {
-		panic(err)
+		return nil, fmt.Errorf("get stops failed `%w`", err)
 	}
 	var result []*statev1.StopAndState
-	if err = cursor.All(context.Background(), &result); err != nil {
-		panic(err)
+	if err := cursor.All(ctx, &result); err != nil {
+		return nil, fmt.Errorf("get stops failed `%w`", err)
 	}
-	return result
+	return result, nil
 }
 
 /*
 	Block
 */
 
-func (db *DBHandler) AddBlock(block *statev1.BlockState) error {
+func (db *DBHandler) AddBlock(ctx context.Context, block *statev1.BlockState) error {
 	collection := db.stateManagerDB.Collection("blocks")
-	_, err := collection.InsertOne(context.Background(), block)
+	_, err := collection.InsertOne(ctx, block)
 	if err != nil {
-		return err
+		return fmt.Errorf("insert block failed `%w`", err)
 	}
 	return nil
 }
 
-func (db *DBHandler) UpdateBlock(block *statev1.BlockState) error {
+func (db *DBHandler) UpdateBlock(ctx context.Context, block *statev1.BlockState) error {
 	collection := db.stateManagerDB.Collection("blocks")
 	_, err := collection.UpdateOne(
-		context.Background(),
+		ctx,
 		bson.M{"blockid": block.BlockId},
 		bson.M{"$set": bson.M{"state": block.State}},
 	)
 	if err != nil {
-		return err
+		return fmt.Errorf("update block failed `%w`", err)
 	}
 	return nil
 }
 
-func (db *DBHandler) GetBlock(blockId string) (*statev1.BlockState, error) {
+func (db *DBHandler) GetBlock(ctx context.Context, blockId string) (*statev1.BlockState, error) {
 	collection := db.stateManagerDB.Collection("blocks")
 	var result *statev1.BlockState
-	err := collection.FindOne(context.Background(), bson.M{"blockid": blockId}).Decode(&result)
+	err := collection.FindOne(ctx, bson.M{"blockid": blockId}).Decode(&result)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("get block failed `%w`", err)
 	}
 	return result, nil
 }
 
-func (db *DBHandler) GetBlocks() ([]*statev1.BlockState, error) {
+func (db *DBHandler) GetBlocks(ctx context.Context) ([]*statev1.BlockState, error) {
 	collection := db.stateManagerDB.Collection("blocks")
-	cursor, err := collection.Find(context.Background(), bson.M{})
+	cursor, err := collection.Find(ctx, bson.M{})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("get blocks failed `%w`", err)
 	}
 	var result []*statev1.BlockState
-	if err = cursor.All(context.Background(), &result); err != nil {
-		return nil, err
+	if err = cursor.All(ctx, &result); err != nil {
+		return nil, fmt.Errorf("get blocks failed `%w`", err)
 	}
 	return result, nil
 }
