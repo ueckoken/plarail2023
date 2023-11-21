@@ -123,8 +123,6 @@ func main() {
 	r := chi.NewRouter()
 	// r.Use(middleware.Recoverer)
 	r.Use(middleware.Heartbeat("/debug/ping"))
-	r.Mount("/debug", middleware.Profiler())
-	r.Handle(statev1connect.NewStateManagerServiceHandler(&connectHandler.StateManagerServer{DBHandler: DBHandler, MqttHandler: mqttHandler}))
 	r.Use(httplog.RequestLogger(
 		httplog.NewLogger(
 			"http_server",
@@ -143,7 +141,7 @@ func main() {
 	),
 	)
 	r.Mount("/debug", middleware.Profiler())
-	r.Handle(statev1connect.NewStateManagerServiceHandler(&connectHandler.StateManagerServer{}))
+	r.Handle(statev1connect.NewStateManagerServiceHandler(&connectHandler.StateManagerServer{DBHandler: DBHandler, MqttHandler: mqttHandler}))
 
 	srv := &http.Server{
 		Addr:              net.JoinHostPort("0.0.0.0", "8080"),
