@@ -14,10 +14,18 @@ uint8_t t=0;
 
 static camera_config_t cam_cfg={// https://github.com/espressif/esp-who/blob/master/docs/en/Camera_connections.md
 	.pin_pwdn=-1,.pin_reset=-1,
+
+	#ifdef ARDUINO_XIAO_ESP32S3
+	.pin_xclk=10,.pin_sccb_sda=40,.pin_sccb_scl=39,
+
+	.pin_d7=48,.pin_d6=11,.pin_d5=12,.pin_d4=14,.pin_d3=16,.pin_d2=18,.pin_d1=17,.pin_d0=15,
+	.pin_vsync=38,.pin_href=47,.pin_pclk=13,
+	#else
 	.pin_xclk=4,.pin_sccb_sda=18,.pin_sccb_scl=23,
 
 	.pin_d7=36,.pin_d6=37,.pin_d5=38,.pin_d4=39,.pin_d3=35,.pin_d2=14,.pin_d1=13,.pin_d0=34,
 	.pin_vsync=5,.pin_href=27,.pin_pclk=25,
+	#endif
 
 	.xclk_freq_hz=20000000,//EXPERIMENTAL: Set to 16MHz on ESP32-S2 or ESP32-S3 to enable EDMA mode
 	.ledc_timer=LEDC_TIMER_0,.ledc_channel=LEDC_CHANNEL_0,
@@ -31,21 +39,20 @@ static camera_config_t cam_cfg={// https://github.com/espressif/esp-who/blob/mas
 };
 
 void setup(){
-	psramInit();pinMode(21,OUTPUT);pinMode(22,OUTPUT);
+	psramInit();pinMode(21,OUTPUT);digitalWrite(21,HIGH);delay(200);digitalWrite(21,LOW);
 
 	WiFi.begin();
 	for(uint8_t i=0;WiFi.status()!=WL_CONNECTED;i++){
 		if(i>20){
-			digitalWrite(21,HIGH);
-			WiFi.beginSmartConfig();while(!WiFi.smartConfigDone());
+			
+			WiFi.beginSmartConfig();while(!WiFi.smartConfigDone()){delay(200);digitalWrite(21,HIGH);delay(200);digitalWrite(21,LOW);};
 		}
 		delay(500);
 	}
 	MDNS.begin("udp-cam");
 	host=MDNS.queryHost(HOST);
-	digitalWrite(21,LOW);
 	esp_camera_init(&cam_cfg);
-	digitalWrite(22,HIGH);
+	digitalWrite(21,HIGH);
 }
 
 void loop(){
