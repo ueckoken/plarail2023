@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"log/slog"
 	"os"
 	"strings"
 
@@ -66,9 +66,10 @@ func StartHandler(ctx context.Context) error {
 			log.Printf("Received message: %s from topic: %s\n", msg.Payload(), msg.Topic())
 			topicHandler(cc, msg)
 		case <-ctx.Done():
-			fmt.Println("Interrupted")
+			slog.Default().Info("Interrupted at mqtt_handler")
 			cc.Disconnect(1000)
-			return nil
+			slog.Default().Info("Disconnected from mqtt broker")
+			return ctx.Err()
 		}
 	}
 }
@@ -149,7 +150,7 @@ func getState(cc mqtt.Client, target string, id string) {
 			token.Wait()
 			return
 		}
-		raw, err := ioutil.ReadFile("../settings/esp/" + id + ".json")
+		raw, err := os.ReadFile("../settings/esp/" + id + ".json")
 		if err != nil {
 			log.Println(err.Error())
 			return

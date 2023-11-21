@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"net"
 	"net/http"
@@ -28,6 +29,19 @@ const (
 	Test
 	Prod
 )
+
+func (a AppEnv) String() string {
+	switch a {
+	case Dev:
+		return "dev"
+	case Test:
+		return "test"
+	case Prod:
+		return "prod"
+	default:
+		return "unknown"
+	}
+}
 
 var appEnv AppEnv = Dev
 var (
@@ -65,19 +79,19 @@ func init() {
 func main() {
 	err := godotenv.Load(".env")
 	if err != nil {
-		slog.Default().Error("Error loading .env file")
+		slog.Default().Error("Error loading .env file", slog.Any("error", err))
+		os.Exit(1)
 	}
 	baseCtx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	ctx, stop := signal.NotifyContext(baseCtx, os.Interrupt)
+	signalCtx, stop := signal.NotifyContext(baseCtx, os.Interrupt)
 	defer stop()
-
 	go func() {
-		<-ctx.Done()
+		<-signalCtx.Done()
 		slog.Default().Info("signal received")
 	}()
 
-	eg, ctx := errgroup.WithContext(ctx)
+	eg, ctx := errgroup.WithContext(signalCtx)
 
 	r := chi.NewRouter()
 	// r.Use(middleware.Recoverer)
@@ -108,18 +122,36 @@ func main() {
 		ReadHeaderTimeout: 60 * time.Second,
 		BaseContext:       func(net.Listener) context.Context { return ctx },
 	}
-	eg.Go(srv.ListenAndServe)
+	eg.Go(func() error {
+		errC := make(chan error)
+		go func() {
+			slog.Default().Info("start http server")
+			if err := srv.ListenAndServe(); err != nil {
+				slog.Default().Error("http server error", slog.Any("error", err))
+				errC <- err
+			}
+		}()
+		select {
+		case err := <-errC:
+			return fmt.Errorf("http server error: %w", err)
+		case <-ctx.Done():
+			slog.Default().Info("Interrupted at http server")
+			return ctx.Err()
+		}
+	})
 	//go operation.Handler()
 	eg.Go(func() error {
 		slog.Default().Info("start mqtt handler")
-		return mqtt_handler.StartHandler(ctx)
+		err := mqtt_handler.StartHandler(ctx)
+		return fmt.Errorf("mqtt handler error: %w", err)
 	})
 
+	// errGroup.Waitはeg.Goが全てerrorを返すまでwaitする
 	if err := eg.Wait(); err != nil {
-		slog.Default().Error("error in sub goroutine at main", err)
+		slog.Default().Error("error in sub goroutine at main", slog.Any("error", err))
 	}
+	slog.Default().Info("shutting down server")
 	newCtx, srvTimeOutCancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer srvTimeOutCancel()
 	srv.Shutdown(newCtx)
-	<-newCtx.Done()
 }
