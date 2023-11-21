@@ -41,7 +41,7 @@ func (h *Handler) Start(ctx context.Context) error {
 		case msg := <-msgCh:
 			// if topic start with "point/"
 			log.Printf("Received message: %s from topic: %s\n", msg.Payload(), msg.Topic())
-			h.topicHandler(msg)
+			h.topicHandler(ctx, msg)
 		case <-ctx.Done():
 			slog.Default().Info("Interrupted at mqtt_handler")
 			h.client.Disconnect(1000)
@@ -77,7 +77,7 @@ func (h *Handler) Send(topic string, payload string) {
 	{target}/{pointId}/update
 */
 
-func (h *Handler) topicHandler(msg mqtt.Message) {
+func (h *Handler) topicHandler(ctx context.Context, msg mqtt.Message) {
 	// Handle by Path
 	arr := strings.Split(msg.Topic(), "/")
 	target := arr[0]
@@ -90,32 +90,37 @@ func (h *Handler) topicHandler(msg mqtt.Message) {
 
 	switch method {
 	case "get":
-		h.getState(target, id)
+		h.getState(ctx, target, id)
 	case "delta":
-		h.getDelta(target, id)
+		h.getDelta(ctx, target, id)
 	case "update":
-		h.updateState(target, id, msg.Payload())
+		h.updateState(ctx, target, id, msg.Payload())
 	}
 }
 
-func (h *Handler) NotifyStateUpdate(target string, id string, state string) {
+func (h *Handler) NotifyStateUpdate(ctx context.Context, target string, id string, state string) {
 	token := h.client.Publish(target+"/"+id+"/delta", 0, false, state)
-	token.Wait()
+	select {
+	case <-token.Done():
+		slog.Default().Info("token done in mqtt_handler.NotifyStateUpdate", slog.Any("err", token.Error()))
+	case <-ctx.Done():
+		slog.Default().Info("context done in mqtt_handler.NotifyStateUpdate", slog.Any("err", ctx.Err()))
+	}
 }
 
-func (h *Handler) getState(target string, id string) {
+func (h *Handler) getState(ctx context.Context, target string, id string) error {
 	switch target {
 	case "point":
-		point, err := h.dbHandler.GetPoint(id)
+		point, err := h.dbHandler.GetPoint(ctx, id)
 		if err != nil {
-			log.Fatal(err)
+			slog.Default().Info("db error in mqtt_handler.getState", slog.Any("err", err))
 		}
 		log.Println(point)
 		token := h.client.Publish("point/"+id+"/get/accepted", 0, false, point.State.String())
 		token.Wait()
 
 	case "stop":
-		stop, err := h.dbHandler.GetStop(id)
+		stop, err := h.dbHandler.GetStop(ctx, id)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -124,7 +129,7 @@ func (h *Handler) getState(target string, id string) {
 		token.Wait()
 
 	case "block":
-		block, err := h.dbHandler.GetBlock(id)
+		block, err := h.dbHandler.GetBlock(ctx, id)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -160,13 +165,14 @@ func (h *Handler) getState(target string, id string) {
 	case "train":
 		// TODO: implement
 	}
+	return nil
 }
 
-func (h *Handler) getDelta(target string, id string) {
+func (h *Handler) getDelta(ctx context.Context, target string, id string) {
 
 }
 
-func (h *Handler) updateState(target string, id string, payload []byte) {
+func (h *Handler) updateState(ctx context.Context, target string, id string, payload []byte) {
 
 	switch target {
 	case "block":
@@ -175,7 +181,7 @@ func (h *Handler) updateState(target string, id string, payload []byte) {
 		fmt.Print("newState: ")
 		fmt.Println(newState)
 		if newState == "OPEN" {
-			err := h.dbHandler.UpdateBlock(&statev1.BlockState{
+			err := h.dbHandler.UpdateBlock(ctx, &statev1.BlockState{
 				BlockId: id,
 				State:   statev1.BlockStateEnum_BLOCK_STATE_OPEN,
 			})
@@ -184,25 +190,25 @@ func (h *Handler) updateState(target string, id string, payload []byte) {
 			}
 			// NT Tokyo
 			if id == "yamashita_b1" {
-				err := h.dbHandler.UpdateStop(&statev1.StopAndState{
+				err := h.dbHandler.UpdateStop(ctx, &statev1.StopAndState{
 					Id:    "yamashita_s1",
 					State: statev1.StopStateEnum_STOP_STATE_GO,
 				})
 				if err != nil {
 					log.Fatal(err)
 				}
-				h.NotifyStateUpdate("stop", "yamashita_s1", statev1.StopStateEnum_STOP_STATE_GO.String())
-				err = h.dbHandler.UpdateStop(&statev1.StopAndState{
+				h.NotifyStateUpdate(ctx, "stop", "yamashita_s1", statev1.StopStateEnum_STOP_STATE_GO.String())
+				err = h.dbHandler.UpdateStop(ctx, &statev1.StopAndState{
 					Id:    "yamashita_s2",
 					State: statev1.StopStateEnum_STOP_STATE_GO,
 				})
 				if err != nil {
 					log.Fatal(err)
 				}
-				h.NotifyStateUpdate("stop", "yamashita_s2", statev1.StopStateEnum_STOP_STATE_GO.String())
+				h.NotifyStateUpdate(ctx, "stop", "yamashita_s2", statev1.StopStateEnum_STOP_STATE_GO.String())
 
 				// 今と逆にする
-				now, err := h.dbHandler.GetPoint("yamashita_p1")
+				now, err := h.dbHandler.GetPoint(ctx, "yamashita_p1")
 				if err != nil {
 					log.Fatal(err)
 				}
@@ -212,7 +218,7 @@ func (h *Handler) updateState(target string, id string, payload []byte) {
 				} else {
 					newS = statev1.PointStateEnum_POINT_STATE_NORMAL
 				}
-				err = h.dbHandler.UpdatePoint(&statev1.PointAndState{
+				err = h.dbHandler.UpdatePoint(ctx, &statev1.PointAndState{
 					Id:    "yamashita_p1",
 					State: newS,
 				})
@@ -221,11 +227,11 @@ func (h *Handler) updateState(target string, id string, payload []byte) {
 					log.Fatal(err)
 				}
 
-				h.NotifyStateUpdate("point", "yamashita_p1", newS.String())
+				h.NotifyStateUpdate(ctx, "point", "yamashita_p1", newS.String())
 
 			}
 		} else if newState == "CLOSE" {
-			err := h.dbHandler.UpdateBlock(&statev1.BlockState{
+			err := h.dbHandler.UpdateBlock(ctx, &statev1.BlockState{
 				BlockId: id,
 				State:   statev1.BlockStateEnum_BLOCK_STATE_CLOSE,
 			})
@@ -234,22 +240,22 @@ func (h *Handler) updateState(target string, id string, payload []byte) {
 			}
 			// NT Tokyo
 			if id == "yamashita_b1" {
-				err := h.dbHandler.UpdateStop(&statev1.StopAndState{
+				err := h.dbHandler.UpdateStop(ctx, &statev1.StopAndState{
 					Id:    "yamashita_s1",
 					State: statev1.StopStateEnum_STOP_STATE_STOP,
 				})
 				if err != nil {
 					log.Fatal(err)
 				}
-				h.NotifyStateUpdate("stop", "yamashita_s1", statev1.StopStateEnum_STOP_STATE_STOP.String())
-				err = h.dbHandler.UpdateStop(&statev1.StopAndState{
+				h.NotifyStateUpdate(ctx, "stop", "yamashita_s1", statev1.StopStateEnum_STOP_STATE_STOP.String())
+				err = h.dbHandler.UpdateStop(ctx, &statev1.StopAndState{
 					Id:    "yamashita_s2",
 					State: statev1.StopStateEnum_STOP_STATE_STOP,
 				})
 				if err != nil {
 					log.Fatal(err)
 				}
-				h.NotifyStateUpdate("stop", "yamashita_s2", statev1.StopStateEnum_STOP_STATE_STOP.String())
+				h.NotifyStateUpdate(ctx, "stop", "yamashita_s2", statev1.StopStateEnum_STOP_STATE_STOP.String())
 			}
 		}
 

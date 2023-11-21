@@ -29,15 +29,18 @@ func main() {
 	if err := godotenv.Load(".env"); err != nil {
 		panic(err)
 	}
-	db, err := dbhandler.Open(context.TODO(), options.Client().ApplyURI(os.Getenv("MONGODB_URI")))
+	ctx, cancel := context.WithCancelCause(context.Background())
+	defer cancel(nil)
+	db, err := dbhandler.Open(ctx, options.Client().ApplyURI(os.Getenv("MONGODB_URI")))
 	if err != nil {
+		cancel(err)
 		return
 	}
-	defer db.Close()
+	defer db.Close(ctx)
 	data := &Seed{}
 	b, _ := os.ReadFile("./data/nt-tokyo.yaml")
 	if err := yaml.Unmarshal(b, data); err != nil {
-		panic(err)
+		cancel(err)
 	}
 
 	//for _, stop := range data.StopRails {
@@ -63,11 +66,12 @@ func main() {
 	//}
 	for _, block := range data.Blocks {
 		println(block)
-		err := db.AddBlock(&statev1.BlockState{
+		err := db.AddBlock(ctx, &statev1.BlockState{
 			BlockId: string(block),
 			State:   statev1.BlockStateEnum_BLOCK_STATE_OPEN,
 		})
 		if err != nil {
+			cancel(err)
 			return
 		}
 	}

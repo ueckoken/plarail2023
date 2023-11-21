@@ -27,7 +27,7 @@ func (s *StateManagerServer) GetBlockStates(
 	ctx context.Context,
 	req *connect.Request[statev1.GetBlockStatesRequest],
 ) (*connect.Response[statev1.GetBlockStatesResponse], error) {
-	blockStates, err := s.DBHandler.GetBlocks()
+	blockStates, err := s.DBHandler.GetBlocks(ctx)
 	if err != nil {
 		err = connect.NewError(
 			connect.CodeUnknown,
@@ -57,7 +57,7 @@ func (s *StateManagerServer) UpdateBlockState(
 	ctx context.Context,
 	req *connect.Request[statev1.UpdateBlockStateRequest],
 ) (*connect.Response[statev1.UpdateBlockStateResponse], error) {
-	err := s.DBHandler.UpdateBlock(req.Msg.State)
+	err := s.DBHandler.UpdateBlock(ctx, req.Msg.State)
 	if err != nil {
 		err = connect.NewError(
 			connect.CodeUnknown,
@@ -77,7 +77,7 @@ func (s *StateManagerServer) UpdatePointState(
 	ctx context.Context,
 	req *connect.Request[statev1.UpdatePointStateRequest],
 ) (*connect.Response[statev1.UpdatePointStateResponse], error) {
-	err := s.DBHandler.UpdatePoint(req.Msg.State)
+	err := s.DBHandler.UpdatePoint(ctx, req.Msg.State)
 	if err != nil {
 		err = connect.NewError(
 			connect.CodeUnknown,
@@ -86,7 +86,7 @@ func (s *StateManagerServer) UpdatePointState(
 		slog.Default().Error("db error", err)
 		return nil, err
 	}
-	s.MqttHandler.NotifyStateUpdate("point", req.Msg.State.Id, req.Msg.State.State.String())
+	s.MqttHandler.NotifyStateUpdate(ctx, "point", req.Msg.State.Id, req.Msg.State.State.String())
 
 	return connect.NewResponse(&statev1.UpdatePointStateResponse{}), nil
 }
@@ -110,7 +110,7 @@ func (s *StateManagerServer) UpdateStopState(
 	ctx context.Context,
 	req *connect.Request[statev1.UpdateStopStateRequest],
 ) (*connect.Response[statev1.UpdateStopStateResponse], error) {
-	err := s.DBHandler.UpdateStop(req.Msg.State)
+	err := s.DBHandler.UpdateStop(ctx,req.Msg.State)
 	if err != nil {
 		err = connect.NewError(
 			connect.CodeUnknown,
@@ -119,7 +119,7 @@ func (s *StateManagerServer) UpdateStopState(
 		slog.Default().Error("db connection error", err)
 		return nil, err
 	}
-	s.MqttHandler.NotifyStateUpdate("stop", req.Msg.State.Id, req.Msg.State.State.String())
+	s.MqttHandler.NotifyStateUpdate(ctx, "stop", req.Msg.State.Id, req.Msg.State.State.String())
 	return connect.NewResponse(&statev1.UpdateStopStateResponse{}), nil
 }
 
