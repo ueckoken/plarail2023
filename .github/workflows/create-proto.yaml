@@ -42,7 +42,7 @@ jobs:
           mkdir -p $GITHUB_WORKSPACE/backend/spec
       - name: prepare proto for node
         run: |-
-          pnpm install
+          npm install
         working-directory: frontend/dashboard
       - name: gen proto
         run: |-
