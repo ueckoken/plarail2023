@@ -3,7 +3,7 @@ module github.com/ueckoken/plarail2023
 go 1.21.4
 
 require (
-	github.com/bufbuild/connect-go v1.10.0
+	connectrpc.com/connect v1.12.0
 	github.com/eclipse/paho.mqtt.golang v1.4.3
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/go-chi/httplog/v2 v2.0.7
