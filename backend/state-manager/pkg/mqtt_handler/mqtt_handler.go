@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"log/slog"
 	"os"
@@ -151,7 +150,7 @@ func getState(cc mqtt.Client, target string, id string) {
 			token.Wait()
 			return
 		}
-		raw, err := ioutil.ReadFile("../settings/esp/" + id + ".json")
+		raw, err := os.ReadFile("../settings/esp/" + id + ".json")
 		if err != nil {
 			log.Println(err.Error())
 			return
