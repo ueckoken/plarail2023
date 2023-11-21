@@ -87,7 +87,7 @@ func main() {
 	}
 	baseCtx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	signalCtx, stop := signal.NotifyContext(baseCtx, os.Interrupt)
+	ctx, stop := signal.NotifyContext(baseCtx, os.Interrupt)
 	defer stop()
 	go func() {
 		<-ctx.Done()
@@ -171,7 +171,7 @@ func main() {
 	//go operation.Handler()
 	eg.Go(func() error {
 		slog.Default().Info("start mqtt handler")
-		err := mqtt_handler.StartHandler(ctx)
+		err := mqttHandler.Start(ctx)
 		return fmt.Errorf("mqtt handler error: %w", err)
 	})
 
