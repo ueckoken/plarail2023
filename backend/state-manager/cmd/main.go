@@ -146,6 +146,7 @@ func main() {
 		return fmt.Errorf("mqtt handler error: %w", err)
 	})
 
+	// errGroup.Waitはeg.Goが全てerrorを返すまでwaitする
 	if err := eg.Wait(); err != nil {
 		slog.Default().Error("error in sub goroutine at main", slog.Any("error", err))
 	}
