@@ -40,9 +40,9 @@ jobs:
           go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.31
           go install connectrpc.com/connect/cmd/protoc-gen-connect-go@latest
           mkdir -p $GITHUB_WORKSPACE/backend/spec
+      - uses: pnpm/action-setup@v2.2.2
       - name: prepare proto for node
         run: |-
-          curl -fsSL https://get.pnpm.io/install.sh | sh -
           pnpm install
         working-directory: frontend/dashboard
       - name: gen proto
