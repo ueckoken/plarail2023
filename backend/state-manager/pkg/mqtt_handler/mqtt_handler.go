@@ -45,7 +45,7 @@ func (h *Handler) Start(ctx context.Context) error {
 			slog.Default().Info("Interrupted at mqtt_handler")
 			h.client.Disconnect(1000)
 			slog.Default().Info("Disconnected from mqtt broker")
-			return nil
+			return fmt.Errorf("interrupted at mqtt_handler: %w", ctx.Err())
 		}
 	}
 }
