@@ -5,16 +5,15 @@ import (
 	"errors"
 	"log/slog"
 
-	"connectrpc.com/connect"
+	connect "github.com/bufbuild/connect-go"
 
 	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
 	"github.com/ueckoken/plarail2023/backend/state-manager/pkg/db"
 	"github.com/ueckoken/plarail2023/backend/state-manager/pkg/mqtt_handler"
 )
 
-
 type StateManagerServer struct {
-	DBHandler *db.DBHandler
+	DBHandler   *db.DBHandler
 	MqttHandler *mqtt_handler.Handler
 }
 
