@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"log/slog"
 	"os"
 	"strings"
 
@@ -14,25 +14,43 @@ import (
 	"github.com/ueckoken/plarail2023/backend/state-manager/pkg/db"
 )
 
-var cc mqtt.Client
-
-func MakeClient() mqtt.Client {
-	var opts = mqtt.NewClientOptions()
-	opts.AddBroker(os.Getenv("MQTT_BROKER_ADDR"))
-	opts.Username = os.Getenv("MQTT_USERNAME")
-	opts.Password = os.Getenv("MQTT_PASSWORD")
-	opts.ClientID = os.Getenv("MQTT_CLIENT_ID")
-
-	cc = mqtt.NewClient(opts)
-
-	if token := cc.Connect(); token.Wait() && token.Error() != nil {
-		log.Fatalf("Mqtt error: %s", token.Error())
-	}
-
-	return cc
+type Handler struct {
+	client    mqtt.Client
+	dbHandler *db.DBHandler
 }
 
-func Subscribe(cc mqtt.Client, topic []string, f mqtt.MessageHandler) {
+func NewHandler(clientOpts *mqtt.ClientOptions, dbHandler *db.DBHandler) (*Handler, error) {
+	cc := mqtt.NewClient(clientOpts)
+
+	if token := cc.Connect(); token.Wait() && token.Error() != nil {
+		return nil, fmt.Errorf("mqtt error: %w", token.Error())
+	}
+	return &Handler{client: cc, dbHandler: dbHandler}, nil
+}
+
+func (h *Handler) Start(ctx context.Context) error {
+	msgCh := make(chan mqtt.Message)
+	var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
+		msgCh <- msg
+	}
+	h.Subscribe([]string{"point/#", "stop/#", "block/#", "train/#", "setting/#"}, f)
+
+	for {
+		select {
+		case msg := <-msgCh:
+			// if topic start with "point/"
+			log.Printf("Received message: %s from topic: %s\n", msg.Payload(), msg.Topic())
+			h.topicHandler(msg)
+		case <-ctx.Done():
+			slog.Default().Info("Interrupted at mqtt_handler")
+			h.client.Disconnect(1000)
+			slog.Default().Info("Disconnected from mqtt broker")
+			return nil
+		}
+	}
+}
+
+func (h *Handler) Subscribe(topic []string, f mqtt.MessageHandler) {
 	qos := byte(1)
 
 	filters := make(map[string]byte)
@@ -40,37 +58,15 @@ func Subscribe(cc mqtt.Client, topic []string, f mqtt.MessageHandler) {
 		filters[t] = qos
 	}
 
-	subscribeToken := cc.SubscribeMultiple(filters, f)
+	subscribeToken := h.client.SubscribeMultiple(filters, f)
 	if subscribeToken.Wait() && subscribeToken.Error() != nil {
 		log.Fatal(subscribeToken.Error())
 	}
 }
 
-func Send(cc mqtt.Client, topic string, payload string) {
-	token := cc.Publish(topic, 0, false, payload)
+func (h *Handler) Send(topic string, payload string) {
+	token := h.client.Publish(topic, 0, false, payload)
 	token.Wait()
-}
-
-func StartHandler(ctx context.Context) error {
-	msgCh := make(chan mqtt.Message)
-	var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
-		msgCh <- msg
-	}
-	cc := MakeClient()
-	Subscribe(cc, []string{"point/#", "stop/#", "block/#", "train/#", "setting/#"}, f)
-
-	for {
-		select {
-		case msg := <-msgCh:
-			// if topic start with "point/"
-			log.Printf("Received message: %s from topic: %s\n", msg.Payload(), msg.Topic())
-			topicHandler(cc, msg)
-		case <-ctx.Done():
-			fmt.Println("Interrupted")
-			cc.Disconnect(1000)
-			return nil
-		}
-	}
 }
 
 /*
@@ -80,7 +76,7 @@ func StartHandler(ctx context.Context) error {
 	{target}/{pointId}/update
 */
 
-func topicHandler(cc mqtt.Client, msg mqtt.Message) {
+func (h *Handler) topicHandler(msg mqtt.Message) {
 	// Handle by Path
 	arr := strings.Split(msg.Topic(), "/")
 	target := arr[0]
@@ -93,49 +89,49 @@ func topicHandler(cc mqtt.Client, msg mqtt.Message) {
 
 	switch method {
 	case "get":
-		getState(cc, target, id)
+		h.getState(target, id)
 	case "delta":
-		getDelta(cc, target, id)
+		h.getDelta(target, id)
 	case "update":
-		updateState(cc, target, id, msg.Payload())
+		h.updateState(target, id, msg.Payload())
 	}
 }
 
-func NotifyStateUpdate(target string, id string, state string) {
-	token := cc.Publish(target+"/"+id+"/delta", 0, false, state)
+func (h *Handler) NotifyStateUpdate(target string, id string, state string) {
+	token := h.client.Publish(target+"/"+id+"/delta", 0, false, state)
 	token.Wait()
 }
 
-func getState(cc mqtt.Client, target string, id string) {
-	defer db.C()
-	db.Open()
-
+func (h *Handler) getState(target string, id string) {
 	switch target {
 	case "point":
-		point, err := db.GetPoint(id)
+		point, err := h.dbHandler.GetPoint(id)
 		if err != nil {
 			log.Fatal(err)
 		}
 		log.Println(point)
-		token := cc.Publish("point/"+id+"/get/accepted", 0, false, point.State.String())
+		token := h.client.Publish("point/"+id+"/get/accepted", 0, false, point.State.String())
 		token.Wait()
 
 	case "stop":
-		stop, err := db.GetStop(id)
+		stop, err := h.dbHandler.GetStop(id)
 		if err != nil {
 			log.Fatal(err)
 		}
 		log.Println(stop)
-		token := cc.Publish("stop/"+id+"/get/accepted", 0, false, stop.State.String())
+		token := h.client.Publish("stop/"+id+"/get/accepted", 0, false, stop.State.String())
 		token.Wait()
 
 	case "block":
-		block, err := db.GetBlock(id)
+		block, err := h.dbHandler.GetBlock(id)
 		if err != nil {
 			log.Fatal(err)
 		}
 		res, err := json.Marshal(block)
-		token := cc.Publish("block/"+id+"/get/accepted", 0, false, res)
+		if err != nil {
+			slog.Default().Info("invaild json marshaled in mqtt_handler.NotifyStateUpdate", slog.Any("err", err))
+		}
+		token := h.client.Publish("block/"+id+"/get/accepted", 0, false, res)
 		token.Wait()
 
 	case "setting":
@@ -145,11 +141,11 @@ func getState(cc mqtt.Client, target string, id string) {
 		if err != nil {
 			log.Println(err.Error())
 			// Return error message
-			token := cc.Publish("setting/"+id+"/get/accepted", 0, false, "error")
+			token := h.client.Publish("setting/"+id+"/get/accepted", 0, false, "error")
 			token.Wait()
 			return
 		}
-		raw, err := ioutil.ReadFile("../settings/esp/" + id + ".json")
+		raw, err := os.ReadFile("../settings/esp/" + id + ".json")
 		if err != nil {
 			log.Println(err.Error())
 			return
@@ -157,7 +153,7 @@ func getState(cc mqtt.Client, target string, id string) {
 		// remove \n code
 		raw = []byte(strings.Replace(string(raw), "\n", "", -1))
 		raw = []byte(strings.Replace(string(raw), " ", "", -1))
-		token := cc.Publish("setting/"+id+"/get/accepted", 0, false, string(raw))
+		token := h.client.Publish("setting/"+id+"/get/accepted", 0, false, string(raw))
 		token.Wait()
 
 	case "train":
@@ -165,13 +161,11 @@ func getState(cc mqtt.Client, target string, id string) {
 	}
 }
 
-func getDelta(cc mqtt.Client, target string, id string) {
+func (h *Handler) getDelta(target string, id string) {
 
 }
 
-func updateState(cc mqtt.Client, target string, id string, payload []byte) {
-	defer db.C()
-	db.Open()
+func (h *Handler) updateState(target string, id string, payload []byte) {
 
 	switch target {
 	case "block":
@@ -180,7 +174,7 @@ func updateState(cc mqtt.Client, target string, id string, payload []byte) {
 		fmt.Print("newState: ")
 		fmt.Println(newState)
 		if newState == "OPEN" {
-			err := db.UpdateBlock(&statev1.BlockState{
+			err := h.dbHandler.UpdateBlock(&statev1.BlockState{
 				BlockId: id,
 				State:   statev1.BlockStateEnum_BLOCK_STATE_OPEN,
 			})
@@ -189,25 +183,25 @@ func updateState(cc mqtt.Client, target string, id string, payload []byte) {
 			}
 			// NT Tokyo
 			if id == "yamashita_b1" {
-				err := db.UpdateStop(&statev1.StopAndState{
+				err := h.dbHandler.UpdateStop(&statev1.StopAndState{
 					Id:    "yamashita_s1",
 					State: statev1.StopStateEnum_STOP_STATE_GO,
 				})
 				if err != nil {
 					log.Fatal(err)
 				}
-				NotifyStateUpdate("stop", "yamashita_s1", statev1.StopStateEnum_STOP_STATE_GO.String())
-				err = db.UpdateStop(&statev1.StopAndState{
+				h.NotifyStateUpdate("stop", "yamashita_s1", statev1.StopStateEnum_STOP_STATE_GO.String())
+				err = h.dbHandler.UpdateStop(&statev1.StopAndState{
 					Id:    "yamashita_s2",
 					State: statev1.StopStateEnum_STOP_STATE_GO,
 				})
 				if err != nil {
 					log.Fatal(err)
 				}
-				NotifyStateUpdate("stop", "yamashita_s2", statev1.StopStateEnum_STOP_STATE_GO.String())
+				h.NotifyStateUpdate("stop", "yamashita_s2", statev1.StopStateEnum_STOP_STATE_GO.String())
 
 				// 今と逆にする
-				now, err := db.GetPoint("yamashita_p1")
+				now, err := h.dbHandler.GetPoint("yamashita_p1")
 				if err != nil {
 					log.Fatal(err)
 				}
@@ -217,7 +211,7 @@ func updateState(cc mqtt.Client, target string, id string, payload []byte) {
 				} else {
 					newS = statev1.PointStateEnum_POINT_STATE_NORMAL
 				}
-				err = db.UpdatePoint(&statev1.PointAndState{
+				err = h.dbHandler.UpdatePoint(&statev1.PointAndState{
 					Id:    "yamashita_p1",
 					State: newS,
 				})
@@ -226,11 +220,11 @@ func updateState(cc mqtt.Client, target string, id string, payload []byte) {
 					log.Fatal(err)
 				}
 
-				NotifyStateUpdate("point", "yamashita_p1", newS.String())
+				h.NotifyStateUpdate("point", "yamashita_p1", newS.String())
 
 			}
 		} else if newState == "CLOSE" {
-			err := db.UpdateBlock(&statev1.BlockState{
+			err := h.dbHandler.UpdateBlock(&statev1.BlockState{
 				BlockId: id,
 				State:   statev1.BlockStateEnum_BLOCK_STATE_CLOSE,
 			})
@@ -239,22 +233,22 @@ func updateState(cc mqtt.Client, target string, id string, payload []byte) {
 			}
 			// NT Tokyo
 			if id == "yamashita_b1" {
-				err := db.UpdateStop(&statev1.StopAndState{
+				err := h.dbHandler.UpdateStop(&statev1.StopAndState{
 					Id:    "yamashita_s1",
 					State: statev1.StopStateEnum_STOP_STATE_STOP,
 				})
 				if err != nil {
 					log.Fatal(err)
 				}
-				NotifyStateUpdate("stop", "yamashita_s1", statev1.StopStateEnum_STOP_STATE_STOP.String())
-				err = db.UpdateStop(&statev1.StopAndState{
+				h.NotifyStateUpdate("stop", "yamashita_s1", statev1.StopStateEnum_STOP_STATE_STOP.String())
+				err = h.dbHandler.UpdateStop(&statev1.StopAndState{
 					Id:    "yamashita_s2",
 					State: statev1.StopStateEnum_STOP_STATE_STOP,
 				})
 				if err != nil {
 					log.Fatal(err)
 				}
-				NotifyStateUpdate("stop", "yamashita_s2", statev1.StopStateEnum_STOP_STATE_STOP.String())
+				h.NotifyStateUpdate("stop", "yamashita_s2", statev1.StopStateEnum_STOP_STATE_STOP.String())
 			}
 		}
 
