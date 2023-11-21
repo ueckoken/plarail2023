@@ -141,7 +141,7 @@ func main() {
 	),
 	)
 	r.Mount("/debug", middleware.Profiler())
-	r.Handle(statev1connect.NewStateManagerServiceHandler(&connectHandler.StateManagerServer{DBHandler: DBHandler, MqttHandler: mqttHandler}))
+	r.Mount(statev1connect.NewStateManagerServiceHandler(&connectHandler.StateManagerServer{DBHandler: DBHandler, MqttHandler: mqttHandler}))
 
 	srv := &http.Server{
 		Addr:              net.JoinHostPort("0.0.0.0", "8080"),
