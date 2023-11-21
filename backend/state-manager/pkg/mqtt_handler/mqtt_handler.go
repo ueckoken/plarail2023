@@ -141,7 +141,7 @@ func (h *Handler) getState(target string, id string) {
 		if err != nil {
 			log.Println(err.Error())
 			// Return error message
-			token := cc.Publish("setting/"+id+"/get/accepted", 0, false, "error")
+			token := h.client.Publish("setting/"+id+"/get/accepted", 0, false, "error")
 			token.Wait()
 			return
 		}
@@ -153,7 +153,7 @@ func (h *Handler) getState(target string, id string) {
 		// remove \n code
 		raw = []byte(strings.Replace(string(raw), "\n", "", -1))
 		raw = []byte(strings.Replace(string(raw), " ", "", -1))
-		token := cc.Publish("setting/"+id+"/get/accepted", 0, false, string(raw))
+		token := h.client.Publish("setting/"+id+"/get/accepted", 0, false, string(raw))
 		token.Wait()
 
 	case "train":
