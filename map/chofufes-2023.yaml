@@ -1,36 +1,34 @@
 - stations:
-  - name: "調布"
-    id: chofu_up
-    capacity: 2
-  - name: "調布"
-    id: chofu_down
-    capacity: 2
-  - name: "新宿"
-    id: shinjyuku_up
-    capacity: 2
-  - name: "新宿"
-    id: shinjyuku_down
-    capacity: 2
-  - name: "橋本"
-    id: hashimoto_up
-    capacity: 2
-  - name: "橋本"
-    id: hashimoto_down
-    capacity: 2
+    - name: "調布"
+      id: chofu_up
+      capacity: 2
+    - name: "調布"
+      id: chofu_down
+      capacity: 2
+    - name: "新宿"
+      id: shinjyuku_up
+      capacity: 2
+    - name: "新宿"
+      id: shinjyuku_down
+      capacity: 2
+    - name: "橋本"
+      id: hashimoto_up
+      capacity: 2
+    - name: "橋本"
+      id: hashimoto_down
+      capacity: 2
 
 - routes:
-  - name: 本線
-    path:
-      - chofu_up
-      - shinjyuku_up
-      - shinjyuku_down
-      - chofu_down
-      - chofu_up
-  - name: 相模原線
-    path: 
-      - chofu_up
-      - hashimoto_up
-      - hashimoto_down
-      - chofu_down
-
-
+    - name: 本線
+      path:
+        - chofu_up
+        - shinjyuku_up
+        - shinjyuku_down
+        - chofu_down
+        - chofu_up
+    - name: 相模原線
+      path:
+        - chofu_up
+        - hashimoto_up
+        - hashimoto_down
+        - chofu_down
