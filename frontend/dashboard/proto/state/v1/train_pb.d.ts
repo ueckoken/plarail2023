@@ -42,11 +42,18 @@ export declare class Train extends Message<Train> {
   trainId: string;
 
   /**
-   * 駅のID
+   * 駅 or 閉塞のID
    *
-   * @generated from field: string station_id = 2;
+   * @generated from field: string position_id = 2;
    */
-  stationId: string;
+  positionId: string;
+
+  /**
+   * 列車の優先度
+   *
+   * @generated from field: state.v1.Priority priority = 3;
+   */
+  priority: Priority;
 
   constructor(data?: PartialMessage<Train>);
 
