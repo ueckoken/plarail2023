@@ -52,10 +52,7 @@ message AddTrainResponse {
 */
 
 message UpdateTrainRequest {
-  string train_id = 1; // 列車ID
-  string position_id = 2; // 駅 or 閉塞のID
-  Priority priority = 3; // 列車の優先度
-  string uuid = 4; // NFCのUUID
+  Train train = 1;
 }
 
 message UpdateTrainResponse {
