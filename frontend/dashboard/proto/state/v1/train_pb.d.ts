@@ -131,32 +131,9 @@ export declare class GetTrainsResponse extends Message<GetTrainsResponse> {
  */
 export declare class AddTrainRequest extends Message<AddTrainRequest> {
   /**
-   * 列車ID
-   *
-   * @generated from field: string train_id = 1;
+   * @generated from field: state.v1.Train train = 1;
    */
-  trainId: string;
-
-  /**
-   * 駅 or 閉塞のID
-   *
-   * @generated from field: string position_id = 2;
-   */
-  positionId: string;
-
-  /**
-   * 列車の優先度
-   *
-   * @generated from field: state.v1.Priority priority = 3;
-   */
-  priority: Priority;
-
-  /**
-   * NFCのUUID
-   *
-   * @generated from field: string uuid = 4;
-   */
-  uuid: string;
+  train?: Train;
 
   constructor(data?: PartialMessage<AddTrainRequest>);
 

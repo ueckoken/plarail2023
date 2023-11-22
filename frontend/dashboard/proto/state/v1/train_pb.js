@@ -64,10 +64,7 @@ export const GetTrainsResponse = proto3.makeMessageType(
 export const AddTrainRequest = proto3.makeMessageType(
   "state.v1.AddTrainRequest",
   () => [
-    { no: 1, name: "train_id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 2, name: "position_id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 3, name: "priority", kind: "enum", T: proto3.getEnumType(Priority) },
-    { no: 4, name: "uuid", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 1, name: "train", kind: "message", T: Train },
   ],
 );
 
