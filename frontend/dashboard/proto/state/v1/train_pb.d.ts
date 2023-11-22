@@ -55,6 +55,13 @@ export declare class Train extends Message<Train> {
    */
   priority: Priority;
 
+  /**
+   * NFCのUUID
+   *
+   * @generated from field: string uuid = 4;
+   */
+  uuid: string;
+
   constructor(data?: PartialMessage<Train>);
 
   static readonly runtime: typeof proto3;
@@ -118,11 +125,11 @@ export declare class GetTrainsResponse extends Message<GetTrainsResponse> {
 
 /**
  *
- * UpdateTrainUUID : NFCのUUID紐付けを更新するAPI
+ * Add Train : 列車を追加するAPI
  *
- * @generated from message state.v1.UpdateTrainUUIDRequest
+ * @generated from message state.v1.AddTrainRequest
  */
-export declare class UpdateTrainUUIDRequest extends Message<UpdateTrainUUIDRequest> {
+export declare class AddTrainRequest extends Message<AddTrainRequest> {
   /**
    * 列車ID
    *
@@ -131,43 +138,133 @@ export declare class UpdateTrainUUIDRequest extends Message<UpdateTrainUUIDReque
   trainId: string;
 
   /**
+   * 駅 or 閉塞のID
+   *
+   * @generated from field: string position_id = 2;
+   */
+  positionId: string;
+
+  /**
+   * 列車の優先度
+   *
+   * @generated from field: state.v1.Priority priority = 3;
+   */
+  priority: Priority;
+
+  /**
    * NFCのUUID
    *
-   * @generated from field: string uuid = 2;
+   * @generated from field: string uuid = 4;
    */
   uuid: string;
 
-  constructor(data?: PartialMessage<UpdateTrainUUIDRequest>);
+  constructor(data?: PartialMessage<AddTrainRequest>);
 
   static readonly runtime: typeof proto3;
-  static readonly typeName = "state.v1.UpdateTrainUUIDRequest";
+  static readonly typeName = "state.v1.AddTrainRequest";
   static readonly fields: FieldList;
 
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): UpdateTrainUUIDRequest;
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): AddTrainRequest;
 
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): UpdateTrainUUIDRequest;
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): AddTrainRequest;
 
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): UpdateTrainUUIDRequest;
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): AddTrainRequest;
 
-  static equals(a: UpdateTrainUUIDRequest | PlainMessage<UpdateTrainUUIDRequest> | undefined, b: UpdateTrainUUIDRequest | PlainMessage<UpdateTrainUUIDRequest> | undefined): boolean;
+  static equals(a: AddTrainRequest | PlainMessage<AddTrainRequest> | undefined, b: AddTrainRequest | PlainMessage<AddTrainRequest> | undefined): boolean;
 }
 
 /**
- * @generated from message state.v1.UpdateTrainUUIDResponse
+ * @generated from message state.v1.AddTrainResponse
  */
-export declare class UpdateTrainUUIDResponse extends Message<UpdateTrainUUIDResponse> {
-  constructor(data?: PartialMessage<UpdateTrainUUIDResponse>);
+export declare class AddTrainResponse extends Message<AddTrainResponse> {
+  /**
+   * @generated from field: state.v1.Train train = 1;
+   */
+  train?: Train;
+
+  constructor(data?: PartialMessage<AddTrainResponse>);
 
   static readonly runtime: typeof proto3;
-  static readonly typeName = "state.v1.UpdateTrainUUIDResponse";
+  static readonly typeName = "state.v1.AddTrainResponse";
   static readonly fields: FieldList;
 
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): UpdateTrainUUIDResponse;
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): AddTrainResponse;
 
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): UpdateTrainUUIDResponse;
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): AddTrainResponse;
 
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): UpdateTrainUUIDResponse;
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): AddTrainResponse;
 
-  static equals(a: UpdateTrainUUIDResponse | PlainMessage<UpdateTrainUUIDResponse> | undefined, b: UpdateTrainUUIDResponse | PlainMessage<UpdateTrainUUIDResponse> | undefined): boolean;
+  static equals(a: AddTrainResponse | PlainMessage<AddTrainResponse> | undefined, b: AddTrainResponse | PlainMessage<AddTrainResponse> | undefined): boolean;
+}
+
+/**
+ * @generated from message state.v1.UpdateTrainRequest
+ */
+export declare class UpdateTrainRequest extends Message<UpdateTrainRequest> {
+  /**
+   * 列車ID
+   *
+   * @generated from field: string train_id = 1;
+   */
+  trainId: string;
+
+  /**
+   * 駅 or 閉塞のID
+   *
+   * @generated from field: string position_id = 2;
+   */
+  positionId: string;
+
+  /**
+   * 列車の優先度
+   *
+   * @generated from field: state.v1.Priority priority = 3;
+   */
+  priority: Priority;
+
+  /**
+   * NFCのUUID
+   *
+   * @generated from field: string uuid = 4;
+   */
+  uuid: string;
+
+  constructor(data?: PartialMessage<UpdateTrainRequest>);
+
+  static readonly runtime: typeof proto3;
+  static readonly typeName = "state.v1.UpdateTrainRequest";
+  static readonly fields: FieldList;
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): UpdateTrainRequest;
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): UpdateTrainRequest;
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): UpdateTrainRequest;
+
+  static equals(a: UpdateTrainRequest | PlainMessage<UpdateTrainRequest> | undefined, b: UpdateTrainRequest | PlainMessage<UpdateTrainRequest> | undefined): boolean;
+}
+
+/**
+ * @generated from message state.v1.UpdateTrainResponse
+ */
+export declare class UpdateTrainResponse extends Message<UpdateTrainResponse> {
+  /**
+   * @generated from field: state.v1.Train train = 1;
+   */
+  train?: Train;
+
+  constructor(data?: PartialMessage<UpdateTrainResponse>);
+
+  static readonly runtime: typeof proto3;
+  static readonly typeName = "state.v1.UpdateTrainResponse";
+  static readonly fields: FieldList;
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): UpdateTrainResponse;
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): UpdateTrainResponse;
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): UpdateTrainResponse;
+
+  static equals(a: UpdateTrainResponse | PlainMessage<UpdateTrainResponse> | undefined, b: UpdateTrainResponse | PlainMessage<UpdateTrainResponse> | undefined): boolean;
 }
 

@@ -30,6 +30,7 @@ export const Train = proto3.makeMessageType(
     { no: 1, name: "train_id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 2, name: "position_id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 3, name: "priority", kind: "enum", T: proto3.getEnumType(Priority) },
+    { no: 4, name: "uuid", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ],
 );
 
@@ -56,23 +57,50 @@ export const GetTrainsResponse = proto3.makeMessageType(
 
 /**
  *
- * UpdateTrainUUID : NFCのUUID紐付けを更新するAPI
+ * Add Train : 列車を追加するAPI
  *
- * @generated from message state.v1.UpdateTrainUUIDRequest
+ * @generated from message state.v1.AddTrainRequest
  */
-export const UpdateTrainUUIDRequest = proto3.makeMessageType(
-  "state.v1.UpdateTrainUUIDRequest",
+export const AddTrainRequest = proto3.makeMessageType(
+  "state.v1.AddTrainRequest",
   () => [
     { no: 1, name: "train_id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 2, name: "uuid", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "position_id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "priority", kind: "enum", T: proto3.getEnumType(Priority) },
+    { no: 4, name: "uuid", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ],
 );
 
 /**
- * @generated from message state.v1.UpdateTrainUUIDResponse
+ * @generated from message state.v1.AddTrainResponse
  */
-export const UpdateTrainUUIDResponse = proto3.makeMessageType(
-  "state.v1.UpdateTrainUUIDResponse",
-  [],
+export const AddTrainResponse = proto3.makeMessageType(
+  "state.v1.AddTrainResponse",
+  () => [
+    { no: 1, name: "train", kind: "message", T: Train },
+  ],
+);
+
+/**
+ * @generated from message state.v1.UpdateTrainRequest
+ */
+export const UpdateTrainRequest = proto3.makeMessageType(
+  "state.v1.UpdateTrainRequest",
+  () => [
+    { no: 1, name: "train_id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "position_id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "priority", kind: "enum", T: proto3.getEnumType(Priority) },
+    { no: 4, name: "uuid", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ],
+);
+
+/**
+ * @generated from message state.v1.UpdateTrainResponse
+ */
+export const UpdateTrainResponse = proto3.makeMessageType(
+  "state.v1.UpdateTrainResponse",
+  () => [
+    { no: 1, name: "train", kind: "message", T: Train },
+  ],
 );
 
