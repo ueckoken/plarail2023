@@ -7,7 +7,7 @@ import { GetBlockStatesRequest, GetBlockStatesResponse, UpdateBlockStateRequest,
 import { MethodKind } from "@bufbuild/protobuf";
 import { GetPointStatesRequest, GetPointStatesResponse, UpdatePointStateRequest, UpdatePointStateResponse } from "./point_pb.js";
 import { GetStopStatesRequest, GetStopStatesResponse, UpdateStopStateRequest, UpdateStopStateResponse } from "./stop_pb.js";
-import { GetTrainsRequest, GetTrainsResponse, UpdateTrainUUIDRequest, UpdateTrainUUIDResponse } from "./train_pb.js";
+import { AddTrainRequest, AddTrainResponse, GetTrainsRequest, GetTrainsResponse, UpdateTrainRequest, UpdateTrainResponse } from "./train_pb.js";
 
 /**
  *
@@ -91,12 +91,21 @@ export declare const StateManagerService: {
       readonly kind: MethodKind.Unary,
     },
     /**
-     * @generated from rpc state.v1.StateManagerService.UpdateTrainUUID
+     * @generated from rpc state.v1.StateManagerService.AddTrain
      */
-    readonly updateTrainUUID: {
-      readonly name: "UpdateTrainUUID",
-      readonly I: typeof UpdateTrainUUIDRequest,
-      readonly O: typeof UpdateTrainUUIDResponse,
+    readonly addTrain: {
+      readonly name: "AddTrain",
+      readonly I: typeof AddTrainRequest,
+      readonly O: typeof AddTrainResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc state.v1.StateManagerService.UpdateTrain
+     */
+    readonly updateTrain: {
+      readonly name: "UpdateTrain",
+      readonly I: typeof UpdateTrainRequest,
+      readonly O: typeof UpdateTrainResponse,
       readonly kind: MethodKind.Unary,
     },
   }
