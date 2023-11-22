@@ -2,3 +2,4 @@
 go.work.sum
 node_modules/
 dist
+.env
