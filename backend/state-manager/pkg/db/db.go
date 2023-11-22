@@ -86,18 +86,18 @@ func (db *DBHandler) GetPoint(pointId string) (*statev1.PointAndState, error) {
 	return result, nil
 }
 
-func (db *DBHandler) GetPoints() []*statev1.PointAndState {
+func (db *DBHandler) GetPoints() ([]*statev1.PointAndState, error) {
 	collection := db.stateManagerDB.Collection("points")
 	cursor, err := collection.Find(context.Background(), bson.M{})
 	if err != nil {
 		slog.Default().Warn("Get Points failed", slog.Any("err", err))
-		panic(err)
+		return nil, err
 	}
 	var result []*statev1.PointAndState
 	if err = cursor.All(context.Background(), &result); err != nil {
-		panic(err)
+		return nil, err
 	}
-	return result
+	return result, nil
 }
 
 /*
@@ -138,17 +138,17 @@ func (db *DBHandler) GetStop(stopId string) (*statev1.StopAndState, error) {
 	return result, nil
 }
 
-func (db *DBHandler) GetStops() []*statev1.StopAndState {
+func (db *DBHandler) GetStops() ([]*statev1.StopAndState, error) {
 	collection := db.stateManagerDB.Collection("stops")
 	cursor, err := collection.Find(context.Background(), bson.M{})
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	var result []*statev1.StopAndState
 	if err = cursor.All(context.Background(), &result); err != nil {
-		panic(err)
+		return nil, err
 	}
-	return result
+	return result, nil
 }
 
 /*
@@ -194,6 +194,55 @@ func (db *DBHandler) GetBlocks() ([]*statev1.BlockState, error) {
 		return nil, err
 	}
 	var result []*statev1.BlockState
+	if err = cursor.All(context.Background(), &result); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+/*
+Train
+*/
+
+func (db *DBHandler) AddTrain(train *statev1.Train) error {
+	collection := db.stateManagerDB.Collection("trains")
+	_, err := collection.InsertOne(context.Background(), train)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (db *DBHandler) UpdateTrain(train *statev1.Train) error {
+	collection := db.stateManagerDB.Collection("trains")
+	_, err := collection.UpdateOne(
+		context.Background(),
+		bson.M{"trainid": train.TrainId},
+		bson.M{"$set": bson.M{"state": train}},
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (db *DBHandler) GetTrain(trainId string) (*statev1.Train, error) {
+	collection := db.stateManagerDB.Collection("trains")
+	var result *statev1.Train
+	err := collection.FindOne(context.Background(), bson.M{"trainid": trainId}).Decode(&result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (db *DBHandler) GetTrains() ([]*statev1.Train, error) {
+	collection := db.stateManagerDB.Collection("trains")
+	cursor, err := collection.Find(context.Background(), bson.M{})
+	if err != nil {
+		return nil, err
+	}
+	var result []*statev1.Train
 	if err = cursor.All(context.Background(), &result); err != nil {
 		return nil, err
 	}
