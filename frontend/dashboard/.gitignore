@@ -34,3 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# prettier / Eslint
+.eslintrc.json
+.prettierrc.json

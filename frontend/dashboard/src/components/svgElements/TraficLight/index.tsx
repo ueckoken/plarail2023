@@ -1,0 +1,1 @@
+export { TraficLight } from "./TraficLight";
