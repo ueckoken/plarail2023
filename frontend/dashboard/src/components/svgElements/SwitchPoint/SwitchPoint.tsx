@@ -26,7 +26,7 @@ export const SwitchPoint: React.FC<Props> = ({
     const fromAnglePointX = position.x + Math.cos(degToRad(fromAngle)) * 10;
     const fromAnglePointY = position.y + Math.sin(degToRad(fromAngle)) * 10;
 
-    let outAngle = isLeft ? leftOutAngle : rightOutAngle;
+    const outAngle = isLeft ? leftOutAngle : rightOutAngle;
 
     return (
         <g
