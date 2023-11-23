@@ -18,12 +18,15 @@ enum Priority {
 }
 
 message Train {
-  string train_id = 1;          // 列車ID(NFCのUUIDと一意に対応している)
-  string station_id = 2;  // 駅のID
+  string train_id = 1; // 列車ID(NFCのUUIDと一意に対応している)
+  string position_id = 2; // 駅 or 閉塞のID
+  Priority priority = 3; // 列車の優先度
+  string uuid = 4; // NFCのUUID
+  string destination = 5; // 行き先
 }
 
 /*
-  GetTrains : 列車の状態を取得するAPI
+   GetTrains : 列車の状態を取得するAPI
 */
 message GetTrainsRequest {}
 
@@ -32,11 +35,24 @@ message GetTrainsResponse {
 }
 
 /*
-  UpdateTrainUUID : NFCのUUID紐付けを更新するAPI
+   Add Train : 列車を追加するAPI
 */
-message UpdateTrainUUIDRequest {
-  string train_id = 1;  // 列車ID
-  string uuid = 2;      // NFCのUUID
+message AddTrainRequest {
+  Train train = 1;
 }
 
-message UpdateTrainUUIDResponse{}
+message AddTrainResponse {
+  Train train = 1;
+}
+
+/*
+   Update Train: 列車の情報を更新するAPI
+*/
+
+message UpdateTrainRequest {
+  Train train = 1;
+}
+
+message UpdateTrainResponse {
+  Train train = 1;
+}

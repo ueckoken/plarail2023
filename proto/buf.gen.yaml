@@ -12,3 +12,23 @@ plugins:
     out: ../backend/spec
     opt:
       - paths=source_relative
+  - plugin: es
+    path: ../frontend/dashboard/node_modules/.bin/protoc-gen-es
+    out: ../frontend/dashboard/proto
+    opt:
+      - target=dts+js
+  - plugin: connect-es
+    path: ../frontend/dashboard/node_modules/.bin/protoc-gen-connect-web
+    out: ../frontend/dashboard/proto
+    opt:
+      - target=dts+js
+  - plugin: es
+    path: ../frontend/dashboard/node_modules/.bin/protoc-gen-es
+    out: ../backend/auto-operation/proto
+    opt:
+      - target=dts+js
+  - plugin: connect-es
+    path: ../frontend/dashboard/node_modules/.bin/protoc-gen-connect-web
+    out: ../backend/auto-operation/proto
+    opt:
+      - target=dts+js
