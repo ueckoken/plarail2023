@@ -11,7 +11,7 @@ interface Props {
     onClick?: () => void;
 }
 
-export const TraficLight: React.FC<Props> = ({ position, isStop, onClick }) => {
+export const TrafficLight: React.FC<Props> = ({ position, isStop, onClick }) => {
     return (
         <g
             onClick={onClick}
