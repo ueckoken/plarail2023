@@ -1,1 +1,1 @@
-export { TrafficLight as TraficLight } from "./TraficLight";
+export { TrafficLight } from "./TrafficLight";
