@@ -22,6 +22,7 @@ message Train {
   string position_id = 2; // 駅 or 閉塞のID
   Priority priority = 3; // 列車の優先度
   string uuid = 4; // NFCのUUID
+  string destination = 5; // 行き先
 }
 
 /*

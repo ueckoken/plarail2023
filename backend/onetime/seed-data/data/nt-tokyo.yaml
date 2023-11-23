@@ -1,6 +1,3 @@
-stations:
-  - yamashita
-  - umishita
 stop_rails:
   - yamashita_s1
   - yamashita_s2
