@@ -5,14 +5,17 @@ import (
 	"errors"
 	"log/slog"
 
-	"connectrpc.com/connect"
+	connect "connectrpc.com/connect"
 
 	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
-	db "github.com/ueckoken/plarail2023/backend/state-manager/pkg/db"
+	"github.com/ueckoken/plarail2023/backend/state-manager/pkg/db"
 	"github.com/ueckoken/plarail2023/backend/state-manager/pkg/mqtt_handler"
 )
 
-type StateManagerServer struct{}
+type StateManagerServer struct {
+	DBHandler   *db.DBHandler
+	MqttHandler *mqtt_handler.Handler
+}
 
 /*
 Block
@@ -23,9 +26,7 @@ func (s *StateManagerServer) GetBlockStates(
 	ctx context.Context,
 	req *connect.Request[statev1.GetBlockStatesRequest],
 ) (*connect.Response[statev1.GetBlockStatesResponse], error) {
-	defer db.C()
-	db.Open()
-	blockStates, err := db.GetBlocks()
+	blockStates, err := s.DBHandler.GetBlocks()
 	if err != nil {
 		err = connect.NewError(
 			connect.CodeUnknown,
@@ -55,9 +56,7 @@ func (s *StateManagerServer) UpdateBlockState(
 	ctx context.Context,
 	req *connect.Request[statev1.UpdateBlockStateRequest],
 ) (*connect.Response[statev1.UpdateBlockStateResponse], error) {
-	defer db.C()
-	db.Open()
-	err := db.UpdateBlock(req.Msg.State)
+	err := s.DBHandler.UpdateBlock(req.Msg.State)
 	if err != nil {
 		err = connect.NewError(
 			connect.CodeUnknown,
@@ -77,9 +76,7 @@ func (s *StateManagerServer) UpdatePointState(
 	ctx context.Context,
 	req *connect.Request[statev1.UpdatePointStateRequest],
 ) (*connect.Response[statev1.UpdatePointStateResponse], error) {
-	defer db.C()
-	db.Open()
-	err := db.UpdatePoint(req.Msg.State)
+	err := s.DBHandler.UpdatePoint(req.Msg.State)
 	if err != nil {
 		err = connect.NewError(
 			connect.CodeUnknown,
@@ -88,7 +85,7 @@ func (s *StateManagerServer) UpdatePointState(
 		slog.Default().Error("db error", err)
 		return nil, err
 	}
-	mqtt_handler.NotifyStateUpdate("point", req.Msg.State.Id, req.Msg.State.State.String())
+	s.MqttHandler.NotifyStateUpdate("point", req.Msg.State.Id, req.Msg.State.State.String())
 
 	return connect.NewResponse(&statev1.UpdatePointStateResponse{}), nil
 }
@@ -97,11 +94,29 @@ func (s *StateManagerServer) GetPointStates(
 	ctx context.Context,
 	req *connect.Request[statev1.GetPointStatesRequest],
 ) (*connect.Response[statev1.GetPointStatesResponse], error) {
-	err := connect.NewError(
-		connect.CodeUnknown,
-		errors.New("not implemented"),
-	)
-	return nil, err
+	blockStates, err := s.DBHandler.GetPoints()
+	if err != nil {
+		err = connect.NewError(
+			connect.CodeUnknown,
+			errors.New("db error"),
+		)
+		return nil, err
+	}
+
+	var response []*statev1.PointAndState
+
+	for _, pointState := range blockStates {
+		response = append(response, &statev1.PointAndState{
+			Id:    pointState.Id,
+			State: pointState.State,
+		})
+	}
+
+	res := connect.NewResponse(&statev1.GetPointStatesResponse{
+		States: response,
+	})
+
+	return res, nil
 }
 
 /*
@@ -112,9 +127,7 @@ func (s *StateManagerServer) UpdateStopState(
 	ctx context.Context,
 	req *connect.Request[statev1.UpdateStopStateRequest],
 ) (*connect.Response[statev1.UpdateStopStateResponse], error) {
-	db.Open()
-	defer db.C()
-	err := db.UpdateStop(req.Msg.State)
+	err := s.DBHandler.UpdateStop(req.Msg.State)
 	if err != nil {
 		err = connect.NewError(
 			connect.CodeUnknown,
@@ -123,7 +136,7 @@ func (s *StateManagerServer) UpdateStopState(
 		slog.Default().Error("db connection error", err)
 		return nil, err
 	}
-	mqtt_handler.NotifyStateUpdate("stop", req.Msg.State.Id, req.Msg.State.State.String())
+	s.MqttHandler.NotifyStateUpdate("stop", req.Msg.State.Id, req.Msg.State.State.String())
 	return connect.NewResponse(&statev1.UpdateStopStateResponse{}), nil
 }
 
@@ -131,11 +144,30 @@ func (s *StateManagerServer) GetStopStates(
 	ctx context.Context,
 	req *connect.Request[statev1.GetStopStatesRequest],
 ) (*connect.Response[statev1.GetStopStatesResponse], error) {
-	err := connect.NewError(
-		connect.CodeUnknown,
-		errors.New("not implemented"),
-	)
-	return nil, err
+	stopStates, err := s.DBHandler.GetStops()
+	if err != nil {
+		err = connect.NewError(
+			connect.CodeUnknown,
+			errors.New("db error"),
+		)
+		slog.Default().Error("db connection error", err)
+		return nil, err
+	}
+
+	var response []*statev1.StopAndState
+
+	for _, stopState := range stopStates {
+		response = append(response, &statev1.StopAndState{
+			Id:    stopState.Id,
+			State: stopState.State,
+		})
+	}
+
+	res := connect.NewResponse(&statev1.GetStopStatesResponse{
+		States: response,
+	})
+
+	return res, nil
 }
 
 /*
@@ -146,20 +178,57 @@ func (s *StateManagerServer) GetTrains(
 	ctx context.Context,
 	req *connect.Request[statev1.GetTrainsRequest],
 ) (*connect.Response[statev1.GetTrainsResponse], error) {
-	err := connect.NewError(
-		connect.CodeUnknown,
-		errors.New("not implemented"),
-	)
-	return nil, err
+	trains, err := s.DBHandler.GetTrains()
+	if err != nil {
+		err = connect.NewError(
+			connect.CodeUnknown,
+			errors.New("db error"),
+		)
+		slog.Default().Error("db connection error", err)
+	}
+	var response []*statev1.Train
+
+	for _, train := range trains {
+		response = append(response, &statev1.Train{
+			TrainId:    train.TrainId,
+			PositionId: train.PositionId,
+			Priority:   train.Priority,
+		})
+	}
+
+	res := connect.NewResponse(&statev1.GetTrainsResponse{
+		Trains: response,
+	})
+
+	return res, err
 }
 
-func (s *StateManagerServer) UpdateTrainUUID(
+func (s *StateManagerServer) AddTrain(
 	ctx context.Context,
-	req *connect.Request[statev1.UpdateTrainUUIDRequest],
-) (*connect.Response[statev1.UpdateTrainUUIDResponse], error) {
-	err := connect.NewError(
-		connect.CodeUnknown,
-		errors.New("not implemented"),
-	)
-	return nil, err
+	req *connect.Request[statev1.AddTrainRequest],
+) (*connect.Response[statev1.AddTrainResponse], error) {
+	err := s.DBHandler.AddTrain(req.Msg.Train)
+	if err != nil {
+		err = connect.NewError(
+			connect.CodeUnknown,
+			errors.New("db error"),
+		)
+		slog.Default().Error("db connection error", err)
+	}
+	return connect.NewResponse(&statev1.AddTrainResponse{}), err
+}
+
+func (s *StateManagerServer) UpdateTrain(
+	ctx context.Context,
+	req *connect.Request[statev1.UpdateTrainRequest],
+) (*connect.Response[statev1.UpdateTrainResponse], error) {
+	err := s.DBHandler.UpdateTrain(req.Msg.Train)
+	if err != nil {
+		err = connect.NewError(
+			connect.CodeUnknown,
+			errors.New("db error"),
+		)
+		slog.Default().Error("db connection error", err)
+	}
+	return connect.NewResponse(&statev1.UpdateTrainResponse{}), err
 }
