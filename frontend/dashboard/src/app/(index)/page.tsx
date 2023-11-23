@@ -9,7 +9,7 @@ import {
     Train,
 } from "@/components/svgElements";
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getPointStates, getStopStates, updatePointState, updateStopState } from '@/proto/state/v1/state-StateManagerService_connectquery'
+import { getPointStates, getStopStates, getTrains, updatePointState, updateStopState } from '@/proto/state/v1/state-StateManagerService_connectquery'
 import { StopStateEnum } from "@/proto/state/v1/stop_pb";
 import {PointStateEnum} from "@/proto/state/v1/point_pb";
 
@@ -36,11 +36,14 @@ const POINT_RAILS_FROM_ID: Map<string, {x: number, y: number, fixed: number, str
   ["chofu_up_p1", { x: 1000, y: 140, fixed: -90, straight: 90, changed: 135 }], // Question: これdownじゃない？
 ]);
 
+const LOCATIONS_FOR_TRAIN_FROM_ID: Map<string, {x: number, y: number}> = new Map([...STOP_RAILS_FROM_ID, ...POINT_RAILS_FROM_ID])
+
 export default function Home() {
     const { data: stops, refetch: refetchStops } = useQuery(getStopStates.useQuery({}));
-    const { data: points, refetch: refetchPoints } = useQuery(getPointStates.useQuery({}));
     const { mutate: mutateStops } = useMutation(updateStopState.useMutation({}));
+    const { data: points, refetch: refetchPoints } = useQuery(getPointStates.useQuery({}));
     const { mutate: mutatePoints } = useMutation(updatePointState.useMutation({}));
+    const { data: trains } = useQuery(getTrains.useQuery({}));
     return (
         <>
             <svg width="100%" height="620px">
@@ -131,6 +134,18 @@ export default function Home() {
                     )
                   })
                 }
+                {
+                  trains?.trains.map((train) => {
+                    const s = LOCATIONS_FOR_TRAIN_FROM_ID.get(train.positionId)
+                    if (s == undefined){
+                      throw new Error(`unknown train location: ${train.positionId}`)
+                    }
+                    return ( <Train position={s} key={train.trainId} trainData={{id: train.trainId, type: train.priority}}/>
+                    )
+                  })
+
+                }
+
             </svg>
         </>
     );
