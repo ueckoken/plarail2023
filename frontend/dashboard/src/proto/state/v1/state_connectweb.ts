@@ -7,7 +7,7 @@ import { GetBlockStatesRequest, GetBlockStatesResponse, UpdateBlockStateRequest,
 import { MethodKind } from "@bufbuild/protobuf";
 import { GetPointStatesRequest, GetPointStatesResponse, UpdatePointStateRequest, UpdatePointStateResponse } from "./point_pb.js";
 import { GetStopStatesRequest, GetStopStatesResponse, UpdateStopStateRequest, UpdateStopStateResponse } from "./stop_pb.js";
-import { GetTrainsRequest, GetTrainsResponse, UpdateTrainUUIDRequest, UpdateTrainUUIDResponse } from "./train_pb.js";
+import { AddTrainRequest, AddTrainResponse, GetTrainsRequest, GetTrainsResponse, UpdateTrainRequest, UpdateTrainResponse } from "./train_pb.js";
 
 /**
  *
@@ -91,12 +91,21 @@ export const StateManagerService = {
       kind: MethodKind.Unary,
     },
     /**
-     * @generated from rpc state.v1.StateManagerService.UpdateTrainUUID
+     * @generated from rpc state.v1.StateManagerService.AddTrain
      */
-    updateTrainUUID: {
-      name: "UpdateTrainUUID",
-      I: UpdateTrainUUIDRequest,
-      O: UpdateTrainUUIDResponse,
+    addTrain: {
+      name: "AddTrain",
+      I: AddTrainRequest,
+      O: AddTrainResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc state.v1.StateManagerService.UpdateTrain
+     */
+    updateTrain: {
+      name: "UpdateTrain",
+      I: UpdateTrainRequest,
+      O: UpdateTrainResponse,
       kind: MethodKind.Unary,
     },
   }
