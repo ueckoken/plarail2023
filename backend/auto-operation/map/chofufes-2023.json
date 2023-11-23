@@ -1,0 +1,50 @@
+{
+  "stopBlocks": {
+    "shinjyuku_down_s1": "shinjyuku_down_b1",
+    "sakurajosui_down_s1": "sakurajosui_down_b1",
+    "sakurajosui_down_s2": "sakurajosui_down_b1",
+    "chofu_down_s2": "chofu_down_b2",
+    "hashimoto_down_s1": "hashimoto_down_b1",
+    "hashimoto_up_s1": "hashimoto_up_b1",
+    "chofu_up_s2": "chofu_up_b1",
+    "chofu_down_s1": "chofu_down_b1",
+    "hachioji_down_s1": "hachioji_down_b1",
+    "hachioji_up_s1": "hachioji_up_b1",
+    "chofu_up_s1": "chofu_up_b1",
+    "sakurajosui_up_s1": "sakurajosui_up_b1",
+    "sakurajosui_up_s2": "sakurajosui_up_b1",
+    "shinjyuku_up_s1": "shinjyuku_up_b1"
+  },
+  "stations": {
+    "shinjyuku_up": {
+      "capacity": 1
+    },
+    "shinjyuku_down": {
+      "capacity": 1
+    },
+    "sakurajosui_up": {
+      "capacity": 2
+    },
+    "sakurajosui_down": {
+      "capacity": 2
+    },
+    "chofu_up": {
+      "capacity": 1
+    },
+    "chofu_down": {
+      "capacity": 1
+    },
+    "hashimoto_up": {
+      "capacity": 1
+    },
+    "hashimoto_down": {
+      "capacity": 1
+    },
+    "hachioji_up": {
+      "capacity": 1
+    },
+    "hachioji_down": {
+      "capacity": 1
+    }
+  }
+}
