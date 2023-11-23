@@ -1,0 +1,24 @@
+version: v1
+managed:
+  enabled: true
+  go_package_prefix:
+    default: github.com/ueckoken/plarail2023/backend/spec
+plugins:
+  - plugin: go
+    out: ../backend/spec
+    opt:
+      - paths=source_relative
+  - plugin: connect-go
+    out: ../backend/spec
+    opt:
+      - paths=source_relative
+  - plugin: es
+    path: ../frontend/dashboard/node_modules/.bin/protoc-gen-es
+    out: ../frontend/dashboard/proto
+    opt:
+      - target=dts+js
+  - plugin: connect-es
+    path: ../frontend/dashboard/node_modules/.bin/protoc-gen-connect-web
+    out: ../frontend/dashboard/proto
+    opt:
+      - target=dts+js

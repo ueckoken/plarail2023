@@ -1,5 +1,16 @@
-buf:
-	rm -Rf ./backend/proto
-	buf generate --path=./proto/
-	cd ./backend/proto && go mod init github.com/ueckoken/plarail2023/backend/proto
-	cd ./backend/proto && go mod tidy
+up:
+	docker compose down
+	docker compose up --build -d
+
+pull:
+	git pull
+
+test:
+	docker compose -f compose.debug.yaml up --build -d
+
+test-status:
+	docker compose -f compose.debug.yaml ps
+
+test-logs:
+	docker compose -f compose.debug.yaml logs -f
+

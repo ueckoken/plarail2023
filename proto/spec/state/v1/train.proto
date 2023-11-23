@@ -1,0 +1,57 @@
+/*
+   Train Proto
+   駅に停車している列車の情報を扱うためのプロトコル
+*/
+
+syntax = "proto3";
+
+package state.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "pkg/grpc";
+
+enum Priority {
+  PRIORITY_UNSPECIFIED = 0;
+  PRIORITY_LOW = 1;
+  PRIORITY_HIGH = 2;
+}
+
+message Train {
+  string train_id = 1; // 列車ID(NFCのUUIDと一意に対応している)
+  string position_id = 2; // 駅 or 閉塞のID
+  Priority priority = 3; // 列車の優先度
+  string uuid = 4; // NFCのUUID
+}
+
+/*
+   GetTrains : 列車の状態を取得するAPI
+*/
+message GetTrainsRequest {}
+
+message GetTrainsResponse {
+  repeated Train trains = 1;
+}
+
+/*
+   Add Train : 列車を追加するAPI
+*/
+message AddTrainRequest {
+  Train train = 1;
+}
+
+message AddTrainResponse {
+  Train train = 1;
+}
+
+/*
+   Update Train: 列車の情報を更新するAPI
+*/
+
+message UpdateTrainRequest {
+  Train train = 1;
+}
+
+message UpdateTrainResponse {
+  Train train = 1;
+}

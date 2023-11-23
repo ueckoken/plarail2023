@@ -1,0 +1,36 @@
+/*
+   Point Proto
+   ポイントレールの状態を扱うプロトコル
+*/
+syntax = "proto3";
+
+package state.v1;
+
+enum PointStateEnum {
+  POINT_STATE_UNKNOWN = 0;
+  POINT_STATE_NORMAL = 1;   // ポイントがまっすぐな状態
+  POINT_STATE_REVERSE = 2;  // ポイントが移動している状態
+}
+
+message PointAndState {
+  string id = 1; // ポイントのid
+  PointStateEnum state = 2; // ポイントの状態
+}
+
+/*
+  UpdatePointState : ポイントの状態を更新するAPI
+*/
+message UpdatePointStateRequest {
+  PointAndState state = 1;
+}
+
+message UpdatePointStateResponse {}
+
+/*
+  GetPointStates : 全てのポイントの状態を取得するAPI
+*/
+message GetPointStatesRequest {}
+
+message GetPointStatesResponse {
+  repeated PointAndState states = 1;
+}

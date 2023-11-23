@@ -1,0 +1,4 @@
+.DS_Store
+go.work.sum
+node_modules/
+dist

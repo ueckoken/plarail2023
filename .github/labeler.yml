@@ -1,9 +1,15 @@
 backend:
   - any:
       - "backend/**"
+
+hardware:
+  - any:
+      - "hardware/**"
+
 dashboard:
   - any:
       - "frontend/dashboard/**"
+      - "frontend/editor/**"
 video-sender:
   - any:
       - "frontend/video-sender/**"
