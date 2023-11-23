@@ -62,6 +62,13 @@ export declare class Train extends Message<Train> {
    */
   uuid: string;
 
+  /**
+   * 行き先
+   *
+   * @generated from field: string destination = 5;
+   */
+  destination: string;
+
   constructor(data?: PartialMessage<Train>);
 
   static readonly runtime: typeof proto3;

@@ -1131,6 +1131,14 @@
     "@bufbuild/protobuf" "^1.3.3"
     "@bufbuild/protoplugin" "^1.3.3"
 
+"@connectrpc/protoc-gen-connect-query@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@connectrpc/protoc-gen-connect-query/-/protoc-gen-connect-query-0.6.0.tgz#bb19291a3c949a8c23f4a27d23fb0c9fb67e48c0"
+  integrity sha512-Y8Zow5bK/WFVABbrIYpqDo5hVYzWyqRuXfGLqurhKthrbpDKgB/MGYaz8ly7k2B0SE28//62HKVKlM63w12S4g==
+  dependencies:
+    "@bufbuild/protobuf" "^1.3.3"
+    "@bufbuild/protoplugin" "^1.3.3"
+
 "@jridgewell/gen-mapping@^0.3.0", "@jridgewell/gen-mapping@^0.3.2":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@jridgewell/gen-mapping/-/gen-mapping-0.3.3.tgz#7e02e6eb5df901aaedb08514203b096614024098"
@@ -1325,6 +1333,18 @@
   integrity sha512-E4KcWTpoLHqwPHLxidpOqQbcrZVgi0rsmmZXUle1jXmJfuIf/UWpczUJ7MZZ5tlxytgJXyp0w4PGkkeLiuIdZw==
   dependencies:
     tslib "^2.4.0"
+
+"@tanstack/query-core@5.8.3":
+  version "5.8.3"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.8.3.tgz#7c6d62721518223e8b27f1a0b5e9bd4e3bb7ecd8"
+  integrity sha512-SWFMFtcHfttLYif6pevnnMYnBvxKf3C+MHMH7bevyYfpXpTMsLB9O6nNGBdWSoPwnZRXFNyNeVZOw25Wmdasow==
+
+"@tanstack/react-query@^5.8.4":
+  version "5.8.4"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.8.4.tgz#7d5ef4dc4e2985fdc607d0f30ff79a8453abe652"
+  integrity sha512-CD+AkXzg8J72JrE6ocmuBEJfGzEzu/bzkD6sFXFDDB5yji9N20JofXZlN6n0+CaPJuIi+e4YLCbGsyPFKkfNQA==
+  dependencies:
+    "@tanstack/query-core" "5.8.3"
 
 "@trysound/sax@0.2.0":
   version "0.2.0"
