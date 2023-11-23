@@ -16,17 +16,18 @@ plugins:
     path: ../frontend/dashboard/node_modules/.bin/protoc-gen-es
     out: ../frontend/dashboard/src/proto
     opt:
-      - target=dts+js
+      - target=ts
   - plugin: connect-es
     path: ../frontend/dashboard/node_modules/.bin/protoc-gen-connect-web
     out: ../frontend/dashboard/src/proto
     opt:
-      - target=dts+js
+      - target=ts
   - plugin: connect-query
     path: ../frontend/dashboard/node_modules/.bin/protoc-gen-connect-query
     out: ../frontend/dashboard/src/proto
     opt:
       - target=ts
+      - import_extension=.ts
   - plugin: es
     path: ../frontend/dashboard/node_modules/.bin/protoc-gen-es
     out: ../backend/auto-operation/proto
