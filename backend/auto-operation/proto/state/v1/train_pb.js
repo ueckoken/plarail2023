@@ -31,6 +31,7 @@ export const Train = proto3.makeMessageType(
     { no: 2, name: "position_id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 3, name: "priority", kind: "enum", T: proto3.getEnumType(Priority) },
     { no: 4, name: "uuid", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 5, name: "destination", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ],
 );
 
