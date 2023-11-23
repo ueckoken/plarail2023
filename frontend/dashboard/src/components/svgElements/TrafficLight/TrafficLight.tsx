@@ -3,7 +3,7 @@ import clsx from "clsx";
 
 import { Coordinate } from "@/types/Coordinate";
 
-import styles from "./TraficLight.module.scss";
+import styles from "./TrafficLight.module.scss";
 
 interface Props {
     position: Coordinate;
