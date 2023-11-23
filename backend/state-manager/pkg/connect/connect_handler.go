@@ -190,9 +190,11 @@ func (s *StateManagerServer) GetTrains(
 
 	for _, train := range trains {
 		response = append(response, &statev1.Train{
-			TrainId:    train.TrainId,
-			PositionId: train.PositionId,
-			Priority:   train.Priority,
+			TrainId:     train.TrainId,
+			PositionId:  train.PositionId,
+			Priority:    train.Priority,
+			Uuid:        train.Uuid,
+			Destination: train.Destination,
 		})
 	}
 
