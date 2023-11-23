@@ -8,8 +8,8 @@ import "state/v1/stop.proto";
 import "state/v1/train.proto";
 
 /*
-  StateManagerが提供するサービス
-  AutoOperationとフロントエンド間の通信に利用される
+   StateManagerが提供するサービス
+   AutoOperationとフロントエンド間の通信に利用される
 */
 service StateManagerService {
   /* Block */
@@ -23,5 +23,6 @@ service StateManagerService {
   rpc GetStopStates(GetStopStatesRequest) returns (GetStopStatesResponse);
   /* Train */
   rpc GetTrains(GetTrainsRequest) returns (GetTrainsResponse);
-  rpc UpdateTrainUUID(UpdateTrainUUIDRequest) returns (UpdateTrainUUIDResponse);
+  rpc AddTrain(AddTrainRequest) returns (AddTrainResponse);
+  rpc UpdateTrain(UpdateTrainRequest) returns (UpdateTrainResponse);
 }

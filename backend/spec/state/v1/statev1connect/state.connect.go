@@ -54,9 +54,12 @@ const (
 	// StateManagerServiceGetTrainsProcedure is the fully-qualified name of the StateManagerService's
 	// GetTrains RPC.
 	StateManagerServiceGetTrainsProcedure = "/state.v1.StateManagerService/GetTrains"
-	// StateManagerServiceUpdateTrainUUIDProcedure is the fully-qualified name of the
-	// StateManagerService's UpdateTrainUUID RPC.
-	StateManagerServiceUpdateTrainUUIDProcedure = "/state.v1.StateManagerService/UpdateTrainUUID"
+	// StateManagerServiceAddTrainProcedure is the fully-qualified name of the StateManagerService's
+	// AddTrain RPC.
+	StateManagerServiceAddTrainProcedure = "/state.v1.StateManagerService/AddTrain"
+	// StateManagerServiceUpdateTrainProcedure is the fully-qualified name of the StateManagerService's
+	// UpdateTrain RPC.
+	StateManagerServiceUpdateTrainProcedure = "/state.v1.StateManagerService/UpdateTrain"
 )
 
 // StateManagerServiceClient is a client for the state.v1.StateManagerService service.
@@ -72,7 +75,8 @@ type StateManagerServiceClient interface {
 	GetStopStates(context.Context, *connect.Request[v1.GetStopStatesRequest]) (*connect.Response[v1.GetStopStatesResponse], error)
 	// Train
 	GetTrains(context.Context, *connect.Request[v1.GetTrainsRequest]) (*connect.Response[v1.GetTrainsResponse], error)
-	UpdateTrainUUID(context.Context, *connect.Request[v1.UpdateTrainUUIDRequest]) (*connect.Response[v1.UpdateTrainUUIDResponse], error)
+	AddTrain(context.Context, *connect.Request[v1.AddTrainRequest]) (*connect.Response[v1.AddTrainResponse], error)
+	UpdateTrain(context.Context, *connect.Request[v1.UpdateTrainRequest]) (*connect.Response[v1.UpdateTrainResponse], error)
 }
 
 // NewStateManagerServiceClient constructs a client for the state.v1.StateManagerService service. By
@@ -120,9 +124,14 @@ func NewStateManagerServiceClient(httpClient connect.HTTPClient, baseURL string,
 			baseURL+StateManagerServiceGetTrainsProcedure,
 			opts...,
 		),
-		updateTrainUUID: connect.NewClient[v1.UpdateTrainUUIDRequest, v1.UpdateTrainUUIDResponse](
+		addTrain: connect.NewClient[v1.AddTrainRequest, v1.AddTrainResponse](
 			httpClient,
-			baseURL+StateManagerServiceUpdateTrainUUIDProcedure,
+			baseURL+StateManagerServiceAddTrainProcedure,
+			opts...,
+		),
+		updateTrain: connect.NewClient[v1.UpdateTrainRequest, v1.UpdateTrainResponse](
+			httpClient,
+			baseURL+StateManagerServiceUpdateTrainProcedure,
 			opts...,
 		),
 	}
@@ -137,7 +146,8 @@ type stateManagerServiceClient struct {
 	updateStopState  *connect.Client[v1.UpdateStopStateRequest, v1.UpdateStopStateResponse]
 	getStopStates    *connect.Client[v1.GetStopStatesRequest, v1.GetStopStatesResponse]
 	getTrains        *connect.Client[v1.GetTrainsRequest, v1.GetTrainsResponse]
-	updateTrainUUID  *connect.Client[v1.UpdateTrainUUIDRequest, v1.UpdateTrainUUIDResponse]
+	addTrain         *connect.Client[v1.AddTrainRequest, v1.AddTrainResponse]
+	updateTrain      *connect.Client[v1.UpdateTrainRequest, v1.UpdateTrainResponse]
 }
 
 // GetBlockStates calls state.v1.StateManagerService.GetBlockStates.
@@ -175,9 +185,14 @@ func (c *stateManagerServiceClient) GetTrains(ctx context.Context, req *connect.
 	return c.getTrains.CallUnary(ctx, req)
 }
 
-// UpdateTrainUUID calls state.v1.StateManagerService.UpdateTrainUUID.
-func (c *stateManagerServiceClient) UpdateTrainUUID(ctx context.Context, req *connect.Request[v1.UpdateTrainUUIDRequest]) (*connect.Response[v1.UpdateTrainUUIDResponse], error) {
-	return c.updateTrainUUID.CallUnary(ctx, req)
+// AddTrain calls state.v1.StateManagerService.AddTrain.
+func (c *stateManagerServiceClient) AddTrain(ctx context.Context, req *connect.Request[v1.AddTrainRequest]) (*connect.Response[v1.AddTrainResponse], error) {
+	return c.addTrain.CallUnary(ctx, req)
+}
+
+// UpdateTrain calls state.v1.StateManagerService.UpdateTrain.
+func (c *stateManagerServiceClient) UpdateTrain(ctx context.Context, req *connect.Request[v1.UpdateTrainRequest]) (*connect.Response[v1.UpdateTrainResponse], error) {
+	return c.updateTrain.CallUnary(ctx, req)
 }
 
 // StateManagerServiceHandler is an implementation of the state.v1.StateManagerService service.
@@ -193,7 +208,8 @@ type StateManagerServiceHandler interface {
 	GetStopStates(context.Context, *connect.Request[v1.GetStopStatesRequest]) (*connect.Response[v1.GetStopStatesResponse], error)
 	// Train
 	GetTrains(context.Context, *connect.Request[v1.GetTrainsRequest]) (*connect.Response[v1.GetTrainsResponse], error)
-	UpdateTrainUUID(context.Context, *connect.Request[v1.UpdateTrainUUIDRequest]) (*connect.Response[v1.UpdateTrainUUIDResponse], error)
+	AddTrain(context.Context, *connect.Request[v1.AddTrainRequest]) (*connect.Response[v1.AddTrainResponse], error)
+	UpdateTrain(context.Context, *connect.Request[v1.UpdateTrainRequest]) (*connect.Response[v1.UpdateTrainResponse], error)
 }
 
 // NewStateManagerServiceHandler builds an HTTP handler from the service implementation. It returns
@@ -237,9 +253,14 @@ func NewStateManagerServiceHandler(svc StateManagerServiceHandler, opts ...conne
 		svc.GetTrains,
 		opts...,
 	)
-	stateManagerServiceUpdateTrainUUIDHandler := connect.NewUnaryHandler(
-		StateManagerServiceUpdateTrainUUIDProcedure,
-		svc.UpdateTrainUUID,
+	stateManagerServiceAddTrainHandler := connect.NewUnaryHandler(
+		StateManagerServiceAddTrainProcedure,
+		svc.AddTrain,
+		opts...,
+	)
+	stateManagerServiceUpdateTrainHandler := connect.NewUnaryHandler(
+		StateManagerServiceUpdateTrainProcedure,
+		svc.UpdateTrain,
 		opts...,
 	)
 	return "/state.v1.StateManagerService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -258,8 +279,10 @@ func NewStateManagerServiceHandler(svc StateManagerServiceHandler, opts ...conne
 			stateManagerServiceGetStopStatesHandler.ServeHTTP(w, r)
 		case StateManagerServiceGetTrainsProcedure:
 			stateManagerServiceGetTrainsHandler.ServeHTTP(w, r)
-		case StateManagerServiceUpdateTrainUUIDProcedure:
-			stateManagerServiceUpdateTrainUUIDHandler.ServeHTTP(w, r)
+		case StateManagerServiceAddTrainProcedure:
+			stateManagerServiceAddTrainHandler.ServeHTTP(w, r)
+		case StateManagerServiceUpdateTrainProcedure:
+			stateManagerServiceUpdateTrainHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -297,6 +320,10 @@ func (UnimplementedStateManagerServiceHandler) GetTrains(context.Context, *conne
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("state.v1.StateManagerService.GetTrains is not implemented"))
 }
 
-func (UnimplementedStateManagerServiceHandler) UpdateTrainUUID(context.Context, *connect.Request[v1.UpdateTrainUUIDRequest]) (*connect.Response[v1.UpdateTrainUUIDResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("state.v1.StateManagerService.UpdateTrainUUID is not implemented"))
+func (UnimplementedStateManagerServiceHandler) AddTrain(context.Context, *connect.Request[v1.AddTrainRequest]) (*connect.Response[v1.AddTrainResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("state.v1.StateManagerService.AddTrain is not implemented"))
+}
+
+func (UnimplementedStateManagerServiceHandler) UpdateTrain(context.Context, *connect.Request[v1.UpdateTrainRequest]) (*connect.Response[v1.UpdateTrainResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("state.v1.StateManagerService.UpdateTrain is not implemented"))
 }
