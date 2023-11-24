@@ -1,0 +1,45 @@
+{
+  "name": "shinjyuku",
+  "stops": [
+    {
+      "stop_id": "shinjyuku_down_s1",
+      "pin": 13
+    },
+    {
+      "stop_id": "shinjyuku_up_s1",
+      "pin": 14
+    }
+  ],
+  "detectors": [
+    {
+      "block_id": "shinjyuku_down_b1",
+      "target": "CLOSE",
+      "pin": 12
+    },
+    {
+      "block_id": "shinjyuku_up_b1",
+      "target": "CLOSE",
+      "pin": 22
+    },
+    {
+      "block_id": "shinjyuku_up_b1",
+      "target": "OPEN",
+      "pin": 23
+    },
+    {
+      "block_id": "sakurajosui_up_b1",
+      "target": "OPEN",
+      "pin": 25
+    }
+  ],
+  "nfcs": [
+    {
+      "nfc_id": "shinjyuku_down_s1",
+      "pin": 4
+    },
+    {
+      "nfc_id": "shinjyuku_up_s1",
+      "pin": 5
+    }
+  ]
+}
