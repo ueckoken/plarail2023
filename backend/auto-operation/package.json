@@ -20,7 +20,7 @@
     "install": "^0.13.0"
   },
   "devDependencies": {
-    "@types/node": "20.9.2",
+    "@types/node": "20.9.3",
     "tsx": "^4.3.0",
     "typescript": "5.2.2",
     "@connectrpc/protoc-gen-connect-es": "^1.1.3",
