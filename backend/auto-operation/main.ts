@@ -16,15 +16,16 @@ type MapConfig = {
 }
 let mapConfig: MapConfig;
 
+const SERVER_ADDR = process.env['SERVER_ADDR'] ?? 'http://localhost:8080'
 const transport = createConnectTransport(
   {
     httpVersion: "2",
-    baseUrl: "http://localhost:8080",
+    baseUrl: SERVER_ADDR,
   });
 const client = createPromiseClient(StateManagerService, transport);
 
 async function loadConfig() {
-  mapConfig = await import("./map/chofufes-2023.json");
+  mapConfig = (await import("./map/chofufes-2023.json")).default;
 }
 
 loadConfig();
@@ -191,7 +192,9 @@ async function main() {
 
 addTest();
 
-while (true) {
-  main();
-  await new Promise(resolve => setTimeout(resolve, 200));
-}
+(async () => {
+  while (true) {
+    main();
+    await new Promise(resolve => setTimeout(resolve, 200));
+  }
+})()

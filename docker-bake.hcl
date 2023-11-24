@@ -1,6 +1,7 @@
 group "default" {
   targets = [
     "state-manager",
+    "autooperation",
     "dashboard"
   ]
 }
@@ -27,6 +28,13 @@ target "state-manager" {
         "linux/amd64",
         "linux/arm64"
     ]
+}
+
+target "autooperation" {
+  dockerfile = "docker/backend/auto-operation/Dockerfile"
+  tags = [
+    GET_TAG("autooperation")
+  ]
 }
 
 target "dashboard" {
