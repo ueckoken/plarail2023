@@ -8,7 +8,7 @@ FROM base AS dep-resolver
 WORKDIR /dashboard
 COPY --chown=node:node pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY frontend/ ./frontend 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 FROM dep-resolver AS dashboard-builder
 RUN pnpm run --filter=./frontend/dashboard -r build
