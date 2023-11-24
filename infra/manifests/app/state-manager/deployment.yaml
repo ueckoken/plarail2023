@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: state-manager
+  namespace: plarail2023
+spec:
+  selector:
+    matchLabels:
+      app: state-manager
+  template:
+    metadata:
+      labels:
+        app: state-manager
+    spec:
+      containers:
+        - name: state-manager
+          image: ghcr.io/ueckoken/plarail2023-state-manager/deployment-d17e785-1700807874 # {"$imagepolicy": "plarail2023:state-manager"}
+          imagePullPolicy: Always
+    env:
+      - name: MQTT_BROKER_ADDR
+        value: tls://p390e24a.ala.us-east-1.emqxsl.com:8883
+      - name: MQTT_USERNAME
+        value: test
+      - name: MQTT_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: password
+            name: mqtt_secret
+      - name: MQTT_CLIENT_ID
+        value: emqx_cloudd1e033
+      - name: MONGODB_URI
+        valueFrom:
+          secretKeyRef:
+            key: MONGODB_URI
+            name: mongodb_secret

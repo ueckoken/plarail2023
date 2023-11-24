@@ -1,3 +1,5 @@
 resources:
   - './auto-operation'
+  - 'dashboard'
+  - 'state=manager'
   # - ./emqx
