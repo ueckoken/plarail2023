@@ -1,4 +1,4 @@
-name: compile_PB
+name: compile PB
 
 on:
   push:
@@ -18,19 +18,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-        working-directory: ./frontend/dashboard
-      - uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - run: yarn install --immutable
-        working-directory: ./frontend/dashboard
+      - run: pnpm install --frozen-lockfile 
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
