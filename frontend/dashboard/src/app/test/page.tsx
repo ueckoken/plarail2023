@@ -1,6 +1,6 @@
 "use client";
 import { createPromiseClient } from "@connectrpc/connect";
-import { StateManagerService } from "@/proto/state/v1/state_connectweb";
+import { StateManagerService } from "@/proto/state/v1/state_connect";
 import { createConnectTransport } from "@connectrpc/connect-web";
 import { GetBlockStatesRequest } from "@/proto/state/v1/block_pb";
 
