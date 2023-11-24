@@ -1,4 +1,4 @@
-FROM node:20.9-buster as builder
+FROM node:20.10-buster as builder
 ENV ESP_EYE_IP 192.168.12.199
 WORKDIR /app
 COPY package.json package-lock.json /app/
