@@ -48,11 +48,32 @@ export class Train extends Message<Train> {
   trainId = "";
 
   /**
-   * 駅のID
+   * 駅 or 閉塞のID
    *
-   * @generated from field: string station_id = 2;
+   * @generated from field: string position_id = 2;
    */
-  stationId = "";
+  positionId = "";
+
+  /**
+   * 列車の優先度
+   *
+   * @generated from field: state.v1.Priority priority = 3;
+   */
+  priority = Priority.UNSPECIFIED;
+
+  /**
+   * NFCのUUID
+   *
+   * @generated from field: string uuid = 4;
+   */
+  uuid = "";
+
+  /**
+   * 行き先
+   *
+   * @generated from field: string destination = 5;
+   */
+  destination = "";
 
   constructor(data?: PartialMessage<Train>) {
     super();
@@ -63,7 +84,10 @@ export class Train extends Message<Train> {
   static readonly typeName = "state.v1.Train";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 1, name: "train_id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 2, name: "station_id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "position_id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "priority", kind: "enum", T: proto3.getEnumType(Priority) },
+    { no: 4, name: "uuid", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 5, name: "destination", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): Train {
@@ -156,82 +180,152 @@ export class GetTrainsResponse extends Message<GetTrainsResponse> {
 
 /**
  *
- * UpdateTrainUUID : NFCのUUID紐付けを更新するAPI
+ * Add Train : 列車を追加するAPI
  *
- * @generated from message state.v1.UpdateTrainUUIDRequest
+ * @generated from message state.v1.AddTrainRequest
  */
-export class UpdateTrainUUIDRequest extends Message<UpdateTrainUUIDRequest> {
+export class AddTrainRequest extends Message<AddTrainRequest> {
   /**
-   * 列車ID
-   *
-   * @generated from field: string train_id = 1;
+   * @generated from field: state.v1.Train train = 1;
    */
-  trainId = "";
+  train?: Train;
 
-  /**
-   * NFCのUUID
-   *
-   * @generated from field: string uuid = 2;
-   */
-  uuid = "";
-
-  constructor(data?: PartialMessage<UpdateTrainUUIDRequest>) {
+  constructor(data?: PartialMessage<AddTrainRequest>) {
     super();
     proto3.util.initPartial(data, this);
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "state.v1.UpdateTrainUUIDRequest";
+  static readonly typeName = "state.v1.AddTrainRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "train_id", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 2, name: "uuid", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 1, name: "train", kind: "message", T: Train },
   ]);
 
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): UpdateTrainUUIDRequest {
-    return new UpdateTrainUUIDRequest().fromBinary(bytes, options);
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): AddTrainRequest {
+    return new AddTrainRequest().fromBinary(bytes, options);
   }
 
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): UpdateTrainUUIDRequest {
-    return new UpdateTrainUUIDRequest().fromJson(jsonValue, options);
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): AddTrainRequest {
+    return new AddTrainRequest().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): UpdateTrainUUIDRequest {
-    return new UpdateTrainUUIDRequest().fromJsonString(jsonString, options);
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): AddTrainRequest {
+    return new AddTrainRequest().fromJsonString(jsonString, options);
   }
 
-  static equals(a: UpdateTrainUUIDRequest | PlainMessage<UpdateTrainUUIDRequest> | undefined, b: UpdateTrainUUIDRequest | PlainMessage<UpdateTrainUUIDRequest> | undefined): boolean {
-    return proto3.util.equals(UpdateTrainUUIDRequest, a, b);
+  static equals(a: AddTrainRequest | PlainMessage<AddTrainRequest> | undefined, b: AddTrainRequest | PlainMessage<AddTrainRequest> | undefined): boolean {
+    return proto3.util.equals(AddTrainRequest, a, b);
   }
 }
 
 /**
- * @generated from message state.v1.UpdateTrainUUIDResponse
+ * @generated from message state.v1.AddTrainResponse
  */
-export class UpdateTrainUUIDResponse extends Message<UpdateTrainUUIDResponse> {
-  constructor(data?: PartialMessage<UpdateTrainUUIDResponse>) {
+export class AddTrainResponse extends Message<AddTrainResponse> {
+  /**
+   * @generated from field: state.v1.Train train = 1;
+   */
+  train?: Train;
+
+  constructor(data?: PartialMessage<AddTrainResponse>) {
     super();
     proto3.util.initPartial(data, this);
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "state.v1.UpdateTrainUUIDResponse";
+  static readonly typeName = "state.v1.AddTrainResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "train", kind: "message", T: Train },
   ]);
 
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): UpdateTrainUUIDResponse {
-    return new UpdateTrainUUIDResponse().fromBinary(bytes, options);
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): AddTrainResponse {
+    return new AddTrainResponse().fromBinary(bytes, options);
   }
 
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): UpdateTrainUUIDResponse {
-    return new UpdateTrainUUIDResponse().fromJson(jsonValue, options);
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): AddTrainResponse {
+    return new AddTrainResponse().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): UpdateTrainUUIDResponse {
-    return new UpdateTrainUUIDResponse().fromJsonString(jsonString, options);
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): AddTrainResponse {
+    return new AddTrainResponse().fromJsonString(jsonString, options);
   }
 
-  static equals(a: UpdateTrainUUIDResponse | PlainMessage<UpdateTrainUUIDResponse> | undefined, b: UpdateTrainUUIDResponse | PlainMessage<UpdateTrainUUIDResponse> | undefined): boolean {
-    return proto3.util.equals(UpdateTrainUUIDResponse, a, b);
+  static equals(a: AddTrainResponse | PlainMessage<AddTrainResponse> | undefined, b: AddTrainResponse | PlainMessage<AddTrainResponse> | undefined): boolean {
+    return proto3.util.equals(AddTrainResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message state.v1.UpdateTrainRequest
+ */
+export class UpdateTrainRequest extends Message<UpdateTrainRequest> {
+  /**
+   * @generated from field: state.v1.Train train = 1;
+   */
+  train?: Train;
+
+  constructor(data?: PartialMessage<UpdateTrainRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "state.v1.UpdateTrainRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "train", kind: "message", T: Train },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): UpdateTrainRequest {
+    return new UpdateTrainRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): UpdateTrainRequest {
+    return new UpdateTrainRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): UpdateTrainRequest {
+    return new UpdateTrainRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: UpdateTrainRequest | PlainMessage<UpdateTrainRequest> | undefined, b: UpdateTrainRequest | PlainMessage<UpdateTrainRequest> | undefined): boolean {
+    return proto3.util.equals(UpdateTrainRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message state.v1.UpdateTrainResponse
+ */
+export class UpdateTrainResponse extends Message<UpdateTrainResponse> {
+  /**
+   * @generated from field: state.v1.Train train = 1;
+   */
+  train?: Train;
+
+  constructor(data?: PartialMessage<UpdateTrainResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "state.v1.UpdateTrainResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "train", kind: "message", T: Train },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): UpdateTrainResponse {
+    return new UpdateTrainResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): UpdateTrainResponse {
+    return new UpdateTrainResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): UpdateTrainResponse {
+    return new UpdateTrainResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: UpdateTrainResponse | PlainMessage<UpdateTrainResponse> | undefined, b: UpdateTrainResponse | PlainMessage<UpdateTrainResponse> | undefined): boolean {
+    return proto3.util.equals(UpdateTrainResponse, a, b);
   }
 }
 

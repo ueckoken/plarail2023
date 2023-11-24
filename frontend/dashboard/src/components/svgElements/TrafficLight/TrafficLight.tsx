@@ -3,15 +3,16 @@ import clsx from "clsx";
 
 import { Coordinate } from "@/types/Coordinate";
 
-import styles from "./TraficLight.module.scss";
+import styles from "./TrafficLight.module.scss";
 
 interface Props {
     position: Coordinate;
+    name?: string;
     isStop: boolean;
     onClick?: () => void;
 }
 
-export const TraficLight: React.FC<Props> = ({ position, isStop, onClick }) => {
+export const TrafficLight: React.FC<Props> = ({ position, name, isStop, onClick }) => {
     return (
         <g
             onClick={onClick}
@@ -19,6 +20,15 @@ export const TraficLight: React.FC<Props> = ({ position, isStop, onClick }) => {
                 cursor: onClick ? "pointer" : "initial",
             }}
         >
+            {
+              name && (
+                <text
+                x={position.x}
+                y={position.y - 20}
+                fontSize={8}
+                >{name}</text>
+                )
+            }
             <line
                 x1={position.x}
                 y1={position.y - 5}
