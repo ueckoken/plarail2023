@@ -22,6 +22,10 @@
     {
       "point_id": "sakurajosui_down_p1",
       "pin": 13
+    },
+    {
+      "point_id": "sakurajosui_up_p1",
+      "pin": 18
     }
   ],
   "detectors": [
