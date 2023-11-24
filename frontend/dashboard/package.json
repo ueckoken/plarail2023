@@ -37,5 +37,6 @@
         ".next/standalone",
         ".next/static",
         "public"
-    ]
+    ],
+   "packageManager": "pnpm@8.6.11"
 }
