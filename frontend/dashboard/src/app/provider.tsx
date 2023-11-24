@@ -1,6 +1,6 @@
 "use client";
 
-import {createConnectTransport} from "@bufbuild/connect-web";
+import {createConnectTransport} from "@connectrpc/connect-web";
 import {TransportProvider} from "@connectrpc/connect-query";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
