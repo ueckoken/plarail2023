@@ -1,2 +1,3 @@
 resources:
-  - ./emqx
+  - './auto-operation'
+  # - ./emqx
