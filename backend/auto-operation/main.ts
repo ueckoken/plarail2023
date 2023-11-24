@@ -6,7 +6,15 @@ import { StopStateEnum } from "./proto/state/v1/stop_pb.js";
 import { PointStateEnum } from "./proto/state/v1/point_pb.js";
 import { Priority } from "./proto/state/v1/train_pb.js";
 
-let mapConfig;
+type MapConfig = {
+  stopBlocks: { [key: string]: string },
+  stations: {
+    [key: string]: {
+      capacity: number,
+    }
+  }
+}
+let mapConfig: MapConfig;
 
 const transport = createConnectTransport(
   {
@@ -27,7 +35,7 @@ async function addTest() {
     train: {
       trainId: "test",
       positionId: "shinjuku_b1",
-      priority: Priority.PRIORITY_HIGH,
+      priority: Priority.HIGH,
       uuid: "test",
       destination: "hashimoto_up_s1"
     }
@@ -36,7 +44,7 @@ async function addTest() {
     train: {
       trainId: "test2",
       positionId: "shinjuku_s1",
-      priority: Priority.PRIORITY_LOW,
+      priority: Priority.LOW,
       uuid: "test",
       destination: "hachioji_up_s1"
     }
@@ -84,14 +92,14 @@ async function main() {
       // 通過待ちができるかどうか
       const stationName = train.positionId.split("_")[0] + "_" + train.positionId.split("_")[1];
       const capacity = mapConfig.stations[stationName];
-      if (capacity > 1 && train.Priority === Priority.PRIORITY_LOW) {
+      if (capacity.capacity > 1 && train.priority === Priority.LOW) {
         // 通過待ちが可能な駅で、PriorityがLOWの列車はPriorityがHIGHの列車が停車するまで待つ
-        const highPriorityTrains = trains.filter(t => (t.positionId.includes(stationName)) && t.Priority === Priority.PRIORITY_HIGH);
+        const highPriorityTrains = trains.filter(t => (t.positionId.includes(stationName)) && t.priority === Priority.HIGH);
         if (highPriorityTrains.length > 0) continue;
       }
       const stop = stops.find(s => s.id === train.positionId);
       // 問題ないならGOにする
-      if (stop.state !== StopStateEnum.STOP_STATE_GO) {
+      if (stop && stop.state !== StopStateEnum.STOP_STATE_GO) {
         await client.updateStopState({
           "state": {
             "id": stop.id,
@@ -108,8 +116,8 @@ async function main() {
       // 桜上水上りポイント
       // デフォルトではSTRAIGHTにして、sakurajosui_up_s1がONならREVERSEにする
       const sakurajosui_up_s1 = stops.find(s => s.id === "sakurajosui_up_s1");
-      if (sakurajosui_up_s1.state === StopStateEnum.STOP_STATE_STOP) {
-        if (point.state !== StopStateEnum.STOP_STATE_REVERSE) {
+      if (sakurajosui_up_s1 && sakurajosui_up_s1.state === StopStateEnum.STOP_STATE_STOP) {
+        if (point.state !== PointStateEnum.POINT_STATE_REVERSE) {
           await client.updatePointState({
             "state": {
               "id": point.id,
@@ -118,7 +126,7 @@ async function main() {
           })
         }
       } else {
-        if (point.state !== StopStateEnum.STOP_STATE_STRAIGHT) {
+        if (point.state !== PointStateEnum.POINT_STATE_NORMAL) {
           await client.updatePointState({
             "state": {
               "id": point.id,
@@ -130,7 +138,7 @@ async function main() {
     }
     if (point.id === "sakurajosui_down_p1") {
       const sakurajosui_down_s1 = stops.find(s => s.id === "sakurajosui_down_s1");
-      if (sakurajosui_down_s1.state === StopStateEnum.STOP_STATE_STOP) {
+      if (sakurajosui_down_s1 && sakurajosui_down_s1.state === StopStateEnum.STOP_STATE_STOP) {
         if (point.state !== PointStateEnum.POINT_STATE_REVERSE) {
           await client.updatePointState({
             "state": {
