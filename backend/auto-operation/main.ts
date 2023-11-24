@@ -1,7 +1,7 @@
 import { createPromiseClient } from "@connectrpc/connect";
 import { createConnectTransport } from "@connectrpc/connect-node";
 import { StateManagerService } from "./proto/state/v1/state_connectweb.js";
-import { BlockStateEnum } from "./proto/state/v1/block_pb.js";
+import { BlockStateEnum } from "@/proto/state/v1/block_pb.js";
 import { StopStateEnum } from "./proto/state/v1/stop_pb.js";
 import { PointStateEnum } from "./proto/state/v1/point_pb.js";
 import { Priority } from "./proto/state/v1/train_pb.js";
