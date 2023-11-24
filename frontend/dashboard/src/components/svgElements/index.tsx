@@ -2,7 +2,7 @@ export { Background } from "./Background/";
 export { Platform } from "./Platform/";
 export { Rail } from "./Rail/";
 export { SwitchPoint } from "./SwitchPoint/";
-export { TraficLight } from "./TraficLight/";
+export { TrafficLight } from "./TrafficLight/";
 
 export { Train } from "./Train/";
 
