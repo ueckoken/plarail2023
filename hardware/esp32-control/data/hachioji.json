@@ -3,11 +3,11 @@
   "stops": [
     {
       "stop_id": "hachioji_up_s1",
-      "pin": 13
+      "pin": 16
     },
     {
       "stop_id": "hachioji_down_s1",
-      "pin": 14
+      "pin": 17
     }
   ],
   "detectors": [
