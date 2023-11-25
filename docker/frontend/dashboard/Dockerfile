@@ -1,4 +1,4 @@
-FROM node:20.9-bookworm AS base
+FROM node:20.10-bookworm AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
@@ -8,7 +8,7 @@ FROM base AS dep-resolver
 WORKDIR /dashboard
 COPY --chown=node:node pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY frontend/ ./frontend 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --no-optional
 
 FROM dep-resolver AS dashboard-builder
 RUN pnpm run --filter=./frontend/dashboard -r build
