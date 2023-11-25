@@ -4,8 +4,8 @@
 #include <ESP32Servo.h>
 
 #define MAX_STOP_NUM 5
-#define STOP_ON_ANGLE 45
-#define STOP_OFF_ANGLE 5
+#define STOP_ON_ANGLE 180
+#define STOP_OFF_ANGLE 0
 
 enum STOP_STATE
 {
@@ -15,7 +15,6 @@ enum STOP_STATE
 
 class StopRail
 {
-  String stop_id;
   STOP_STATE state;
   Servo servo;
   uint8_t pin;
@@ -26,6 +25,7 @@ public:
   void set_state(STOP_STATE state);
   String getId();
   STOP_STATE getState();
+  String stop_id;
 };
 
 #endif
