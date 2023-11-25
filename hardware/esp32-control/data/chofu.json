@@ -3,25 +3,25 @@
   "stops": [
     {
       "stop_id": "chofu_down_s1",
-      "pin": 14
+      "pin": 17
     },
     {
       "stop_id": "chofu_down_s2",
-      "pin": 15
+      "pin": 18
     },
     {
       "stop_id": "chofu_up_s1",
-      "pin": 16
+      "pin": 19
     },
     {
       "stop_id": "chofu_up_s2",
-      "pin": 17
+      "pin": 21
     }
   ],
   "points": [
     {
       "point_id": "chofu_down_p1",
-      "pin": 13
+      "pin": 16
     }
   ],
   "detectors": [
