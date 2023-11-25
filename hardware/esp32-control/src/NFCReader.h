@@ -3,9 +3,7 @@
 #include <MFRC522.h>
 #include <PubSubClient.h>
 
-#define RST_PIN 9
-#define SS_1_PIN 10
-#define SS_2_PIN 8
+#define RST_PIN 3
 
 class NFCReader
 {
