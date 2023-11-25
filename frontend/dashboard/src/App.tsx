@@ -38,7 +38,7 @@ function App() {
 
   const transport = createConnectTransport(
   {
-    baseUrl: "http://quince:3031/api/",
+    baseUrl: "http://localhost:8080",
   });
   return (
   <>

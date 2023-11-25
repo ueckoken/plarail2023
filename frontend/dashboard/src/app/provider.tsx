@@ -14,7 +14,7 @@ export default function Provider({ children }: { children: React.ReactNode}) {
 
   const transport = createConnectTransport(
   {
-    baseUrl: "http://localhost:3030/api/",
+    baseUrl: "http://localhost:8080",
   });
   return (
     <QueryClientProvider client={queryClient}>
