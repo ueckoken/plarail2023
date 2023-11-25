@@ -1,28 +1,45 @@
 {
-  "name": "test",
+  "name": "shinjyuku",
   "stops": [
     {
-      "stop_id": "test_s1",
-      "pin": 13
-    }
-  ],
-  "points": [
+      "stop_id": "shinjyuku_down_s1",
+      "pin": 16
+    },
     {
-      "point_id": "test_p1",
-      "pin": 14
+      "stop_id": "shinjyuku_up_s1",
+      "pin": 17
     }
   ],
   "detectors": [
     {
-      "block_id": "test_b1",
+      "block_id": "shinjyuku_down_b1",
+      "target": "CLOSE",
+      "pin": 12
+    },
+    {
+      "block_id": "shinjyuku_up_b1",
+      "target": "CLOSE",
+      "pin": 22
+    },
+    {
+      "block_id": "shinjyuku_up_b1",
       "target": "OPEN",
-      "pin": 15
+      "pin": 23
+    },
+    {
+      "block_id": "sakurajosui_up_b1",
+      "target": "OPEN",
+      "pin": 25
     }
   ],
   "nfcs": [
     {
-      "nfc_id": "test_t1",
-      "pin": 15
+      "nfc_id": "shinjyuku_down_s1",
+      "pin": 4
+    },
+    {
+      "nfc_id": "shinjyuku_up_s1",
+      "pin": 5
     }
   ]
 }

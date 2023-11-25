@@ -19,11 +19,14 @@
 
 #define DEBUG
 
+#define SPI_SCK 0
+#define SPI_MISO 2
+#define SPI_MOSI 1
+
 // MQTT Broker
 WiFiClientSecure espClient;
 PubSubClient client(espClient);
-
-IOManager manager(client);
+IOManager manager(&client);
 
 void callback(char *topic, byte *payload, unsigned int length);
 
@@ -49,6 +52,9 @@ void setup()
     return;
   }
 
+  // // SPIを初期化
+  // SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);
+
   // 設定ファイルを読み込む
   getSetting(&manager);
 
@@ -60,9 +66,6 @@ void setup()
 
   // MDNSを開始
   MDNS.begin(HOST);
-
-  // SPIを初期化
-  SPI.begin();
 
   espClient.setCACert(root_ca);
   client.setServer(mqtt_broker, mqtt_port);
@@ -85,6 +88,7 @@ void setup()
   client.subscribe("point/+/get/accepted");
   client.subscribe("stop/+/delta");
   client.subscribe("point/+/delta");
+  manager.getInitialState();
 }
 
 void callback(char *topic, byte *payload, unsigned int length)
@@ -101,7 +105,7 @@ void callback(char *topic, byte *payload, unsigned int length)
   Serial.println("-----------------------");
 #endif
 
-  mqtt_handler(topic, payload, length, manager);
+  mqtt_handler(topic, payload, length, &manager);
 }
 
 void loop()
