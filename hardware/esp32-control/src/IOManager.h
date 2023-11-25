@@ -14,10 +14,12 @@
 class IOManager
 {
 public:
-  IOManager(PubSubClient client);
-  PubSubClient client;
+  IOManager(PubSubClient *client);
+  PubSubClient *client;
   void addStop(uint8_t pin, String stop_id);
   void addPoint(uint8_t pin, String point_id);
+
+  void getInitialState();
 
   void setStopState(String stop_id, STOP_STATE state);
   void setPointState(String point_id, POINT_STATE state);

@@ -7,6 +7,6 @@
 #include "Settings.h"
 #include "IOManager.h"
 
-void mqtt_handler(char *topic, byte *payload, unsigned int length, IOManager manager);
+void mqtt_handler(char *topic, byte *payload, unsigned int length, IOManager *manager);
 
 #endif

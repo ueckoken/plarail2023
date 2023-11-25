@@ -116,10 +116,6 @@ func main() {
 		cancel()
 		return
 	}
-	eg.Go(func() error {
-		slog.Default().Info("start mqtt handler")
-		return mqttHandler.Start(ctx)
-	})
 
 	r := chi.NewRouter()
 	// r.Use(middleware.Recoverer)
