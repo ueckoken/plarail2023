@@ -1,0 +1,71 @@
+{
+  "name": "sakurajosui",
+  "stops": [
+    {
+      "stop_id": "sakurajosui_up_s1",
+      "pin": 14
+    },
+    {
+      "stop_id": "sakurajosui_up_s2",
+      "pin": 15
+    },
+    {
+      "stop_id": "sakurajosui_down_s1",
+      "pin": 16
+    },
+    {
+      "stop_id": "sakurajosui_down_s2",
+      "pin": 17
+    }
+  ],
+  "points": [
+    {
+      "point_id": "sakurajosui_down_p1",
+      "pin": 13
+    },
+    {
+      "point_id": "sakurajosui_up_p1",
+      "pin": 18
+    }
+  ],
+  "detectors": [
+    {
+      "block_id": "shinjyuku_down_b1",
+      "target": "OPEN",
+      "pin": 12
+    },
+    {
+      "block_id": "sakurajosui_up_b1",
+      "target": "CLOSE",
+      "pin": 22
+    },
+    {
+      "block_id": "chofu_up_b1",
+      "target": "OPEN",
+      "pin": 23
+    },
+    {
+      "block_id": "chofu_down_b1",
+      "target": "CLOSE",
+      "pin": 25
+    }
+  ],
+  "nfcs": [
+    {
+      "nfc_id": "sakurajosui_up_s1",
+      "pin": 4
+    },
+    {
+      "nfc_id": "sakurajosui_up_s2",
+      "pin": 5
+    },
+    {
+      "nfc_id": "sakurajosui_down_s1",
+      "pin": 32
+    },
+    {
+      "nfc_id": "sakurajosui_down_s2",
+      "pin": 33
+    }
+  ]
+}

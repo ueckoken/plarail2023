@@ -47,6 +47,7 @@
     "initializer_list": "cpp",
     "format": "cpp",
     "span": "cpp",
-    "mixinvector": "cpp"
+    "mixinvector": "cpp",
+    "stacktrace": "cpp"
   }
 }
