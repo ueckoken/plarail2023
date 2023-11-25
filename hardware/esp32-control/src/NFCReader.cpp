@@ -14,6 +14,7 @@ void NFCReader::init(String nfc_id, uint8_t ss_pin, PubSubClient *client)
 
 void NFCReader::loop()
 {
+    Serial.println(reader.PICC_IsNewCardPresent());
     if (!reader.PICC_IsNewCardPresent())
     {
         return;
@@ -30,7 +31,7 @@ void NFCReader::loop()
     }
     Serial.print("NFC ID: ");
     Serial.print(nfc_id);
-    Serial.print( "UID: ");
+    Serial.print("UID: ");
     Serial.println(uid);
     reader.PICC_HaltA();
     reader.PCD_StopCrypto1();
