@@ -20,3 +20,20 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://root:password@mongo:27017/
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: password
+  state-manager:
+    build: 
+      context: .
+      dockerfile: ./docker/backend/state-manager/Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      - MQTT_BROKER_ADDR=tls://p390e24a.ala.us-east-1.emqxsl.com:8883
+      - MQTT_USERNAME=test
+      - MQTT_PASSWORD=password
+      - MQTT_CLIENT_ID=emqx_cloudd1e033
+      - MONGODB_URI=mongodb://root:password@localhost:27017/
+  auto-operation:
+    build: 
+      context: .
+      dockerfile: ./docker/backend/auto-operation/Dockerfile
+  

@@ -7,7 +7,16 @@ import {
     Train,
 } from "@/components/svgElements";
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import { addTrain, getBlockStates, getPointStates, getStopStates, getTrains, updatePointState, updateStopState } from '@/proto/state/v1/state-StateManagerService_connectquery'
+import {
+    addTrain,
+    getBlockStates,
+    getPointStates,
+    getStopStates,
+    getTrains,
+    updateBlockState,
+    updatePointState,
+    updateStopState
+} from '@/proto/state/v1/state-StateManagerService_connectquery'
 import { StopStateEnum } from "@/proto/state/v1/stop_pb";
 import { PointStateEnum } from "@/proto/state/v1/point_pb";
 import { BlockState, BlockStateEnum } from "@/proto/state/v1/block_pb";
@@ -33,7 +42,7 @@ const STOP_RAILS_FROM_ID: Map<string, {x: number, y: number}> = new Map([
 const POINT_RAILS_FROM_ID: Map<string, {x: number, y: number, fixed: number, straight: number, changed: number}> = new Map([
   ["sakurajosui_up_p1", { x: 320, y: 140, fixed: -90, straight: 90, changed: 45 }],
   ["sakurajosui_down_p1", { x: 200, y: 300, fixed: 90, straight: 270, changed: 225 }], // Use 270 instead of -90, for rotate to clockwise
-  ["chofu_up_p1", { x: 1000, y: 140, fixed: -90, straight: 90, changed: 135 }], // Question: これdownじゃない？
+  ["chofu_down_p1", { x: 1000, y: 140, fixed: -90, straight: 90, changed: 135 }], // Question: これdownじゃない？
 ]);
 
 const BLOCKS_FROM_ID: Map<string, {x: number, y: number}> = new Map([
@@ -60,6 +69,7 @@ function MapView() {
     const { data: trains } = useSuspenseQuery(getTrains.useQuery({}));
     const { mutate: mutateTrain } = useMutation(addTrain.useMutation({}));
     const { data: blocks } = useSuspenseQuery(getBlockStates.useQuery({}));
+    const {mutate: mutateBlock} = useMutation(updateBlockState.useMutation({}))
 
     // blocks to Map
     const blocksMap = new Map<string, BlockState>();
@@ -69,6 +79,7 @@ function MapView() {
 
     function isClosed(blockId: string): boolean {
       const s = blocksMap.get(blockId)?.state;
+      console.log(blockId, s);
       if (s == undefined) {
         console.log(`blockId ${blockId} is not found`);
       }
@@ -98,14 +109,16 @@ function MapView() {
                       {x: 200, y: 500},
                       {x: 200, y: 400},
                     ]}
-                    isClosed={isClosed("shinjyuku_down_b1")}
+                    isClosed={isClosed("shinjyuku_up_b1")}
+                    onClick={() => mutateBlock({state: {blockId: "shinjyuku_up_b1", state: isClosed("shinjyuku_up_b1") ? BlockStateEnum.BLOCK_STATE_OPEN : BlockStateEnum.BLOCK_STATE_CLOSE}})}
                 />
                 <Rail
                     points={[
                       {x: 200, y: 300},
                       {x: 200, y: 400},
                     ]}
-                    isClosed={isClosed("shinjyuku_up_b1")}
+                    isClosed={isClosed("shinjyuku_down_b1")}
+                    onClick={() => mutateBlock({state: {blockId: "shinjyuku_down_b1", state: isClosed("shinjyuku_down_b1") ? BlockStateEnum.BLOCK_STATE_OPEN : BlockStateEnum.BLOCK_STATE_CLOSE}})}
                 />
                 <Rail
                     points={[
@@ -122,6 +135,7 @@ function MapView() {
                       {x: 1000, y: 140},
                     ]}
                     isClosed={isClosed("sakurajosui_down_b1")}
+                    onClick={() => mutateBlock({state: {blockId: "sakurajosui_down_b1", state: isClosed("sakurajosui_down_b1") ? BlockStateEnum.BLOCK_STATE_OPEN : BlockStateEnum.BLOCK_STATE_CLOSE}})}
                 />
                 <Rail
                     points={[
@@ -136,6 +150,7 @@ function MapView() {
                       {x: 700, y: 560},
                     ]}
                     isClosed={isClosed("chofu_down_b1")}
+                    onClick={() => mutateBlock({state: {blockId: "chofu_down_b1", state: isClosed("chofu_down_b1") ? BlockStateEnum.BLOCK_STATE_OPEN : BlockStateEnum.BLOCK_STATE_CLOSE}})}
                 />
                 <Rail
                     points={[
@@ -145,6 +160,7 @@ function MapView() {
                       {x: 700, y: 480},
                     ]}
                     isClosed={isClosed("hachioji_down_b1")}
+                    onClick={() => mutateBlock({state: {blockId: "hachioji_down_b1", state: isClosed("hachioji_down_b1") ? BlockStateEnum.BLOCK_STATE_OPEN : BlockStateEnum.BLOCK_STATE_CLOSE}})}
                 />
                 <Rail
                     points={[
@@ -153,15 +169,17 @@ function MapView() {
                       {x: 840, y: 220},
                     ]}
                     isClosed={isClosed("hachioji_up_b1")}
+                    onClick={() => mutateBlock({state: {blockId: "hachioji_up_b1", state: isClosed("hachioji_up_b1") ? BlockStateEnum.BLOCK_STATE_OPEN : BlockStateEnum.BLOCK_STATE_CLOSE}})}
                 />
                 <Rail
                     points={[
-                      {x: 840, y: 220},
+                      {x: 840, y: 250},
                       {x: 840, y: 80},
                       {x: 320, y: 80},
                       {x: 320, y: 140},
                     ]}
                     isClosed={isClosed("chofu_up_b1")}
+                    onClick={() => mutateBlock({state: {blockId: "chofu_up_b1", state: isClosed("chofu_up_b1") ? BlockStateEnum.BLOCK_STATE_OPEN : BlockStateEnum.BLOCK_STATE_CLOSE}})}
                 />
                 <Platform isHorizontal={false} position={{ x: 260, y: 220 }} name="桜上水" />
                 <Rail
@@ -194,26 +212,54 @@ function MapView() {
                       {x: 320, y: 400},
                     ]}
                     isClosed={isClosed("sakurajosui_up_b1")}
+                    onClick={() => mutateBlock({state: {blockId: "sakurajosui_up_b1", state: isClosed("sakurajosui_up_b1") ? BlockStateEnum.BLOCK_STATE_OPEN : BlockStateEnum.BLOCK_STATE_CLOSE}})}
                 />
                 <Platform isHorizontal={false} position={{ x: 900, y: 220 }} name="調布" />
+                <Rail points={[
+                    {x: 840, y: 140},
+                    {x: 800, y: 170},
+                    {x: 800, y: 220},
+                ]}></Rail>
+
+                <Rail points={[
+                    {x: 800, y: 220},
+                    {x: 800, y: 270},
+                    {x: 800, y: 330},
+                    {x: 700, y: 330},
+                ]}
+                      isClosed={isClosed("hashimoto_up_b1")}
+                      onClick={() => mutateBlock({state: {blockId: "hashimoto_up_b1", state: isClosed("hashimoto_up_b1") ? BlockStateEnum.BLOCK_STATE_OPEN : BlockStateEnum.BLOCK_STATE_CLOSE}})}
+                ></Rail>
+                <Rail points={[
+                    {x: 700, y: 330},
+                    {x: 600, y: 330},
+                    {x: 600, y: 410},
+                    {x: 700, y: 410},
+                ]}
+                      isClosed={isClosed("hashimoto_down_b1")}
+                        onClick={() => mutateBlock({state: {blockId: "hashimoto_down_b1", state: isClosed("hashimoto_down_b1") ? BlockStateEnum.BLOCK_STATE_OPEN : BlockStateEnum.BLOCK_STATE_CLOSE}})}
+                ></Rail>
+
                 <Rail
                     points={[
-                      {x: 840, y: 140},
-                      {x: 800, y: 170},
-                      {x: 800, y: 220},
-                      {x: 800, y: 270},
-                      {x: 800, y: 330},
-                      {x: 700, y: 330},
-                      {x: 600, y: 330},
-                      {x: 600, y: 410},
-                      {x: 700, y: 410},
-                      {x: 800, y: 410},
-                      {x: 960, y: 380},
-                      {x: 960, y: 220},
-                      {x: 960, y: 170},
-                      {x: 1000, y: 140},
+                        {x: 960, y: 220},
+                        {x: 960, y: 170},
+                        {x: 1000, y: 140},
                     ]}
                 />
+
+                <Rail
+                    points={[
+                        {x: 700, y: 410},
+                        {x: 800, y: 410},
+                        {x: 960, y: 380},
+                        {x: 960, y: 220},
+                    ]}
+                    isClosed={isClosed("chofu_down_b2")}
+                    onClick={() => mutateBlock({state: {blockId: "chofu_down_b2", state: isClosed("chofu_down_b2") ? BlockStateEnum.BLOCK_STATE_OPEN : BlockStateEnum.BLOCK_STATE_CLOSE}})}
+                />
+
+
                 <Platform isHorizontal={false} position={{ x: 260, y: 400 }} name="新宿" />
                 <Platform position={{ x: 700, y: 370 }} name="橋本" />
                 <Platform position={{ x: 700, y: 520 }} name="京王八王子" />
@@ -240,10 +286,11 @@ function MapView() {
                 }
                 {
                   trains?.trains.map((train) => {
-                    const s = LOCATIONS_FOR_TRAIN_FROM_ID.get(train.positionId)
+                    let s = LOCATIONS_FOR_TRAIN_FROM_ID.get(train.positionId)
                     if (s == undefined){
                       throw new Error(`unknown train location: ${train.positionId}`)
                     }
+                    s = {x: s.x, y: s.y+30}
                     return ( <Train position={s} key={train.trainId} trainData={{id: train.trainId, type: train.priority}}/>
                     )
                   })

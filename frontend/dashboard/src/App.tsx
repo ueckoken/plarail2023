@@ -38,7 +38,7 @@ function App() {
 
   const transport = createConnectTransport(
   {
-    baseUrl: "http://localhost:8080",
+    baseUrl: "https://k1hmbp.tail5590e.ts.net/api/",
   });
   return (
   <>

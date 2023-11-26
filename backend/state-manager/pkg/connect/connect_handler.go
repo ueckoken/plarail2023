@@ -26,6 +26,10 @@ func (s *StateManagerServer) GetBlockStates(
 	ctx context.Context,
 	req *connect.Request[statev1.GetBlockStatesRequest],
 ) (*connect.Response[statev1.GetBlockStatesResponse], error) {
+	req.Header().Set("Access-Control-Allow-Headers", "*")
+	req.Header().Set("Access-Control-Allow-Origin", "*")
+	req.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
 	blockStates, err := s.DBHandler.GetBlocks()
 	if err != nil {
 		err = connect.NewError(
@@ -144,6 +148,9 @@ func (s *StateManagerServer) GetStopStates(
 	ctx context.Context,
 	req *connect.Request[statev1.GetStopStatesRequest],
 ) (*connect.Response[statev1.GetStopStatesResponse], error) {
+	req.Header().Set("Access-Control-Allow-Headers", "*")
+	req.Header().Set("Access-Control-Allow-Origin", "*")
+	req.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 	stopStates, err := s.DBHandler.GetStops()
 	if err != nil {
 		err = connect.NewError(
@@ -178,6 +185,9 @@ func (s *StateManagerServer) GetTrains(
 	ctx context.Context,
 	req *connect.Request[statev1.GetTrainsRequest],
 ) (*connect.Response[statev1.GetTrainsResponse], error) {
+	req.Header().Set("Access-Control-Allow-Headers", "*")
+	req.Header().Set("Access-Control-Allow-Origin", "*")
+	req.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 	trains, err := s.DBHandler.GetTrains()
 	if err != nil {
 		err = connect.NewError(
@@ -209,6 +219,9 @@ func (s *StateManagerServer) AddTrain(
 	ctx context.Context,
 	req *connect.Request[statev1.AddTrainRequest],
 ) (*connect.Response[statev1.AddTrainResponse], error) {
+	req.Header().Set("Access-Control-Allow-Headers", "*")
+	req.Header().Set("Access-Control-Allow-Origin", "*")
+	req.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 	err := s.DBHandler.AddTrain(req.Msg.Train)
 	if err != nil {
 		err = connect.NewError(

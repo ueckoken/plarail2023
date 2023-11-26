@@ -76,7 +76,7 @@ func (h *Handler) Send(topic string, payload string) {
 	{target}/{pointId}/update
 */
 
-func (h *Handler) topicHandler(msg mqtt.Message) {
+func (h *Handler) topicHandler(msg mqtt.Message) error {
 	// Handle by Path
 	arr := strings.Split(msg.Topic(), "/")
 	target := arr[0]
@@ -84,7 +84,7 @@ func (h *Handler) topicHandler(msg mqtt.Message) {
 	method := arr[2]
 
 	if len(arr) > 3 {
-		return
+		return fmt.Errorf("message format failed")
 	}
 
 	switch method {
@@ -95,6 +95,7 @@ func (h *Handler) topicHandler(msg mqtt.Message) {
 	case "update":
 		h.updateState(target, id, msg.Payload())
 	}
+	return nil
 }
 
 func (h *Handler) NotifyStateUpdate(target string, id string, state string) {
@@ -102,12 +103,12 @@ func (h *Handler) NotifyStateUpdate(target string, id string, state string) {
 	token.Wait()
 }
 
-func (h *Handler) getState(target string, id string) {
+func (h *Handler) getState(target string, id string) error {
 	switch target {
 	case "point":
 		point, err := h.dbHandler.GetPoint(id)
 		if err != nil {
-			log.Fatal(err)
+			return fmt.Errorf("Get point failed, %w", err)
 		}
 		log.Println(point)
 		token := h.client.Publish("point/"+id+"/get/accepted", 0, false, point.State.String())
@@ -123,9 +124,10 @@ func (h *Handler) getState(target string, id string) {
 		token.Wait()
 
 	case "block":
+		fmt.Println("block")
 		block, err := h.dbHandler.GetBlock(id)
 		if err != nil {
-			log.Fatal(err)
+			return fmt.Errorf("getblock in block failed, %w", err)
 		}
 		res, err := json.Marshal(block)
 		if err != nil {
@@ -143,12 +145,12 @@ func (h *Handler) getState(target string, id string) {
 			// Return error message
 			token := h.client.Publish("setting/"+id+"/get/accepted", 0, false, "error")
 			token.Wait()
-			return
+			return fmt.Errorf("settings %w", err)
 		}
 		raw, err := os.ReadFile("../settings/esp/" + id + ".json")
 		if err != nil {
 			log.Println(err.Error())
-			return
+			return nil
 		}
 		// remove \n code
 		raw = []byte(strings.Replace(string(raw), "\n", "", -1))
@@ -159,6 +161,7 @@ func (h *Handler) getState(target string, id string) {
 	case "train":
 		// TODO: implement
 	}
+	return nil
 }
 
 func (h *Handler) getDelta(target string, id string) {
@@ -170,8 +173,9 @@ func (h *Handler) updateState(target string, id string, payload []byte) {
 	switch target {
 	case "block":
 		// Check State
+		fmt.Print(id)
 		newState := string(payload)
-		fmt.Print("newState: ")
+		fmt.Print(" change to ")
 		fmt.Println(newState)
 		if newState == "OPEN" {
 			err := h.dbHandler.UpdateBlock(&statev1.BlockState{
@@ -179,49 +183,7 @@ func (h *Handler) updateState(target string, id string, payload []byte) {
 				State:   statev1.BlockStateEnum_BLOCK_STATE_OPEN,
 			})
 			if err != nil {
-				log.Fatal(err)
-			}
-			// NT Tokyo
-			if id == "yamashita_b1" {
-				err := h.dbHandler.UpdateStop(&statev1.StopAndState{
-					Id:    "yamashita_s1",
-					State: statev1.StopStateEnum_STOP_STATE_GO,
-				})
-				if err != nil {
-					log.Fatal(err)
-				}
-				h.NotifyStateUpdate("stop", "yamashita_s1", statev1.StopStateEnum_STOP_STATE_GO.String())
-				err = h.dbHandler.UpdateStop(&statev1.StopAndState{
-					Id:    "yamashita_s2",
-					State: statev1.StopStateEnum_STOP_STATE_GO,
-				})
-				if err != nil {
-					log.Fatal(err)
-				}
-				h.NotifyStateUpdate("stop", "yamashita_s2", statev1.StopStateEnum_STOP_STATE_GO.String())
-
-				// 今と逆にする
-				now, err := h.dbHandler.GetPoint("yamashita_p1")
-				if err != nil {
-					log.Fatal(err)
-				}
-				var newS statev1.PointStateEnum
-				if now.State == statev1.PointStateEnum_POINT_STATE_NORMAL {
-					newS = statev1.PointStateEnum_POINT_STATE_REVERSE
-				} else {
-					newS = statev1.PointStateEnum_POINT_STATE_NORMAL
-				}
-				err = h.dbHandler.UpdatePoint(&statev1.PointAndState{
-					Id:    "yamashita_p1",
-					State: newS,
-				})
-
-				if err != nil {
-					log.Fatal(err)
-				}
-
-				h.NotifyStateUpdate("point", "yamashita_p1", newS.String())
-
+				slog.Warn("Update block failed", slog.Any("err", err))
 			}
 		} else if newState == "CLOSE" {
 			err := h.dbHandler.UpdateBlock(&statev1.BlockState{
@@ -229,28 +191,8 @@ func (h *Handler) updateState(target string, id string, payload []byte) {
 				State:   statev1.BlockStateEnum_BLOCK_STATE_CLOSE,
 			})
 			if err != nil {
-				log.Fatal(err)
-			}
-			// NT Tokyo
-			if id == "yamashita_b1" {
-				err := h.dbHandler.UpdateStop(&statev1.StopAndState{
-					Id:    "yamashita_s1",
-					State: statev1.StopStateEnum_STOP_STATE_STOP,
-				})
-				if err != nil {
-					log.Fatal(err)
-				}
-				h.NotifyStateUpdate("stop", "yamashita_s1", statev1.StopStateEnum_STOP_STATE_STOP.String())
-				err = h.dbHandler.UpdateStop(&statev1.StopAndState{
-					Id:    "yamashita_s2",
-					State: statev1.StopStateEnum_STOP_STATE_STOP,
-				})
-				if err != nil {
-					log.Fatal(err)
-				}
-				h.NotifyStateUpdate("stop", "yamashita_s2", statev1.StopStateEnum_STOP_STATE_STOP.String())
+				slog.Warn("Update block failed", slog.Any("err", err))
 			}
 		}
-
 	}
 }
