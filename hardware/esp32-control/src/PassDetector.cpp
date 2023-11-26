@@ -20,7 +20,7 @@ void PassDetector::loop()
     {
       return;
     }
-    String topic = "pass/" + id + "/update";
+    String topic = "block/" + id + "/update";
     client->publish(topic.c_str(), state.c_str());
     last_switch_time = millis();
   }

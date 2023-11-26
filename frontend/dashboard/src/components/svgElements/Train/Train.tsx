@@ -7,7 +7,7 @@ import styles from "./Train.module.scss";
 import { Coordinate } from "@/types/Coordinate";
 import { TrainData } from "@/types/TrainData";
 
-import TrainIcon from "@/../public/train.svg";
+import TrainIcon from "./train.svg?react";
 
 interface Props {
     position: Coordinate;

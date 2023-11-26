@@ -20,7 +20,7 @@ point_rails:
 blocks:
   - shinjyuku_down_b1
   - sakurajosui_down_b1
-  - sakurajosui_down_b1
+  - sakurajosui_up_b1
   - chofu_down_b2
   - hashimoto_down_b1
   - hashimoto_up_b1
@@ -28,7 +28,6 @@ blocks:
   - chofu_down_b1
   - hachioji_down_b1
   - hachioji_up_b1
-  - chofu_up_b1
   - sakurajosui_up_b1
   - sakurajosui_up_b1
   - shinjyuku_up_b1

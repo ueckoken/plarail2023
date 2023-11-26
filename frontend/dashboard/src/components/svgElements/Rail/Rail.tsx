@@ -8,16 +8,19 @@ import styles from "./Rail.module.scss";
 interface Props {
     points: [Coordinate, Coordinate, ...Coordinate[]];
     isClosed?: boolean;
+    onClick?: () => void;
 }
 
-export const Rail: React.FC<Props> = ({ points, isClosed }) => {
+export const Rail: React.FC<Props> = ({ points, isClosed ,onClick}) => {
     const pointsText = points
         .map((point: Coordinate) => `${point.x}, ${point.y}`)
         .join("\n");
 
     return (
         <>
-            <g>
+            <g
+                onClick={onClick}
+            >
                 <polyline
                     points={pointsText}
                     fill="none"

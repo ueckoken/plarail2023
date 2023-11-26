@@ -88,6 +88,7 @@ void setup()
   client.subscribe("point/+/get/accepted");
   client.subscribe("stop/+/delta");
   client.subscribe("point/+/delta");
+  Serial.println("Subscribed to topics.");
   manager.getInitialState();
 }
 

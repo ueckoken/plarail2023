@@ -1,13 +1,13 @@
 {
-  "name": "hashimoto",
+  "name": "hachioji",
   "stops": [
     {
-      "stop_id": "hashimoto_up_s1",
-      "pin": 13
+      "stop_id": "hachioji_up_s1",
+      "pin": 16
     },
     {
-      "stop_id": "hashimoto_down_s1",
-      "pin": 14
+      "stop_id": "hachioji_down_s1",
+      "pin": 17
     }
   ],
   "detectors": [
@@ -17,28 +17,28 @@
       "pin": 12
     },
     {
-      "block_id": "hashimoto_down_b1",
+      "block_id": "hachioji_up_b1",
       "target": "CLOSE",
       "pin": 22
     },
     {
-      "block_id": "hashimoto_down_b1",
-      "target": "OPEN",
+      "block_id": "hachioji_down_b1",
+      "target": "CLOSE",
       "pin": 23
     },
     {
-      "block_id": "hashimoto_up_b1",
-      "target": "CLOSE",
+      "block_id": "hachioji_down_b1",
+      "target": "OPEN",
       "pin": 25
     }
   ],
   "nfcs": [
     {
-      "nfc_id": "hashimoto_up_s1",
+      "nfc_id": "hachioji_up_s1",
       "pin": 4
     },
     {
-      "nfc_id": "hashimoto_down_s1",
+      "nfc_id": "hachioji_down_s1",
       "pin": 5
     }
   ]

@@ -8,7 +8,7 @@
 
 #define MAX_POINT_NUM 5
 #define MAX_STOP_NUM 5
-#define MAX_DETECTOR_NUM 5
+#define MAX_DETECTOR_NUM 8
 #define MAX_NFC_NUM 5
 
 class IOManager
