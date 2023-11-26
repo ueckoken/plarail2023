@@ -132,7 +132,7 @@ func main() {
 					"version": version,
 					"commit":  commit,
 				},
-				LogLevel: slog.LevelDebug,
+				LogLevel: slog.LevelWarn,
 			},
 		),
 	),
