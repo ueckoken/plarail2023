@@ -1,2 +1,5 @@
 resources:
-  - ./emqx
+  - './auto-operation'
+  - 'dashboard'
+  - 'state-manager'
+  # - ./emqx
