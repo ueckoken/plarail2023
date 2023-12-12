@@ -1077,9 +1077,7 @@
   integrity sha512-JyEH8Z+OD5Sc2opSg86qMHn1EM1Sa+zj/Tc0ovxdwk56ByVNONJSabuCUbLQp+eKN3rWNfrho0X+3SEqEPXIow==
 
 "@bufbuild/protoc-gen-es@^1.4.2":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@bufbuild/protoc-gen-es/-/protoc-gen-es-1.4.2.tgz#00c8b09430dd1154e626da7c247fd6425a1cd41d"
-  integrity sha512-/It7M2s8H1zTDvUMJu6vhBmtnzeFL2VS6e78RYIY38602pNXDK/vbteKUo4KrG0O07lOPFu87hHZ0Y+w5Ib6iw==
+  version "1.6.0"
   dependencies:
     "@bufbuild/protobuf" "^1.4.2"
     "@bufbuild/protoplugin" "1.4.2"
