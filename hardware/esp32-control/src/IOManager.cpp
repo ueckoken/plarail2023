@@ -1,6 +1,9 @@
 #include "IOManager.h"
 
+PointRail POINT_LIST[MAX_POINT_NUM];
 StopRail STOP_LIST[MAX_STOP_NUM];
+PassDetector DETECTOR_LIST[MAX_DETECTOR_NUM];
+NFCReader NFC_LIST[MAX_NFC_NUM];
 
 IOManager::IOManager(PubSubClient *client)
 {
@@ -13,7 +16,6 @@ IOManager::IOManager(PubSubClient *client)
 
 void IOManager::addPoint(uint8_t pin, String point_id)
 {
-  POINT_LIST[POINT_LIST_INDEX] = PointRail();
   POINT_LIST[POINT_LIST_INDEX].attach(pin, point_id);
   POINT_LIST_INDEX++;
 }
