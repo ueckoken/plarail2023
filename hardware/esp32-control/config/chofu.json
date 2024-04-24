@@ -3,31 +3,31 @@
   "stops": [
     {
       "stop_id": "chofu_down_s1",
-      "pin": 17
+      "pin": 14
     },
     {
       "stop_id": "chofu_down_s2",
-      "pin": 18
+      "pin": 15
     },
     {
       "stop_id": "chofu_up_s1",
-      "pin": 19
+      "pin": 16
     },
     {
       "stop_id": "chofu_up_s2",
-      "pin": 21
+      "pin": 17
     }
   ],
   "points": [
     {
       "point_id": "chofu_down_p1",
-      "pin": 16
+      "pin": 13
     }
   ],
   "detectors": [
     {
-      "block_id": "shinjyuku_down_b1",
-      "target": "CLOSE",
+      "block_id": "sakurajosui_down_b1",
+      "target": "OPEN",
       "pin": 12
     },
     {
@@ -53,8 +53,25 @@
     {
       "block_id": "hachioji_up_b1",
       "target": "OPEN",
-      "pin": 27
+      "pin": 32
     }
   ],
-  "nfcs": []
+  "nfcs": [
+    {
+      "nfc_id": "chofu_down_s1",
+      "pin": 4
+    },
+    {
+      "nfc_id": "chofu_down_s2",
+      "pin": 5
+    },
+    {
+      "nfc_id": "chofu_up_s1",
+      "pin": 32
+    },
+    {
+      "nfc_id": "chofu_up_s2",
+      "pin": 33
+    }
+  ]
 }

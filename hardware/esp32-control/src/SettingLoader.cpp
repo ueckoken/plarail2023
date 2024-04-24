@@ -24,7 +24,7 @@ void readFile(fs::FS &fs, const char *path, char *buf)
 
 void loadSetting(char *input, IOManager *manager)
 {
-  StaticJsonDocument<384> doc;
+  StaticJsonDocument<768> doc;
 
   DeserializationError error = deserializeJson(doc, input);
 
@@ -36,7 +36,7 @@ void loadSetting(char *input, IOManager *manager)
   }
 
   // 端末名
-  const char* host_name = doc["name"];
+  const char *host_name = doc["name"];
   strcpy(HOST, host_name);
 
   // STOPS
@@ -67,23 +67,25 @@ void loadSetting(char *input, IOManager *manager)
     const char *target = v["target"];
     int pin = v["pin"];
     Serial.printf("block_id: %s, target: %s, pin: %d\n", block_id, target, pin);
+    manager->addDetector(pin, block_id, target);
   }
 
-  // NFCS
-  JsonArray nfcs = doc["nfcs"];
-  for (JsonVariant v : nfcs)
-  {
-    const char *nfc_id = v["nfc_id"];
-    int pin = v["pin"];
-    Serial.printf("nfc_id: %s, pin: %d\n", nfc_id, pin);
-  }
+  // // NFCS
+  // JsonArray nfcs = doc["nfcs"];
+  // for (JsonVariant v : nfcs)
+  // {
+  //   const char *nfc_id = v["nfc_id"];
+  //   int pin = v["pin"];
+  //   Serial.printf("nfc_id: %s, pin: %d\n", nfc_id, pin);
+  //   // manager->addNfc(pin, nfc_id);
+  // }
   Serial.println("Setiing loaded.");
   SETTING_LOADED = true;
 }
 
 void getSetting(IOManager *manager)
 {
-  char json_buf[4096];
+  char json_buf[2048];
   readFile(LittleFS, "/setting.json", json_buf); // jsonファイル読み込み
   loadSetting(json_buf, manager);
 }

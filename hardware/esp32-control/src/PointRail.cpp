@@ -4,15 +4,14 @@ PointRail::PointRail() {}
 
 void PointRail::attach(uint8_t pin, String point_id)
 {
-  point_id = point_id;
-  pin = pin;
+  this->point_id = point_id;
+  this->pin = pin;
   servo.setPeriodHertz(50);
+  servo.attach(pin, 500, 2400);
 }
 
 void PointRail::set_state(POINT_STATE state)
 {
-  state = state;
-  servo.attach(pin, 500, 2400);
   if (state == POINT_STATE_NORMAL)
   {
     servo.write(POINT_STRAIGHT_ANGLE);
@@ -21,7 +20,7 @@ void PointRail::set_state(POINT_STATE state)
   {
     servo.write(POINT_REVERSE_ANGLE);
   }
-  servo.detach();
+  // servo.detach();
 }
 
 String PointRail::getId()

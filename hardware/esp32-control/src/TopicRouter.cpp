@@ -1,6 +1,6 @@
 #include "TopicRouter.h"
 
-void mqtt_handler(char *topic, byte *payload, unsigned int length, IOManager manager)
+void mqtt_handler(char *topic, byte *payload, unsigned int length, IOManager *manager)
 {
   /*
     受信したTopicに応じて処理を分岐
@@ -26,11 +26,11 @@ void mqtt_handler(char *topic, byte *payload, unsigned int length, IOManager man
 
     if (strcmp(msg, "STOP_STATE_GO") == 0)
     {
-      manager.setStopState(id, STOP_STATE_GO);
+      manager->setStopState(id, STOP_STATE_GO);
     }
     else if (strcmp(msg, "STOP_STATE_STOP") == 0)
     {
-      manager.setStopState(id, STOP_STATE_STOP);
+      manager->setStopState(id, STOP_STATE_STOP);
     }
 
     return;
@@ -55,11 +55,11 @@ void mqtt_handler(char *topic, byte *payload, unsigned int length, IOManager man
 
     if (strcmp(msg, "POINT_STATE_NORMAL") == 0)
     {
-      manager.setPointState(id, POINT_STATE_NORMAL);
+      manager->setPointState(id, POINT_STATE_NORMAL);
     }
     else if (strcmp(msg, "POINT_STATE_REVERSE") == 0)
     {
-      manager.setPointState(id, POINT_STATE_REVERSE);
+      manager->setPointState(id, POINT_STATE_REVERSE);
     }
 
     return;

@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	frontendURL, _ := url.Parse("http://localhost:3000")
+	frontendURL, _ := url.Parse("http://localhost:5173")
 	backendURL, _ := url.Parse("http://localhost:8080")
 
 	mux := http.NewServeMux()
@@ -24,5 +24,5 @@ func main() {
 	}
 	mux.Handle("/api/", &rev)
 
-	fmt.Println(http.ListenAndServe(":3030", mux))
+	fmt.Println(http.ListenAndServe(":3031", mux))
 }
