@@ -138,17 +138,6 @@ async function main() {
             }
           })
         }
-        // 3秒後にSTRAIGHTに戻す
-        setTimeout(async () => {
-          if (point.state !== PointStateEnum.POINT_STATE_NORMAL) {
-            await client.updatePointState({
-              "state": {
-                "id": point.id,
-                "state": PointStateEnum.POINT_STATE_NORMAL
-              }
-            })
-          }
-        }, 3000);
       } else {
         if (point.state !== PointStateEnum.POINT_STATE_NORMAL) {
           await client.updatePointState({

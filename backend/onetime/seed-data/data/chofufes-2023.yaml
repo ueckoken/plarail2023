@@ -16,7 +16,7 @@ stop_rails:
 point_rails:
   - sakurajosui_up_p1
   - sakurajosui_down_p1
-  - chofu_up_p1
+  - chofu_down_p1
 blocks:
   - shinjyuku_down_b1
   - sakurajosui_down_b1
