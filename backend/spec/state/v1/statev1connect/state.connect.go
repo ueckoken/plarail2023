@@ -5,9 +5,9 @@
 package statev1connect
 
 import (
+	connect "connectrpc.com/connect"
 	context "context"
 	errors "errors"
-	connect_go "github.com/bufbuild/connect-go"
 	v1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
 	http "net/http"
 	strings "strings"
@@ -18,7 +18,7 @@ import (
 // generated with a version of connect newer than the one compiled into your binary. You can fix the
 // problem by either regenerating this code with an older version of connect or updating the connect
 // version compiled into your binary.
-const _ = connect_go.IsAtLeastVersion0_1_0
+const _ = connect.IsAtLeastVersion1_13_0
 
 const (
 	// StateManagerServiceName is the fully-qualified name of the StateManagerService service.
@@ -62,21 +62,35 @@ const (
 	StateManagerServiceUpdateTrainProcedure = "/state.v1.StateManagerService/UpdateTrain"
 )
 
+// These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
+var (
+	stateManagerServiceServiceDescriptor                = v1.File_state_v1_state_proto.Services().ByName("StateManagerService")
+	stateManagerServiceGetBlockStatesMethodDescriptor   = stateManagerServiceServiceDescriptor.Methods().ByName("GetBlockStates")
+	stateManagerServiceUpdateBlockStateMethodDescriptor = stateManagerServiceServiceDescriptor.Methods().ByName("UpdateBlockState")
+	stateManagerServiceUpdatePointStateMethodDescriptor = stateManagerServiceServiceDescriptor.Methods().ByName("UpdatePointState")
+	stateManagerServiceGetPointStatesMethodDescriptor   = stateManagerServiceServiceDescriptor.Methods().ByName("GetPointStates")
+	stateManagerServiceUpdateStopStateMethodDescriptor  = stateManagerServiceServiceDescriptor.Methods().ByName("UpdateStopState")
+	stateManagerServiceGetStopStatesMethodDescriptor    = stateManagerServiceServiceDescriptor.Methods().ByName("GetStopStates")
+	stateManagerServiceGetTrainsMethodDescriptor        = stateManagerServiceServiceDescriptor.Methods().ByName("GetTrains")
+	stateManagerServiceAddTrainMethodDescriptor         = stateManagerServiceServiceDescriptor.Methods().ByName("AddTrain")
+	stateManagerServiceUpdateTrainMethodDescriptor      = stateManagerServiceServiceDescriptor.Methods().ByName("UpdateTrain")
+)
+
 // StateManagerServiceClient is a client for the state.v1.StateManagerService service.
 type StateManagerServiceClient interface {
 	// Block
-	GetBlockStates(context.Context, *connect_go.Request[v1.GetBlockStatesRequest]) (*connect_go.Response[v1.GetBlockStatesResponse], error)
-	UpdateBlockState(context.Context, *connect_go.Request[v1.UpdateBlockStateRequest]) (*connect_go.Response[v1.UpdateBlockStateResponse], error)
+	GetBlockStates(context.Context, *connect.Request[v1.GetBlockStatesRequest]) (*connect.Response[v1.GetBlockStatesResponse], error)
+	UpdateBlockState(context.Context, *connect.Request[v1.UpdateBlockStateRequest]) (*connect.Response[v1.UpdateBlockStateResponse], error)
 	// Point
-	UpdatePointState(context.Context, *connect_go.Request[v1.UpdatePointStateRequest]) (*connect_go.Response[v1.UpdatePointStateResponse], error)
-	GetPointStates(context.Context, *connect_go.Request[v1.GetPointStatesRequest]) (*connect_go.Response[v1.GetPointStatesResponse], error)
+	UpdatePointState(context.Context, *connect.Request[v1.UpdatePointStateRequest]) (*connect.Response[v1.UpdatePointStateResponse], error)
+	GetPointStates(context.Context, *connect.Request[v1.GetPointStatesRequest]) (*connect.Response[v1.GetPointStatesResponse], error)
 	// Stop
-	UpdateStopState(context.Context, *connect_go.Request[v1.UpdateStopStateRequest]) (*connect_go.Response[v1.UpdateStopStateResponse], error)
-	GetStopStates(context.Context, *connect_go.Request[v1.GetStopStatesRequest]) (*connect_go.Response[v1.GetStopStatesResponse], error)
+	UpdateStopState(context.Context, *connect.Request[v1.UpdateStopStateRequest]) (*connect.Response[v1.UpdateStopStateResponse], error)
+	GetStopStates(context.Context, *connect.Request[v1.GetStopStatesRequest]) (*connect.Response[v1.GetStopStatesResponse], error)
 	// Train
-	GetTrains(context.Context, *connect_go.Request[v1.GetTrainsRequest]) (*connect_go.Response[v1.GetTrainsResponse], error)
-	AddTrain(context.Context, *connect_go.Request[v1.AddTrainRequest]) (*connect_go.Response[v1.AddTrainResponse], error)
-	UpdateTrain(context.Context, *connect_go.Request[v1.UpdateTrainRequest]) (*connect_go.Response[v1.UpdateTrainResponse], error)
+	GetTrains(context.Context, *connect.Request[v1.GetTrainsRequest]) (*connect.Response[v1.GetTrainsResponse], error)
+	AddTrain(context.Context, *connect.Request[v1.AddTrainRequest]) (*connect.Response[v1.AddTrainResponse], error)
+	UpdateTrain(context.Context, *connect.Request[v1.UpdateTrainRequest]) (*connect.Response[v1.UpdateTrainResponse], error)
 }
 
 // NewStateManagerServiceClient constructs a client for the state.v1.StateManagerService service. By
@@ -86,130 +100,139 @@ type StateManagerServiceClient interface {
 //
 // The URL supplied here should be the base URL for the Connect or gRPC server (for example,
 // http://api.acme.com or https://acme.com/grpc).
-func NewStateManagerServiceClient(httpClient connect_go.HTTPClient, baseURL string, opts ...connect_go.ClientOption) StateManagerServiceClient {
+func NewStateManagerServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) StateManagerServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
 	return &stateManagerServiceClient{
-		getBlockStates: connect_go.NewClient[v1.GetBlockStatesRequest, v1.GetBlockStatesResponse](
+		getBlockStates: connect.NewClient[v1.GetBlockStatesRequest, v1.GetBlockStatesResponse](
 			httpClient,
 			baseURL+StateManagerServiceGetBlockStatesProcedure,
-			opts...,
+			connect.WithSchema(stateManagerServiceGetBlockStatesMethodDescriptor),
+			connect.WithClientOptions(opts...),
 		),
-		updateBlockState: connect_go.NewClient[v1.UpdateBlockStateRequest, v1.UpdateBlockStateResponse](
+		updateBlockState: connect.NewClient[v1.UpdateBlockStateRequest, v1.UpdateBlockStateResponse](
 			httpClient,
 			baseURL+StateManagerServiceUpdateBlockStateProcedure,
-			opts...,
+			connect.WithSchema(stateManagerServiceUpdateBlockStateMethodDescriptor),
+			connect.WithClientOptions(opts...),
 		),
-		updatePointState: connect_go.NewClient[v1.UpdatePointStateRequest, v1.UpdatePointStateResponse](
+		updatePointState: connect.NewClient[v1.UpdatePointStateRequest, v1.UpdatePointStateResponse](
 			httpClient,
 			baseURL+StateManagerServiceUpdatePointStateProcedure,
-			opts...,
+			connect.WithSchema(stateManagerServiceUpdatePointStateMethodDescriptor),
+			connect.WithClientOptions(opts...),
 		),
-		getPointStates: connect_go.NewClient[v1.GetPointStatesRequest, v1.GetPointStatesResponse](
+		getPointStates: connect.NewClient[v1.GetPointStatesRequest, v1.GetPointStatesResponse](
 			httpClient,
 			baseURL+StateManagerServiceGetPointStatesProcedure,
-			opts...,
+			connect.WithSchema(stateManagerServiceGetPointStatesMethodDescriptor),
+			connect.WithClientOptions(opts...),
 		),
-		updateStopState: connect_go.NewClient[v1.UpdateStopStateRequest, v1.UpdateStopStateResponse](
+		updateStopState: connect.NewClient[v1.UpdateStopStateRequest, v1.UpdateStopStateResponse](
 			httpClient,
 			baseURL+StateManagerServiceUpdateStopStateProcedure,
-			opts...,
+			connect.WithSchema(stateManagerServiceUpdateStopStateMethodDescriptor),
+			connect.WithClientOptions(opts...),
 		),
-		getStopStates: connect_go.NewClient[v1.GetStopStatesRequest, v1.GetStopStatesResponse](
+		getStopStates: connect.NewClient[v1.GetStopStatesRequest, v1.GetStopStatesResponse](
 			httpClient,
 			baseURL+StateManagerServiceGetStopStatesProcedure,
-			opts...,
+			connect.WithSchema(stateManagerServiceGetStopStatesMethodDescriptor),
+			connect.WithClientOptions(opts...),
 		),
-		getTrains: connect_go.NewClient[v1.GetTrainsRequest, v1.GetTrainsResponse](
+		getTrains: connect.NewClient[v1.GetTrainsRequest, v1.GetTrainsResponse](
 			httpClient,
 			baseURL+StateManagerServiceGetTrainsProcedure,
-			opts...,
+			connect.WithSchema(stateManagerServiceGetTrainsMethodDescriptor),
+			connect.WithClientOptions(opts...),
 		),
-		addTrain: connect_go.NewClient[v1.AddTrainRequest, v1.AddTrainResponse](
+		addTrain: connect.NewClient[v1.AddTrainRequest, v1.AddTrainResponse](
 			httpClient,
 			baseURL+StateManagerServiceAddTrainProcedure,
-			opts...,
+			connect.WithSchema(stateManagerServiceAddTrainMethodDescriptor),
+			connect.WithClientOptions(opts...),
 		),
-		updateTrain: connect_go.NewClient[v1.UpdateTrainRequest, v1.UpdateTrainResponse](
+		updateTrain: connect.NewClient[v1.UpdateTrainRequest, v1.UpdateTrainResponse](
 			httpClient,
 			baseURL+StateManagerServiceUpdateTrainProcedure,
-			opts...,
+			connect.WithSchema(stateManagerServiceUpdateTrainMethodDescriptor),
+			connect.WithClientOptions(opts...),
 		),
 	}
 }
 
 // stateManagerServiceClient implements StateManagerServiceClient.
 type stateManagerServiceClient struct {
-	getBlockStates   *connect_go.Client[v1.GetBlockStatesRequest, v1.GetBlockStatesResponse]
-	updateBlockState *connect_go.Client[v1.UpdateBlockStateRequest, v1.UpdateBlockStateResponse]
-	updatePointState *connect_go.Client[v1.UpdatePointStateRequest, v1.UpdatePointStateResponse]
-	getPointStates   *connect_go.Client[v1.GetPointStatesRequest, v1.GetPointStatesResponse]
-	updateStopState  *connect_go.Client[v1.UpdateStopStateRequest, v1.UpdateStopStateResponse]
-	getStopStates    *connect_go.Client[v1.GetStopStatesRequest, v1.GetStopStatesResponse]
-	getTrains        *connect_go.Client[v1.GetTrainsRequest, v1.GetTrainsResponse]
-	addTrain         *connect_go.Client[v1.AddTrainRequest, v1.AddTrainResponse]
-	updateTrain      *connect_go.Client[v1.UpdateTrainRequest, v1.UpdateTrainResponse]
+	getBlockStates   *connect.Client[v1.GetBlockStatesRequest, v1.GetBlockStatesResponse]
+	updateBlockState *connect.Client[v1.UpdateBlockStateRequest, v1.UpdateBlockStateResponse]
+	updatePointState *connect.Client[v1.UpdatePointStateRequest, v1.UpdatePointStateResponse]
+	getPointStates   *connect.Client[v1.GetPointStatesRequest, v1.GetPointStatesResponse]
+	updateStopState  *connect.Client[v1.UpdateStopStateRequest, v1.UpdateStopStateResponse]
+	getStopStates    *connect.Client[v1.GetStopStatesRequest, v1.GetStopStatesResponse]
+	getTrains        *connect.Client[v1.GetTrainsRequest, v1.GetTrainsResponse]
+	addTrain         *connect.Client[v1.AddTrainRequest, v1.AddTrainResponse]
+	updateTrain      *connect.Client[v1.UpdateTrainRequest, v1.UpdateTrainResponse]
 }
 
 // GetBlockStates calls state.v1.StateManagerService.GetBlockStates.
-func (c *stateManagerServiceClient) GetBlockStates(ctx context.Context, req *connect_go.Request[v1.GetBlockStatesRequest]) (*connect_go.Response[v1.GetBlockStatesResponse], error) {
+func (c *stateManagerServiceClient) GetBlockStates(ctx context.Context, req *connect.Request[v1.GetBlockStatesRequest]) (*connect.Response[v1.GetBlockStatesResponse], error) {
 	return c.getBlockStates.CallUnary(ctx, req)
 }
 
 // UpdateBlockState calls state.v1.StateManagerService.UpdateBlockState.
-func (c *stateManagerServiceClient) UpdateBlockState(ctx context.Context, req *connect_go.Request[v1.UpdateBlockStateRequest]) (*connect_go.Response[v1.UpdateBlockStateResponse], error) {
+func (c *stateManagerServiceClient) UpdateBlockState(ctx context.Context, req *connect.Request[v1.UpdateBlockStateRequest]) (*connect.Response[v1.UpdateBlockStateResponse], error) {
 	return c.updateBlockState.CallUnary(ctx, req)
 }
 
 // UpdatePointState calls state.v1.StateManagerService.UpdatePointState.
-func (c *stateManagerServiceClient) UpdatePointState(ctx context.Context, req *connect_go.Request[v1.UpdatePointStateRequest]) (*connect_go.Response[v1.UpdatePointStateResponse], error) {
+func (c *stateManagerServiceClient) UpdatePointState(ctx context.Context, req *connect.Request[v1.UpdatePointStateRequest]) (*connect.Response[v1.UpdatePointStateResponse], error) {
 	return c.updatePointState.CallUnary(ctx, req)
 }
 
 // GetPointStates calls state.v1.StateManagerService.GetPointStates.
-func (c *stateManagerServiceClient) GetPointStates(ctx context.Context, req *connect_go.Request[v1.GetPointStatesRequest]) (*connect_go.Response[v1.GetPointStatesResponse], error) {
+func (c *stateManagerServiceClient) GetPointStates(ctx context.Context, req *connect.Request[v1.GetPointStatesRequest]) (*connect.Response[v1.GetPointStatesResponse], error) {
 	return c.getPointStates.CallUnary(ctx, req)
 }
 
 // UpdateStopState calls state.v1.StateManagerService.UpdateStopState.
-func (c *stateManagerServiceClient) UpdateStopState(ctx context.Context, req *connect_go.Request[v1.UpdateStopStateRequest]) (*connect_go.Response[v1.UpdateStopStateResponse], error) {
+func (c *stateManagerServiceClient) UpdateStopState(ctx context.Context, req *connect.Request[v1.UpdateStopStateRequest]) (*connect.Response[v1.UpdateStopStateResponse], error) {
 	return c.updateStopState.CallUnary(ctx, req)
 }
 
 // GetStopStates calls state.v1.StateManagerService.GetStopStates.
-func (c *stateManagerServiceClient) GetStopStates(ctx context.Context, req *connect_go.Request[v1.GetStopStatesRequest]) (*connect_go.Response[v1.GetStopStatesResponse], error) {
+func (c *stateManagerServiceClient) GetStopStates(ctx context.Context, req *connect.Request[v1.GetStopStatesRequest]) (*connect.Response[v1.GetStopStatesResponse], error) {
 	return c.getStopStates.CallUnary(ctx, req)
 }
 
 // GetTrains calls state.v1.StateManagerService.GetTrains.
-func (c *stateManagerServiceClient) GetTrains(ctx context.Context, req *connect_go.Request[v1.GetTrainsRequest]) (*connect_go.Response[v1.GetTrainsResponse], error) {
+func (c *stateManagerServiceClient) GetTrains(ctx context.Context, req *connect.Request[v1.GetTrainsRequest]) (*connect.Response[v1.GetTrainsResponse], error) {
 	return c.getTrains.CallUnary(ctx, req)
 }
 
 // AddTrain calls state.v1.StateManagerService.AddTrain.
-func (c *stateManagerServiceClient) AddTrain(ctx context.Context, req *connect_go.Request[v1.AddTrainRequest]) (*connect_go.Response[v1.AddTrainResponse], error) {
+func (c *stateManagerServiceClient) AddTrain(ctx context.Context, req *connect.Request[v1.AddTrainRequest]) (*connect.Response[v1.AddTrainResponse], error) {
 	return c.addTrain.CallUnary(ctx, req)
 }
 
 // UpdateTrain calls state.v1.StateManagerService.UpdateTrain.
-func (c *stateManagerServiceClient) UpdateTrain(ctx context.Context, req *connect_go.Request[v1.UpdateTrainRequest]) (*connect_go.Response[v1.UpdateTrainResponse], error) {
+func (c *stateManagerServiceClient) UpdateTrain(ctx context.Context, req *connect.Request[v1.UpdateTrainRequest]) (*connect.Response[v1.UpdateTrainResponse], error) {
 	return c.updateTrain.CallUnary(ctx, req)
 }
 
 // StateManagerServiceHandler is an implementation of the state.v1.StateManagerService service.
 type StateManagerServiceHandler interface {
 	// Block
-	GetBlockStates(context.Context, *connect_go.Request[v1.GetBlockStatesRequest]) (*connect_go.Response[v1.GetBlockStatesResponse], error)
-	UpdateBlockState(context.Context, *connect_go.Request[v1.UpdateBlockStateRequest]) (*connect_go.Response[v1.UpdateBlockStateResponse], error)
+	GetBlockStates(context.Context, *connect.Request[v1.GetBlockStatesRequest]) (*connect.Response[v1.GetBlockStatesResponse], error)
+	UpdateBlockState(context.Context, *connect.Request[v1.UpdateBlockStateRequest]) (*connect.Response[v1.UpdateBlockStateResponse], error)
 	// Point
-	UpdatePointState(context.Context, *connect_go.Request[v1.UpdatePointStateRequest]) (*connect_go.Response[v1.UpdatePointStateResponse], error)
-	GetPointStates(context.Context, *connect_go.Request[v1.GetPointStatesRequest]) (*connect_go.Response[v1.GetPointStatesResponse], error)
+	UpdatePointState(context.Context, *connect.Request[v1.UpdatePointStateRequest]) (*connect.Response[v1.UpdatePointStateResponse], error)
+	GetPointStates(context.Context, *connect.Request[v1.GetPointStatesRequest]) (*connect.Response[v1.GetPointStatesResponse], error)
 	// Stop
-	UpdateStopState(context.Context, *connect_go.Request[v1.UpdateStopStateRequest]) (*connect_go.Response[v1.UpdateStopStateResponse], error)
-	GetStopStates(context.Context, *connect_go.Request[v1.GetStopStatesRequest]) (*connect_go.Response[v1.GetStopStatesResponse], error)
+	UpdateStopState(context.Context, *connect.Request[v1.UpdateStopStateRequest]) (*connect.Response[v1.UpdateStopStateResponse], error)
+	GetStopStates(context.Context, *connect.Request[v1.GetStopStatesRequest]) (*connect.Response[v1.GetStopStatesResponse], error)
 	// Train
-	GetTrains(context.Context, *connect_go.Request[v1.GetTrainsRequest]) (*connect_go.Response[v1.GetTrainsResponse], error)
-	AddTrain(context.Context, *connect_go.Request[v1.AddTrainRequest]) (*connect_go.Response[v1.AddTrainResponse], error)
-	UpdateTrain(context.Context, *connect_go.Request[v1.UpdateTrainRequest]) (*connect_go.Response[v1.UpdateTrainResponse], error)
+	GetTrains(context.Context, *connect.Request[v1.GetTrainsRequest]) (*connect.Response[v1.GetTrainsResponse], error)
+	AddTrain(context.Context, *connect.Request[v1.AddTrainRequest]) (*connect.Response[v1.AddTrainResponse], error)
+	UpdateTrain(context.Context, *connect.Request[v1.UpdateTrainRequest]) (*connect.Response[v1.UpdateTrainResponse], error)
 }
 
 // NewStateManagerServiceHandler builds an HTTP handler from the service implementation. It returns
@@ -217,51 +240,60 @@ type StateManagerServiceHandler interface {
 //
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
-func NewStateManagerServiceHandler(svc StateManagerServiceHandler, opts ...connect_go.HandlerOption) (string, http.Handler) {
-	stateManagerServiceGetBlockStatesHandler := connect_go.NewUnaryHandler(
+func NewStateManagerServiceHandler(svc StateManagerServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	stateManagerServiceGetBlockStatesHandler := connect.NewUnaryHandler(
 		StateManagerServiceGetBlockStatesProcedure,
 		svc.GetBlockStates,
-		opts...,
+		connect.WithSchema(stateManagerServiceGetBlockStatesMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
 	)
-	stateManagerServiceUpdateBlockStateHandler := connect_go.NewUnaryHandler(
+	stateManagerServiceUpdateBlockStateHandler := connect.NewUnaryHandler(
 		StateManagerServiceUpdateBlockStateProcedure,
 		svc.UpdateBlockState,
-		opts...,
+		connect.WithSchema(stateManagerServiceUpdateBlockStateMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
 	)
-	stateManagerServiceUpdatePointStateHandler := connect_go.NewUnaryHandler(
+	stateManagerServiceUpdatePointStateHandler := connect.NewUnaryHandler(
 		StateManagerServiceUpdatePointStateProcedure,
 		svc.UpdatePointState,
-		opts...,
+		connect.WithSchema(stateManagerServiceUpdatePointStateMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
 	)
-	stateManagerServiceGetPointStatesHandler := connect_go.NewUnaryHandler(
+	stateManagerServiceGetPointStatesHandler := connect.NewUnaryHandler(
 		StateManagerServiceGetPointStatesProcedure,
 		svc.GetPointStates,
-		opts...,
+		connect.WithSchema(stateManagerServiceGetPointStatesMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
 	)
-	stateManagerServiceUpdateStopStateHandler := connect_go.NewUnaryHandler(
+	stateManagerServiceUpdateStopStateHandler := connect.NewUnaryHandler(
 		StateManagerServiceUpdateStopStateProcedure,
 		svc.UpdateStopState,
-		opts...,
+		connect.WithSchema(stateManagerServiceUpdateStopStateMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
 	)
-	stateManagerServiceGetStopStatesHandler := connect_go.NewUnaryHandler(
+	stateManagerServiceGetStopStatesHandler := connect.NewUnaryHandler(
 		StateManagerServiceGetStopStatesProcedure,
 		svc.GetStopStates,
-		opts...,
+		connect.WithSchema(stateManagerServiceGetStopStatesMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
 	)
-	stateManagerServiceGetTrainsHandler := connect_go.NewUnaryHandler(
+	stateManagerServiceGetTrainsHandler := connect.NewUnaryHandler(
 		StateManagerServiceGetTrainsProcedure,
 		svc.GetTrains,
-		opts...,
+		connect.WithSchema(stateManagerServiceGetTrainsMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
 	)
-	stateManagerServiceAddTrainHandler := connect_go.NewUnaryHandler(
+	stateManagerServiceAddTrainHandler := connect.NewUnaryHandler(
 		StateManagerServiceAddTrainProcedure,
 		svc.AddTrain,
-		opts...,
+		connect.WithSchema(stateManagerServiceAddTrainMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
 	)
-	stateManagerServiceUpdateTrainHandler := connect_go.NewUnaryHandler(
+	stateManagerServiceUpdateTrainHandler := connect.NewUnaryHandler(
 		StateManagerServiceUpdateTrainProcedure,
 		svc.UpdateTrain,
-		opts...,
+		connect.WithSchema(stateManagerServiceUpdateTrainMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
 	)
 	return "/state.v1.StateManagerService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
@@ -292,38 +324,38 @@ func NewStateManagerServiceHandler(svc StateManagerServiceHandler, opts ...conne
 // UnimplementedStateManagerServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedStateManagerServiceHandler struct{}
 
-func (UnimplementedStateManagerServiceHandler) GetBlockStates(context.Context, *connect_go.Request[v1.GetBlockStatesRequest]) (*connect_go.Response[v1.GetBlockStatesResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("state.v1.StateManagerService.GetBlockStates is not implemented"))
+func (UnimplementedStateManagerServiceHandler) GetBlockStates(context.Context, *connect.Request[v1.GetBlockStatesRequest]) (*connect.Response[v1.GetBlockStatesResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("state.v1.StateManagerService.GetBlockStates is not implemented"))
 }
 
-func (UnimplementedStateManagerServiceHandler) UpdateBlockState(context.Context, *connect_go.Request[v1.UpdateBlockStateRequest]) (*connect_go.Response[v1.UpdateBlockStateResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("state.v1.StateManagerService.UpdateBlockState is not implemented"))
+func (UnimplementedStateManagerServiceHandler) UpdateBlockState(context.Context, *connect.Request[v1.UpdateBlockStateRequest]) (*connect.Response[v1.UpdateBlockStateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("state.v1.StateManagerService.UpdateBlockState is not implemented"))
 }
 
-func (UnimplementedStateManagerServiceHandler) UpdatePointState(context.Context, *connect_go.Request[v1.UpdatePointStateRequest]) (*connect_go.Response[v1.UpdatePointStateResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("state.v1.StateManagerService.UpdatePointState is not implemented"))
+func (UnimplementedStateManagerServiceHandler) UpdatePointState(context.Context, *connect.Request[v1.UpdatePointStateRequest]) (*connect.Response[v1.UpdatePointStateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("state.v1.StateManagerService.UpdatePointState is not implemented"))
 }
 
-func (UnimplementedStateManagerServiceHandler) GetPointStates(context.Context, *connect_go.Request[v1.GetPointStatesRequest]) (*connect_go.Response[v1.GetPointStatesResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("state.v1.StateManagerService.GetPointStates is not implemented"))
+func (UnimplementedStateManagerServiceHandler) GetPointStates(context.Context, *connect.Request[v1.GetPointStatesRequest]) (*connect.Response[v1.GetPointStatesResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("state.v1.StateManagerService.GetPointStates is not implemented"))
 }
 
-func (UnimplementedStateManagerServiceHandler) UpdateStopState(context.Context, *connect_go.Request[v1.UpdateStopStateRequest]) (*connect_go.Response[v1.UpdateStopStateResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("state.v1.StateManagerService.UpdateStopState is not implemented"))
+func (UnimplementedStateManagerServiceHandler) UpdateStopState(context.Context, *connect.Request[v1.UpdateStopStateRequest]) (*connect.Response[v1.UpdateStopStateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("state.v1.StateManagerService.UpdateStopState is not implemented"))
 }
 
-func (UnimplementedStateManagerServiceHandler) GetStopStates(context.Context, *connect_go.Request[v1.GetStopStatesRequest]) (*connect_go.Response[v1.GetStopStatesResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("state.v1.StateManagerService.GetStopStates is not implemented"))
+func (UnimplementedStateManagerServiceHandler) GetStopStates(context.Context, *connect.Request[v1.GetStopStatesRequest]) (*connect.Response[v1.GetStopStatesResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("state.v1.StateManagerService.GetStopStates is not implemented"))
 }
 
-func (UnimplementedStateManagerServiceHandler) GetTrains(context.Context, *connect_go.Request[v1.GetTrainsRequest]) (*connect_go.Response[v1.GetTrainsResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("state.v1.StateManagerService.GetTrains is not implemented"))
+func (UnimplementedStateManagerServiceHandler) GetTrains(context.Context, *connect.Request[v1.GetTrainsRequest]) (*connect.Response[v1.GetTrainsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("state.v1.StateManagerService.GetTrains is not implemented"))
 }
 
-func (UnimplementedStateManagerServiceHandler) AddTrain(context.Context, *connect_go.Request[v1.AddTrainRequest]) (*connect_go.Response[v1.AddTrainResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("state.v1.StateManagerService.AddTrain is not implemented"))
+func (UnimplementedStateManagerServiceHandler) AddTrain(context.Context, *connect.Request[v1.AddTrainRequest]) (*connect.Response[v1.AddTrainResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("state.v1.StateManagerService.AddTrain is not implemented"))
 }
 
-func (UnimplementedStateManagerServiceHandler) UpdateTrain(context.Context, *connect_go.Request[v1.UpdateTrainRequest]) (*connect_go.Response[v1.UpdateTrainResponse], error) {
-	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("state.v1.StateManagerService.UpdateTrain is not implemented"))
+func (UnimplementedStateManagerServiceHandler) UpdateTrain(context.Context, *connect.Request[v1.UpdateTrainRequest]) (*connect.Response[v1.UpdateTrainResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("state.v1.StateManagerService.UpdateTrain is not implemented"))
 }
