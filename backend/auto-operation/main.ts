@@ -25,7 +25,7 @@ const transport = createConnectTransport(
 const client = createPromiseClient(StateManagerService, transport);
 
 async function loadConfig() {
-  mapConfig = (await import("./map/chofufes-2023.json")).default;
+  mapConfig = (await import("./map/mfk-2024.json")).default;
 }
 
 loadConfig();
@@ -64,8 +64,6 @@ async function main() {
     // 閉塞の確認する
     const block = blocks.find(b => b.blockId === collespondBlock);
     if (block && block.state === BlockStateEnum.BLOCK_STATE_CLOSE) {
-      // sakurajosui_down_s1はSTOPにしない chofufes
-      if (stop.id === "sakurajosui_down_s1") continue;
       if (stop.state !== StopStateEnum.STOP_STATE_STOP) {
         // 閉塞が閉じていたら列車を止めておく
         await client.updateStopState({

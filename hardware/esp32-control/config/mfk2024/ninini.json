@@ -22,22 +22,22 @@
   ],
   "detectors": [
     {
-      "block_id": "nanana_b1",
+      "block_id": "ninini_b1",
       "target": "CLOSE",
       "pin": 12
     },
     {
-      "block_id": "nanana_b1",
+      "block_id": "ninini_b1",
       "target": "OPEN",
       "pin": 22
     },
     {
-      "block_id": "ninini_b1",
+      "block_id": "nanana_b1",
       "target": "CLOSE",
       "pin": 23
     },
     {
-      "block_id": "ninini_b1",
+      "block_id": "nanana_b1",
       "target": "OPEN",
       "pin": 25
     }
