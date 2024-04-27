@@ -1,0 +1,9 @@
+stop_rails:
+  - ninini_s1
+  - ninini_s2
+  - nanana_s1
+point_rails:
+  - ninini_p1
+blocks:
+  - ninini_b1
+  - nanana_b1
