@@ -45,7 +45,7 @@ function MapView() {
   const { data: points, refetch: refetchPoints } = useSuspenseQuery(getPointStates.useQuery({}));
   const { mutate: mutatePoints } = useMutation(updatePointState.useMutation({}));
   const { data: trains } = useSuspenseQuery(getTrains.useQuery({}));
-  const { mutate: mutateTrain } = useMutation(addTrain.useMutation({}));
+  // const { mutate: mutateTrain } = useMutation(addTrain.useMutation({}));
   const { data: blocks } = useSuspenseQuery(getBlockStates.useQuery({}));
   const { mutate: mutateBlock } = useMutation(updateBlockState.useMutation({}))
 
@@ -63,16 +63,16 @@ function MapView() {
     }
     return s === BlockStateEnum.BLOCK_STATE_CLOSE;
   }
-  const nextLocation = (train: TrainPB): TrainPB | undefined => {
-    const current = train.positionId;
-    LOCATIONS_FOR_TRAIN_FROM_ID.forEach((_, key) => {
-      if (key === current) {
-        const next = LOCATIONS_FOR_TRAIN_FROM_ID.keys().next().value;
-        return { ...train, positionId: next };
-      }
-    });
-    return undefined
-  }
+  // const nextLocation = (train: TrainPB): TrainPB | undefined => {
+  //   const current = train.positionId;
+  //   LOCATIONS_FOR_TRAIN_FROM_ID.forEach((_, key) => {
+  //     if (key === current) {
+  //       const next = LOCATIONS_FOR_TRAIN_FROM_ID.keys().next().value;
+  //       return { ...train, positionId: next };
+  //     }
+  //   });
+  //   return undefined
+  // }
   return (
     <>
       {/* <button onClick={() => mutateTrain({ train: { trainId: "test", positionId: "shinjyuku_up_s1" } })}>Add Train</button>
