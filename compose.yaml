@@ -26,14 +26,12 @@ services:
       dockerfile: ./docker/backend/state-manager/Dockerfile
     ports:
       - 8080:8080
-    environment:
-      - MQTT_BROKER_ADDR=tls://e57dee86.ala.asia-southeast1.emqxsl.com:8883
-      - MQTT_USERNAME=test
-      - MQTT_PASSWORD=password
-      - MQTT_CLIENT_ID=emqx_cloudd1e033
-      - MONGODB_URI=mongodb://root:password@localhost:27017/
+    volumes:
+      - ./backend/state-manager/.env:.env
   auto-operation:
     build: 
       context: .
       dockerfile: ./docker/backend/auto-operation/Dockerfile
+    depends_on:
+      - state-manager
   
