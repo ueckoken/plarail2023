@@ -31,7 +31,7 @@ function App() {
 
   const transport = createConnectTransport(
     {
-      baseUrl: "http://tk2-118-59534.vs.sakura.ne.jp:8080/",
+      baseUrl: "https://api-plarail2023.ueckoken.club/api/",
     });
   return (
     <>
