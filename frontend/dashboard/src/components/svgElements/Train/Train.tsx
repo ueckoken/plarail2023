@@ -1,9 +1,5 @@
 import React from "react";
 
-import clsx from "clsx";
-
-import styles from "./Train.module.scss";
-
 import { Coordinate } from "@/types/Coordinate";
 import { TrainData } from "@/types/TrainData";
 
