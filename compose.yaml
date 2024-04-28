@@ -50,3 +50,15 @@ services:
     depends_on:
       state-manager:
         condition: service_healthy
+  proxy:
+    build: 
+      context: .
+      dockerfile: ./docker/backend/proxy/Dockerfile
+    ports:
+      - 80:3031
+    depends_on:
+      - state-manager
+      - auto-operation
+    environment:
+      - FRONTEND_URL=https://plarail2023.pages.dev
+      - BACKEND_URL=http://state-manager:8080
