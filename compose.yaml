@@ -21,17 +21,32 @@ services:
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: password
   state-manager:
+    restart: always
     build: 
       context: .
       dockerfile: ./docker/backend/state-manager/Dockerfile
     ports:
       - 8080:8080
-    volumes:
-      - ./backend/state-manager/cmd/.env:/state-manager/backend/state-manager/cmd
+    environment:
+      - MQTT_BROKER_ADDR=tls://e57dee86.ala.asia-southeast1.emqxsl.com:8883
+      - MQTT_USERNAME=test
+      - MQTT_PASSWORD=password
+      - MQTT_CLIENT_ID=emqx_cloudd1e033
+      - MONGODB_URI=mongodb://root:password@mongo:27017/
+      - APP_ENV=prod
+    depends_on:
+      - mongo
+    healthcheck:
+      test: curl --fail http://localhost:8080/debug/ping || exit 1
+      interval: 5s
+      timeout: 10s
+      retries: 5
   auto-operation:
     build: 
       context: .
       dockerfile: ./docker/backend/auto-operation/Dockerfile
+    environment:
+      - SERVER_ADDR=http://state-manager:8080
     depends_on:
-      - state-manager
-  
+      state-manager:
+        condition: service_healthy
