@@ -21,6 +21,8 @@ func main() {
 			r.URL.Host = backendURL.Host
 			r.URL.Scheme = backendURL.Scheme
 			r.Header.Set("X-Forwarded-Host", r.Header.Get("Host"))
+			// cors
+			r.Header.Set("Access-Control-Allow-Origin", "*")
 		},
 	}
 	mux.Handle("/api/", &rev)
