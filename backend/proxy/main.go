@@ -23,7 +23,7 @@ func main() {
 			r.Header.Set("X-Forwarded-Host", r.Header.Get("Host"))
 			// cors
 			r.Header.Set("Access-Control-Allow-Origin", "*")
-			r.Header.Set("Access-Control-Request-Headers", "*")
+			r.Header.Set("Access-Control-Allow-Headers", "*")
 		},
 	}
 	mux.Handle("/api/", &rev)
