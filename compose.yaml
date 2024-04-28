@@ -27,7 +27,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ./backend/state-manager/cmd/.env:/.env
+      - ./backend/state-manager/cmd/.env:/state-manager/backend/state-manager/cmd/.env
   auto-operation:
     build: 
       context: .
