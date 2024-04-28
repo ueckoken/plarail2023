@@ -8,7 +8,7 @@ FROM base AS dep-resolver
 WORKDIR /auto-operation
 COPY --chown=node:node pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY backend/auto-operation ./backend/auto-operation
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
 
 FROM dep-resolver AS auto-operation-builder
 RUN pnpm run --filter=./backend/auto-operation -r build
