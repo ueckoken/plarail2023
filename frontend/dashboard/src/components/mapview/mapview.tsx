@@ -8,7 +8,7 @@ import {
 } from "@/components/svgElements";
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import {
-  addTrain,
+  // addTrain,
   getBlockStates,
   getPointStates,
   getStopStates,
@@ -20,7 +20,7 @@ import {
 import { StopStateEnum } from "@/proto/state/v1/stop_pb";
 import { PointStateEnum } from "@/proto/state/v1/point_pb";
 import { BlockState, BlockStateEnum } from "@/proto/state/v1/block_pb";
-import { Train as TrainPB } from "@/proto/state/v1/train_pb";
+// import { Train as TrainPB } from "@/proto/state/v1/train_pb";
 
 const STOP_RAILS_FROM_ID: Map<string, { x: number, y: number }> = new Map([
   ["ninini_s1", { x: 350, y: 100 }],
