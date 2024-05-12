@@ -161,7 +161,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:              net.JoinHostPort("0.0.0.0", "8080"),
-		Handler:           cors.Default().Handler(h2c.NewHandler(r, &http2.Server{})),
+		Handler:           cors.AllowAll().Handler(h2c.NewHandler(r, &http2.Server{})),
 		ReadHeaderTimeout: 60 * time.Second,
 		BaseContext:       func(net.Listener) context.Context { return ctx },
 	}
