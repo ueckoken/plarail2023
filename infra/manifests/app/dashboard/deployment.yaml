@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard
+  namespace: plarail2023
+spec:
+  selector:
+    matchLabels:
+      app: dashboard
+  template:
+    metadata:
+      labels:
+        app: dashboard
+    spec:
+      containers:
+        - name: dashboard
+          image: ghcr.io/ueckoken/plarail2023-dashboard:deployment-d17e785-1700807874 # {"$imagepolicy": "plarail2021:auto-operation"}
+          imagePullPolicy: Always
+          env:
+            - name: SERVER_ADDR
+              value: 'http://state-manager:8080'
+            
