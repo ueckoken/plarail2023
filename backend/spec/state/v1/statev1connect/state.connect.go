@@ -62,20 +62,6 @@ const (
 	StateManagerServiceUpdateTrainProcedure = "/state.v1.StateManagerService/UpdateTrain"
 )
 
-// These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
-var (
-	stateManagerServiceServiceDescriptor                = v1.File_state_v1_state_proto.Services().ByName("StateManagerService")
-	stateManagerServiceGetBlockStatesMethodDescriptor   = stateManagerServiceServiceDescriptor.Methods().ByName("GetBlockStates")
-	stateManagerServiceUpdateBlockStateMethodDescriptor = stateManagerServiceServiceDescriptor.Methods().ByName("UpdateBlockState")
-	stateManagerServiceUpdatePointStateMethodDescriptor = stateManagerServiceServiceDescriptor.Methods().ByName("UpdatePointState")
-	stateManagerServiceGetPointStatesMethodDescriptor   = stateManagerServiceServiceDescriptor.Methods().ByName("GetPointStates")
-	stateManagerServiceUpdateStopStateMethodDescriptor  = stateManagerServiceServiceDescriptor.Methods().ByName("UpdateStopState")
-	stateManagerServiceGetStopStatesMethodDescriptor    = stateManagerServiceServiceDescriptor.Methods().ByName("GetStopStates")
-	stateManagerServiceGetTrainsMethodDescriptor        = stateManagerServiceServiceDescriptor.Methods().ByName("GetTrains")
-	stateManagerServiceAddTrainMethodDescriptor         = stateManagerServiceServiceDescriptor.Methods().ByName("AddTrain")
-	stateManagerServiceUpdateTrainMethodDescriptor      = stateManagerServiceServiceDescriptor.Methods().ByName("UpdateTrain")
-)
-
 // StateManagerServiceClient is a client for the state.v1.StateManagerService service.
 type StateManagerServiceClient interface {
 	// Block
@@ -102,59 +88,60 @@ type StateManagerServiceClient interface {
 // http://api.acme.com or https://acme.com/grpc).
 func NewStateManagerServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) StateManagerServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
+	stateManagerServiceMethods := v1.File_state_v1_state_proto.Services().ByName("StateManagerService").Methods()
 	return &stateManagerServiceClient{
 		getBlockStates: connect.NewClient[v1.GetBlockStatesRequest, v1.GetBlockStatesResponse](
 			httpClient,
 			baseURL+StateManagerServiceGetBlockStatesProcedure,
-			connect.WithSchema(stateManagerServiceGetBlockStatesMethodDescriptor),
+			connect.WithSchema(stateManagerServiceMethods.ByName("GetBlockStates")),
 			connect.WithClientOptions(opts...),
 		),
 		updateBlockState: connect.NewClient[v1.UpdateBlockStateRequest, v1.UpdateBlockStateResponse](
 			httpClient,
 			baseURL+StateManagerServiceUpdateBlockStateProcedure,
-			connect.WithSchema(stateManagerServiceUpdateBlockStateMethodDescriptor),
+			connect.WithSchema(stateManagerServiceMethods.ByName("UpdateBlockState")),
 			connect.WithClientOptions(opts...),
 		),
 		updatePointState: connect.NewClient[v1.UpdatePointStateRequest, v1.UpdatePointStateResponse](
 			httpClient,
 			baseURL+StateManagerServiceUpdatePointStateProcedure,
-			connect.WithSchema(stateManagerServiceUpdatePointStateMethodDescriptor),
+			connect.WithSchema(stateManagerServiceMethods.ByName("UpdatePointState")),
 			connect.WithClientOptions(opts...),
 		),
 		getPointStates: connect.NewClient[v1.GetPointStatesRequest, v1.GetPointStatesResponse](
 			httpClient,
 			baseURL+StateManagerServiceGetPointStatesProcedure,
-			connect.WithSchema(stateManagerServiceGetPointStatesMethodDescriptor),
+			connect.WithSchema(stateManagerServiceMethods.ByName("GetPointStates")),
 			connect.WithClientOptions(opts...),
 		),
 		updateStopState: connect.NewClient[v1.UpdateStopStateRequest, v1.UpdateStopStateResponse](
 			httpClient,
 			baseURL+StateManagerServiceUpdateStopStateProcedure,
-			connect.WithSchema(stateManagerServiceUpdateStopStateMethodDescriptor),
+			connect.WithSchema(stateManagerServiceMethods.ByName("UpdateStopState")),
 			connect.WithClientOptions(opts...),
 		),
 		getStopStates: connect.NewClient[v1.GetStopStatesRequest, v1.GetStopStatesResponse](
 			httpClient,
 			baseURL+StateManagerServiceGetStopStatesProcedure,
-			connect.WithSchema(stateManagerServiceGetStopStatesMethodDescriptor),
+			connect.WithSchema(stateManagerServiceMethods.ByName("GetStopStates")),
 			connect.WithClientOptions(opts...),
 		),
 		getTrains: connect.NewClient[v1.GetTrainsRequest, v1.GetTrainsResponse](
 			httpClient,
 			baseURL+StateManagerServiceGetTrainsProcedure,
-			connect.WithSchema(stateManagerServiceGetTrainsMethodDescriptor),
+			connect.WithSchema(stateManagerServiceMethods.ByName("GetTrains")),
 			connect.WithClientOptions(opts...),
 		),
 		addTrain: connect.NewClient[v1.AddTrainRequest, v1.AddTrainResponse](
 			httpClient,
 			baseURL+StateManagerServiceAddTrainProcedure,
-			connect.WithSchema(stateManagerServiceAddTrainMethodDescriptor),
+			connect.WithSchema(stateManagerServiceMethods.ByName("AddTrain")),
 			connect.WithClientOptions(opts...),
 		),
 		updateTrain: connect.NewClient[v1.UpdateTrainRequest, v1.UpdateTrainResponse](
 			httpClient,
 			baseURL+StateManagerServiceUpdateTrainProcedure,
-			connect.WithSchema(stateManagerServiceUpdateTrainMethodDescriptor),
+			connect.WithSchema(stateManagerServiceMethods.ByName("UpdateTrain")),
 			connect.WithClientOptions(opts...),
 		),
 	}
@@ -241,58 +228,59 @@ type StateManagerServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewStateManagerServiceHandler(svc StateManagerServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	stateManagerServiceMethods := v1.File_state_v1_state_proto.Services().ByName("StateManagerService").Methods()
 	stateManagerServiceGetBlockStatesHandler := connect.NewUnaryHandler(
 		StateManagerServiceGetBlockStatesProcedure,
 		svc.GetBlockStates,
-		connect.WithSchema(stateManagerServiceGetBlockStatesMethodDescriptor),
+		connect.WithSchema(stateManagerServiceMethods.ByName("GetBlockStates")),
 		connect.WithHandlerOptions(opts...),
 	)
 	stateManagerServiceUpdateBlockStateHandler := connect.NewUnaryHandler(
 		StateManagerServiceUpdateBlockStateProcedure,
 		svc.UpdateBlockState,
-		connect.WithSchema(stateManagerServiceUpdateBlockStateMethodDescriptor),
+		connect.WithSchema(stateManagerServiceMethods.ByName("UpdateBlockState")),
 		connect.WithHandlerOptions(opts...),
 	)
 	stateManagerServiceUpdatePointStateHandler := connect.NewUnaryHandler(
 		StateManagerServiceUpdatePointStateProcedure,
 		svc.UpdatePointState,
-		connect.WithSchema(stateManagerServiceUpdatePointStateMethodDescriptor),
+		connect.WithSchema(stateManagerServiceMethods.ByName("UpdatePointState")),
 		connect.WithHandlerOptions(opts...),
 	)
 	stateManagerServiceGetPointStatesHandler := connect.NewUnaryHandler(
 		StateManagerServiceGetPointStatesProcedure,
 		svc.GetPointStates,
-		connect.WithSchema(stateManagerServiceGetPointStatesMethodDescriptor),
+		connect.WithSchema(stateManagerServiceMethods.ByName("GetPointStates")),
 		connect.WithHandlerOptions(opts...),
 	)
 	stateManagerServiceUpdateStopStateHandler := connect.NewUnaryHandler(
 		StateManagerServiceUpdateStopStateProcedure,
 		svc.UpdateStopState,
-		connect.WithSchema(stateManagerServiceUpdateStopStateMethodDescriptor),
+		connect.WithSchema(stateManagerServiceMethods.ByName("UpdateStopState")),
 		connect.WithHandlerOptions(opts...),
 	)
 	stateManagerServiceGetStopStatesHandler := connect.NewUnaryHandler(
 		StateManagerServiceGetStopStatesProcedure,
 		svc.GetStopStates,
-		connect.WithSchema(stateManagerServiceGetStopStatesMethodDescriptor),
+		connect.WithSchema(stateManagerServiceMethods.ByName("GetStopStates")),
 		connect.WithHandlerOptions(opts...),
 	)
 	stateManagerServiceGetTrainsHandler := connect.NewUnaryHandler(
 		StateManagerServiceGetTrainsProcedure,
 		svc.GetTrains,
-		connect.WithSchema(stateManagerServiceGetTrainsMethodDescriptor),
+		connect.WithSchema(stateManagerServiceMethods.ByName("GetTrains")),
 		connect.WithHandlerOptions(opts...),
 	)
 	stateManagerServiceAddTrainHandler := connect.NewUnaryHandler(
 		StateManagerServiceAddTrainProcedure,
 		svc.AddTrain,
-		connect.WithSchema(stateManagerServiceAddTrainMethodDescriptor),
+		connect.WithSchema(stateManagerServiceMethods.ByName("AddTrain")),
 		connect.WithHandlerOptions(opts...),
 	)
 	stateManagerServiceUpdateTrainHandler := connect.NewUnaryHandler(
 		StateManagerServiceUpdateTrainProcedure,
 		svc.UpdateTrain,
-		connect.WithSchema(stateManagerServiceUpdateTrainMethodDescriptor),
+		connect.WithSchema(stateManagerServiceMethods.ByName("UpdateTrain")),
 		connect.WithHandlerOptions(opts...),
 	)
 	return "/state.v1.StateManagerService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
