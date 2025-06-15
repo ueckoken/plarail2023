@@ -14,10 +14,8 @@ FROM dep-resolver AS dashboard-builder
 WORKDIR /dashboard
 RUN pnpm run --filter=./frontend/dashboard build
 RUN pnpm deploy --filter=./frontend/dashboard --prod --legacy dist/dashboard
-WORKDIR /dashboard/dist/dashboard
-RUN cp -r .next/static .next/standalone/.next/
-RUN cp -r public .next/standalone/
 
-FROM gcr.io/distroless/nodejs20-debian12:nonroot AS dashboard-runner
-COPY --from=dashboard-builder --chown=nonroot:nonroot /dashboard/dist/dashboard /dashboard
-CMD ["/dashboard/.next/standalone/server.js"]
+FROM nginx:alpine AS dashboard-runner
+COPY --from=dashboard-builder /dashboard/frontend/dashboard/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
