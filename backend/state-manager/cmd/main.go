@@ -2,7 +2,10 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
+	"log"
 	"log/slog"
 	"net"
 	"net/http"
@@ -80,11 +83,25 @@ func init() {
 	slog.SetDefault(logger)
 }
 
-func main() {
-	err := godotenv.Load(".env")
+func NewTlsConfig() *tls.Config {
+	certpool := x509.NewCertPool()
+	ca, err := os.ReadFile("emqxsl-ca.pem")
 	if err != nil {
-		slog.Default().Error("Error loading .env file", slog.Any("error", err))
-		os.Exit(1)
+		log.Fatalln(err.Error())
+	}
+	certpool.AppendCertsFromPEM(ca)
+	return &tls.Config{
+		RootCAs: certpool,
+	}
+}
+
+func main() {
+	if os.Getenv("APP_ENV") != "prod" {
+		err := godotenv.Load(".env")
+		if err != nil {
+			slog.Default().Error("Error loading .env file", slog.Any("error", err))
+			os.Exit(1)
+		}
 	}
 	baseCtx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -109,6 +126,8 @@ func main() {
 	mqttClientOpts.Username = os.Getenv("MQTT_USERNAME")
 	mqttClientOpts.Password = os.Getenv("MQTT_PASSWORD")
 	mqttClientOpts.ClientID = os.Getenv("MQTT_CLIENT_ID")
+	tlsconfig := NewTlsConfig()
+	mqttClientOpts.SetTLSConfig(tlsconfig)
 
 	mqttHandler, err := mqtt_handler.NewHandler(mqttClientOpts, DBHandler)
 	if err != nil {
@@ -142,7 +161,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:              net.JoinHostPort("0.0.0.0", "8080"),
-		Handler:           cors.Default().Handler(h2c.NewHandler(r, &http2.Server{})),
+		Handler:           cors.AllowAll().Handler(h2c.NewHandler(r, &http2.Server{})),
 		ReadHeaderTimeout: 60 * time.Second,
 		BaseContext:       func(net.Listener) context.Context { return ctx },
 	}

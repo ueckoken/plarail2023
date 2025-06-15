@@ -5,6 +5,8 @@ import { BlockStateEnum } from "./proto/state/v1/block_pb.js";
 import { StopStateEnum } from "./proto/state/v1/stop_pb.js";
 import { PointStateEnum } from "./proto/state/v1/point_pb.js";
 import { Priority } from "./proto/state/v1/train_pb.js";
+// @ts-ignore
+import config from './map/mfk-2024.json' assert {type: 'json'};
 
 type MapConfig = {
   stopBlocks: { [key: string]: string },
@@ -25,7 +27,8 @@ const transport = createConnectTransport(
 const client = createPromiseClient(StateManagerService, transport);
 
 async function loadConfig() {
-  mapConfig = (await import("./map/chofufes-2023.json")).default;
+  // @ts-ignore
+  mapConfig = config;
 }
 
 loadConfig();
@@ -64,8 +67,6 @@ async function main() {
     // 閉塞の確認する
     const block = blocks.find(b => b.blockId === collespondBlock);
     if (block && block.state === BlockStateEnum.BLOCK_STATE_CLOSE) {
-      // sakurajosui_down_s1はSTOPにしない chofufes
-      if (stop.id === "sakurajosui_down_s1") continue;
       if (stop.state !== StopStateEnum.STOP_STATE_STOP) {
         // 閉塞が閉じていたら列車を止めておく
         await client.updateStopState({
@@ -123,13 +124,12 @@ async function main() {
     }
   }
 
-  // ポイント確認
+
   for (const point of points) {
-    if (point.id === "sakurajosui_up_p1") {
-      // 桜上水上りポイント
-      // デフォルトではSTRAIGHTにして、sakurajosui_up_s1がONならREVERSEにする
-      const sakurajosui_up_s1 = stops.find(s => s.id === "sakurajosui_up_s1");
-      if (sakurajosui_up_s1 && sakurajosui_up_s1.state === StopStateEnum.STOP_STATE_STOP) {
+    if (point.id == "ninini_p1") {
+      // ninini_b1のblockが閉じたらninini_p1を逆にする
+      const ninini_b1 = blocks.find(b => b.blockId === "ninini_b1");
+      if (ninini_b1 && ninini_b1.state === BlockStateEnum.BLOCK_STATE_CLOSE) {
         if (point.state !== PointStateEnum.POINT_STATE_REVERSE) {
           await client.updatePointState({
             "state": {
@@ -149,84 +149,115 @@ async function main() {
         }
       }
     }
-    if (point.id === "sakurajosui_down_p1") {
-      // const sakurajosui_down_s1 = stops.find(s => s.id === "sakurajosui_down_s1");
-      const sakurajosui_down_b1 = blocks.find(b => b.blockId === "sakurajosui_down_b1");
-      if (sakurajosui_down_b1 && sakurajosui_down_b1.state === BlockStateEnum.BLOCK_STATE_CLOSE) {
-        if (point.state !== PointStateEnum.POINT_STATE_REVERSE) {
-          await client.updatePointState({
-            "state": {
-              "id": point.id,
-              "state": PointStateEnum.POINT_STATE_REVERSE
-            }
-          })
-        }
-      } else {
-        if (point.state !== PointStateEnum.POINT_STATE_NORMAL) {
-          await client.updatePointState({
-            "state": {
-              "id": point.id,
-              "state": PointStateEnum.POINT_STATE_NORMAL
-            }
-          })
-        }
-      }
-    }
-    if (point.id === "chofu_up_p1") {
-      // 閉塞が空いてる方に切り替える b1 or b2
-      const chofu_up_b1 = blocks.find(b => b.blockId === "chofu_up_b1");
-      const chofu_up_b2 = blocks.find(b => b.blockId === "chofu_up_b2");
-      if (chofu_up_b1 && chofu_up_b2) {
-        if (chofu_up_b1.state === BlockStateEnum.BLOCK_STATE_OPEN) {
-          if (point.state !== PointStateEnum.POINT_STATE_NORMAL) {
-            await client.updatePointState({
-              "state": {
-                "id": point.id,
-                "state": PointStateEnum.POINT_STATE_NORMAL
-              }
-            })
-          }
-        } else if (chofu_up_b2.state === BlockStateEnum.BLOCK_STATE_OPEN) {
-          if (point.state !== PointStateEnum.POINT_STATE_REVERSE) {
-            await client.updatePointState({
-              "state": {
-                "id": point.id,
-                "state": PointStateEnum.POINT_STATE_REVERSE
-              }
-            })
-          }
-        }
-      }
-    }
-
-    //   // 調布ポイント
-    //   // 閉塞 chofu_up_b1 にいる列車の目的地に応じてポイントを切り替える
-    //   const train = trains.find(t => t.positionId === "chofu_up_b1");
-    //   if (train) {
-    //     const destination = train.destination;
-    //     if (destination.includes("hashimoto")) {
-    //       if (point.state !== PointStateEnum.POINT_STATE_REVERSE) {
-    //         await client.updatePointState({
-    //           "state": {
-    //             "id": point.id,
-    //             "state": PointStateEnum.POINT_STATE_REVERSE
-    //           }
-    //         })
-    //       }
-    //     } else {
-    //       if (point.state !== PointStateEnum.POINT_STATE_NORMAL) {
-    //         await client.updatePointState({
-    //           "state": {
-    //             "id": point.id,
-    //             "state": PointStateEnum.POINT_STATE_NORMAL
-    //           }
-    //         })
-    //       }
-
-    //     }
-    //   }
-    // }
   }
+  // for (const point of points) {
+  //   console.log(point);
+  // }
+
+  // ポイント確認
+  // for (const point of points) {
+  //   if (point.id === "sakurajosui_up_p1") {
+  //     // 桜上水上りポイント
+  //     // デフォルトではSTRAIGHTにして、sakurajosui_up_s1がONならREVERSEにする
+  //     const sakurajosui_up_s1 = stops.find(s => s.id === "sakurajosui_up_s1");
+  //     if (sakurajosui_up_s1 && sakurajosui_up_s1.state === StopStateEnum.STOP_STATE_STOP) {
+  //       if (point.state !== PointStateEnum.POINT_STATE_REVERSE) {
+  //         await client.updatePointState({
+  //           "state": {
+  //             "id": point.id,
+  //             "state": PointStateEnum.POINT_STATE_REVERSE
+  //           }
+  //         })
+  //       }
+  //     } else {
+  //       if (point.state !== PointStateEnum.POINT_STATE_NORMAL) {
+  //         await client.updatePointState({
+  //           "state": {
+  //             "id": point.id,
+  //             "state": PointStateEnum.POINT_STATE_NORMAL
+  //           }
+  //         })
+  //       }
+  //     }
+  //   }
+  //   if (point.id === "sakurajosui_down_p1") {
+  //     // const sakurajosui_down_s1 = stops.find(s => s.id === "sakurajosui_down_s1");
+  //     const sakurajosui_down_b1 = blocks.find(b => b.blockId === "sakurajosui_down_b1");
+  //     if (sakurajosui_down_b1 && sakurajosui_down_b1.state === BlockStateEnum.BLOCK_STATE_CLOSE) {
+  //       if (point.state !== PointStateEnum.POINT_STATE_REVERSE) {
+  //         await client.updatePointState({
+  //           "state": {
+  //             "id": point.id,
+  //             "state": PointStateEnum.POINT_STATE_REVERSE
+  //           }
+  //         })
+  //       }
+  //     } else {
+  //       if (point.state !== PointStateEnum.POINT_STATE_NORMAL) {
+  //         await client.updatePointState({
+  //           "state": {
+  //             "id": point.id,
+  //             "state": PointStateEnum.POINT_STATE_NORMAL
+  //           }
+  //         })
+  //       }
+  //     }
+  //   }
+  //   if (point.id === "chofu_up_p1") {
+  //     // 閉塞が空いてる方に切り替える b1 or b2
+  //     const chofu_up_b1 = blocks.find(b => b.blockId === "chofu_up_b1");
+  //     const chofu_up_b2 = blocks.find(b => b.blockId === "chofu_up_b2");
+  //     if (chofu_up_b1 && chofu_up_b2) {
+  //       if (chofu_up_b1.state === BlockStateEnum.BLOCK_STATE_OPEN) {
+  //         if (point.state !== PointStateEnum.POINT_STATE_NORMAL) {
+  //           await client.updatePointState({
+  //             "state": {
+  //               "id": point.id,
+  //               "state": PointStateEnum.POINT_STATE_NORMAL
+  //             }
+  //           })
+  //         }
+  //       } else if (chofu_up_b2.state === BlockStateEnum.BLOCK_STATE_OPEN) {
+  //         if (point.state !== PointStateEnum.POINT_STATE_REVERSE) {
+  //           await client.updatePointState({
+  //             "state": {
+  //               "id": point.id,
+  //               "state": PointStateEnum.POINT_STATE_REVERSE
+  //             }
+  //           })
+  //         }
+  //       }
+  //     }
+  //   }
+
+  //   //   // 調布ポイント
+  //   //   // 閉塞 chofu_up_b1 にいる列車の目的地に応じてポイントを切り替える
+  //   //   const train = trains.find(t => t.positionId === "chofu_up_b1");
+  //   //   if (train) {
+  //   //     const destination = train.destination;
+  //   //     if (destination.includes("hashimoto")) {
+  //   //       if (point.state !== PointStateEnum.POINT_STATE_REVERSE) {
+  //   //         await client.updatePointState({
+  //   //           "state": {
+  //   //             "id": point.id,
+  //   //             "state": PointStateEnum.POINT_STATE_REVERSE
+  //   //           }
+  //   //         })
+  //   //       }
+  //   //     } else {
+  //   //       if (point.state !== PointStateEnum.POINT_STATE_NORMAL) {
+  //   //         await client.updatePointState({
+  //   //           "state": {
+  //   //             "id": point.id,
+  //   //             "state": PointStateEnum.POINT_STATE_NORMAL
+  //   //           }
+  //   //         })
+  //   //       }
+
+  //   //     }
+  //   //   }
+  //   // }
+  // }
 }
 
 // addTest();

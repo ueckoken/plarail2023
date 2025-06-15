@@ -1,0 +1,15 @@
+{
+  "stopBlocks": {
+    "ninini_s1": "nanana_b1",
+    "ninini_s2": "nanana_b1",
+    "nanana_s1": "ninini_b1"
+  },
+  "stations": {
+    "ninini": {
+      "capacity": 2
+    },
+    "nanana": {
+      "capacity": 1
+    }
+  }
+}
