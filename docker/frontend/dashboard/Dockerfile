@@ -6,7 +6,7 @@ RUN corepack enable
 FROM base AS dep-resolver
 
 WORKDIR /dashboard
-COPY --chown=node:node pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+COPY --chown=node:node pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY frontend/ ./frontend 
 RUN pnpm install --frozen-lockfile
 
