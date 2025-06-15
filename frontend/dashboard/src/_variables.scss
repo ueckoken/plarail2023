@@ -1,18 +1,57 @@
-$background-color: #ccc;
+// Color Palette
+$primary-color: #1976D2;
+$primary-dark: #1565C0;
+$primary-light: #42A5F5;
+$secondary-color: #424242;
+$accent-color: #FFC107;
+$success-color: #4CAF50;
+$danger-color: #F44336;
+$warning-color: #FF9800;
 
-$platform-background-color: #fff;
-$platform-stroke-color: #000;
+// Background Colors
+$background-color: #F5F5F5;
+$surface-color: #FFFFFF;
+$dark-background: #121212;
+$dark-surface: #1E1E1E;
 
-$switch-point-background-color: #fff;
-$switch-point-border-color: #000;
+// Text Colors
+$text-primary: #212121;
+$text-secondary: #757575;
+$text-light: #FFFFFF;
 
-$colosed-rail-color: #ff0000;
-$colosed-rail-width: 2;
+// Component Colors
+$platform-background-color: #FFFFFF;
+$platform-stroke-color: #424242;
+$platform-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-$open-rail-color: #000;
-$open-rail-width: 1;
+$switch-point-background-color: #FFFFFF;
+$switch-point-border-color: #424242;
+$switch-point-active-color: $primary-color;
 
-$trafic-light-background-color: #000;
-$trafic-light-off-color: #888;
-$trafic-light-go-color: limegreen;
-$trafic-light-stop-color: #ff0000;
+// Rail Colors
+$closed-rail-color: $danger-color;
+$closed-rail-width: 3;
+$open-rail-color: #424242;
+$open-rail-width: 2;
+
+// Traffic Light Colors
+$traffic-light-background-color: #212121;
+$traffic-light-off-color: #BDBDBD;
+$traffic-light-go-color: $success-color;
+$traffic-light-stop-color: $danger-color;
+
+// Layout Variables
+$header-height: 64px;
+$sidebar-width: 280px;
+$border-radius: 8px;
+$border-radius-small: 4px;
+
+// Shadows
+$shadow-1: 0 2px 4px rgba(0, 0, 0, 0.1);
+$shadow-2: 0 4px 8px rgba(0, 0, 0, 0.15);
+$shadow-3: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+// Transitions
+$transition-fast: 0.2s ease-in-out;
+$transition-normal: 0.3s ease-in-out;
+$transition-slow: 0.5s ease-in-out;

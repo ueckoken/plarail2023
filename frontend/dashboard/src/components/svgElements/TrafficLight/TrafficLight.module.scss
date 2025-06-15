@@ -1,15 +1,17 @@
+@import '../../../variables';
+
 .traficLightBackground {
-    stroke: $trafic-light-background-color;
+    stroke: $traffic-light-background-color;
 }
 
 .traficLightOff {
-    fill: $trafic-light-off-color;
+    fill: $traffic-light-off-color;
 }
 
 .traficLightGo {
-    fill: $trafic-light-go-color;
+    fill: $traffic-light-go-color;
 }
 
 .traficLightStop {
-    fill: $trafic-light-stop-color;
+    fill: $traffic-light-stop-color;
 }

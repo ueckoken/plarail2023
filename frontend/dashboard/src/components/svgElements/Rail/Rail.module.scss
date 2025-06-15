@@ -1,6 +1,8 @@
+@import '../../../variables';
+
 .closedRail {
-    stroke: $colosed-rail-color;
-    stroke-width: $colosed-rail-width;
+    stroke: $closed-rail-color;
+    stroke-width: $closed-rail-width;
 }
 
 .openRail {
