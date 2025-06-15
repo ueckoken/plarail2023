@@ -6,12 +6,13 @@ RUN corepack enable
 FROM base AS dep-resolver
 
 WORKDIR /dashboard
-COPY --chown=node:node pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY --chown=node:node pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 COPY frontend/ ./frontend 
-RUN pnpm install --frozen-lockfile --no-optional
+RUN pnpm install --frozen-lockfile
 
 FROM dep-resolver AS dashboard-builder
-RUN pnpm run --filter=./frontend/dashboard -r build
+WORKDIR /dashboard
+RUN pnpm run --filter=./frontend/dashboard build
 RUN pnpm deploy --filter=./frontend/dashboard --prod dist/dashboard
 WORKDIR /dashboard/dist/dashboard
 RUN cp -r .next/static .next/standalone/.next/
