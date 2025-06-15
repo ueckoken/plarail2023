@@ -1,6 +1,6 @@
 #include "Settings.h"
 
-const char *ssid = "Engeering-2G";
-const char *password = "careerdesignc";
+const char *ssid = "";
+const char *password = "";
 
 char HOST[25];
