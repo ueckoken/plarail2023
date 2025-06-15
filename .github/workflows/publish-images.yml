@@ -72,6 +72,7 @@ jobs:
         uses: docker/bake-action@v4
         env:
           TAG: ${{ steps.generate_tag.outputs.tag }}
+          BUILDX_BAKE_ENTITLEMENTS_FS: 0
         with:
           files: ./docker-bake.hcl
           push: ${{ steps.is_publish.outputs.is_publish == 'true' }}
