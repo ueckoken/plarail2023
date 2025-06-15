@@ -14,11 +14,11 @@ export default defineConfig({
   css: {
     postcss: null,
     preprocessorOptions: {
-        scss: {
-            additionalData: `
-                @import "../src/_variables.scss";
+      scss: {
+        additionalData: `
+                @import "@/_variables.scss";
             `,
-        },
+      },
     },
   },
 })

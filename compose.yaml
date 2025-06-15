@@ -73,15 +73,27 @@ services:
     depends_on:
       state-manager:
         condition: service_healthy
+  frontend:
+    build:
+      context: .
+      dockerfile: ./docker/frontend/dashboard/Dockerfile.static
+    ports:
+      - 5173:80
+    depends_on:
+      - state-manager
   proxy:
     build: 
       context: .
       dockerfile: ./docker/backend/proxy/Dockerfile
     ports:
-      - 80:3031
+      - 3000:3031
     depends_on:
       - state-manager
       - auto-operation
+      - frontend
     environment:
-      - FRONTEND_URL=https://plarail2023.pages.dev
+      - FRONTEND_URL=http://frontend
       - BACKEND_URL=http://state-manager:8080
+
+volumes:
+  dashboard_node_modules:
