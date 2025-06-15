@@ -13,7 +13,7 @@ RUN pnpm install --frozen-lockfile
 FROM dep-resolver AS dashboard-builder
 WORKDIR /dashboard
 RUN pnpm run --filter=./frontend/dashboard build
-RUN pnpm deploy --filter=./frontend/dashboard --prod dist/dashboard
+RUN pnpm deploy --filter=./frontend/dashboard --prod --legacy dist/dashboard
 WORKDIR /dashboard/dist/dashboard
 RUN cp -r .next/static .next/standalone/.next/
 RUN cp -r public .next/standalone/
