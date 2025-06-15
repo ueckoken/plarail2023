@@ -20,6 +20,28 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://root:password@mongo:27017/
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: password
+  emqx:
+    image: emqx/emqx:5.10.0
+    container_name: emqx
+    restart: always
+    ports:
+      - 1883:1883   # MQTT TCP
+      - 8083:8083   # MQTT WebSocket
+      - 8084:8084   # MQTT WebSocket SSL
+      - 8883:8883   # MQTT SSL
+      - 18083:18083 # Dashboard
+    environment:
+      - EMQX_NODE_NAME=emqx@127.0.0.1
+      - EMQX_DASHBOARD__DEFAULT_USERNAME=admin
+      - EMQX_DASHBOARD__DEFAULT_PASSWORD=password
+    healthcheck:
+      test: ["CMD", "/opt/emqx/bin/emqx", "ctl", "status"]
+      interval: 5s
+      timeout: 25s
+      retries: 5
+    volumes:
+      - ./data/emqx/data:/opt/emqx/data
+      - ./data/emqx/log:/opt/emqx/log
   state-manager:
     restart: always
     build: 
@@ -28,14 +50,15 @@ services:
     ports:
       - 8080:8080
     environment:
-      - MQTT_BROKER_ADDR=tls://e57dee86.ala.asia-southeast1.emqxsl.com:8883
-      - MQTT_USERNAME=test
-      - MQTT_PASSWORD=password
-      - MQTT_CLIENT_ID=emqx_cloudd1e033
+      - MQTT_BROKER_ADDR=tcp://emqx:1883
+      - MQTT_USERNAME=
+      - MQTT_PASSWORD=
+      - MQTT_CLIENT_ID=state-manager-client
       - MONGODB_URI=mongodb://root:password@mongo:27017/
       - APP_ENV=prod
     depends_on:
       - mongo
+      - emqx
     healthcheck:
       test: curl --fail http://localhost:8080/debug/ping || exit 1
       interval: 5s

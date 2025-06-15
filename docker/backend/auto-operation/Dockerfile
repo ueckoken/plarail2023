@@ -12,7 +12,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install
 
 FROM dep-resolver AS auto-operation-builder
 RUN pnpm run --filter=./backend/auto-operation -r build
-RUN pnpm deploy --filter=./backend/auto-operation --prod dist/auto-operation
+RUN pnpm deploy --filter=./backend/auto-operation --prod --legacy dist/auto-operation
 RUN cp backend/auto-operation/main.js dist/auto-operation/main.js
 WORKDIR /autooperation/dist/auto-operation
 
