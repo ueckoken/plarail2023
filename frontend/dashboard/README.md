@@ -2,6 +2,21 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## Environment Variables
+
+This application uses environment variables for configuration. Create a `.env` file in the `frontend/dashboard` directory with the following variables:
+
+```bash
+# API Base URL
+VITE_API_BASE_URL=http://localhost:3000/api/
+```
+
+You can also override these values at runtime by setting environment variables in your shell:
+
+```bash
+VITE_API_BASE_URL=https://your-api-server.com/api/ npm run dev
+```
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh

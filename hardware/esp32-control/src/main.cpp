@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <PubSubClient.h>
 #include <WiFi.h>
-#include <WiFiClientSecure.h>
+#include <WiFiClient.h>
 #include <ESP32Servo.h>
 #include <ArduinoOTA.h>
 #include <LittleFS.h>
@@ -24,7 +24,7 @@
 #define SPI_MOSI 1
 
 // MQTT Broker
-WiFiClientSecure espClient;
+WiFiClient espClient;
 PubSubClient client(espClient);
 IOManager manager(&client);
 
@@ -72,7 +72,7 @@ void setup()
   // MDNSを開始
   MDNS.begin(HOST);
 
-  espClient.setCACert(root_ca);
+  // espClient.setCACert(root_ca);
   client.setServer(mqtt_broker, mqtt_port);
   client.setCallback(callback);
   client.setKeepAlive(60);     // KeepAliveを60秒に設定
