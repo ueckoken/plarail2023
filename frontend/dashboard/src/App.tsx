@@ -1,4 +1,5 @@
 import MapView from "./components/mapview/mapview"
+import Layout from "./components/Layout/Layout"
 import { TransportProvider } from "@connectrpc/connect-query";
 import { createConnectTransport } from "@bufbuild/connect-web";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -31,7 +32,7 @@ function App() {
 
   const transport = createConnectTransport(
     {
-      baseUrl: "https://api-plarail2023.ueckoken.club/api/",
+      baseUrl: "/api/",
     });
   return (
     <>
@@ -39,7 +40,9 @@ function App() {
         <Suspense>
           <QueryClientProvider client={queryClient}>
             <TransportProvider transport={transport}>
-              <MapView />
+              <Layout>
+                <MapView />
+              </Layout>
             </TransportProvider>
           </QueryClientProvider>
         </Suspense>

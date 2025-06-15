@@ -1,4 +1,5 @@
-@import "_variables.scss";
+@import "./_variables.scss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 *,
 *::before,
@@ -10,4 +11,59 @@ html,
 body {
     margin: 0;
     padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: $background-color;
+    color: $text-primary;
+    line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    font-weight: 600;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    transition: all $transition-fast;
+    
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+// Utility Classes
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+.card {
+    background-color: $surface-color;
+    border-radius: $border-radius;
+    box-shadow: $shadow-1;
+    padding: 24px;
+    transition: box-shadow $transition-normal;
+    
+    &:hover {
+        box-shadow: $shadow-2;
+    }
+}
+
+// Dark Mode Support
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: $dark-background;
+        color: $text-light;
+    }
+    
+    .card {
+        background-color: $dark-surface;
+    }
 }
