@@ -33,7 +33,7 @@ func main() {
 	}
 	defer db.Close()
 	data := &Seed{}
-	b, _ := os.ReadFile("./data/chofufes-2023.yaml")
+	b, _ := os.ReadFile("./data/mfk-2024.yaml")
 	if err := yaml.Unmarshal(b, data); err != nil {
 		panic(err)
 	}

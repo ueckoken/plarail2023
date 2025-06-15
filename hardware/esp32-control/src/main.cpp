@@ -29,10 +29,15 @@ PubSubClient client(espClient);
 IOManager manager(&client);
 
 void callback(char *topic, byte *payload, unsigned int length);
+void reconnect(); // 再接続関数を追加
 
 void setup()
 {
   Serial.begin(115200);
+
+  // PubSubClientのバッファサイズを増やす（デフォルト256から1024へ）
+  client.setBufferSize(1024);
+
   // WiFiに接続
   Serial.println("-----Welcome to Plarail IoT System!-----");
   WiFi.begin(ssid, password);
@@ -70,26 +75,75 @@ void setup()
   espClient.setCACert(root_ca);
   client.setServer(mqtt_broker, mqtt_port);
   client.setCallback(callback);
+  client.setKeepAlive(60);     // KeepAliveを60秒に設定
+  client.setSocketTimeout(30); // ソケットタイムアウトを30秒に設定
+
+  reconnect(); // 初回接続を再接続関数で行う
+
+  // 初期状態を取得
+  manager.getInitialState();
+}
+
+// 再接続関数を追加
+void reconnect()
+{
   while (!client.connected())
   {
     String client_id = "esp32-client-";
     client_id += String(HOST);
     Serial.printf("The client %s connects to the public mqtt broker\n", client_id.c_str());
-    if (!client.connect(client_id.c_str(), mqtt_username, mqtt_password))
+
+    if (client.connect(client_id.c_str(), mqtt_username, mqtt_password))
+    {
+      Serial.println("MQTT connected");
+      // 再接続時にTopicを再購読
+      client.subscribe("stop/+/get/accepted");
+      client.subscribe("point/+/get/accepted");
+      client.subscribe("stop/+/delta");
+      client.subscribe("point/+/delta");
+      Serial.println("Topics resubscribed after reconnection");
+    }
+    else
     {
       Serial.print("failed with state ");
-      Serial.print(client.state());
-      delay(2000);
+      int state = client.state();
+      Serial.print(state);
+      switch (state)
+      {
+      case -4:
+        Serial.println(" - MQTT_CONNECTION_TIMEOUT");
+        break;
+      case -3:
+        Serial.println(" - MQTT_CONNECTION_LOST");
+        break;
+      case -2:
+        Serial.println(" - MQTT_CONNECT_FAILED");
+        break;
+      case -1:
+        Serial.println(" - MQTT_DISCONNECTED");
+        break;
+      case 1:
+        Serial.println(" - MQTT_CONNECT_BAD_PROTOCOL");
+        break;
+      case 2:
+        Serial.println(" - MQTT_CONNECT_BAD_CLIENT_ID");
+        break;
+      case 3:
+        Serial.println(" - MQTT_CONNECT_UNAVAILABLE");
+        break;
+      case 4:
+        Serial.println(" - MQTT_CONNECT_BAD_CREDENTIALS");
+        break;
+      case 5:
+        Serial.println(" - MQTT_CONNECT_UNAUTHORIZED");
+        break;
+      default:
+        Serial.println(" - Unknown error");
+      }
+      Serial.println("Retrying in 5 seconds...");
+      delay(5000);
     }
   }
-
-  // 必要なTopicをSubscribeする
-  client.subscribe("stop/+/get/accepted");
-  client.subscribe("point/+/get/accepted");
-  client.subscribe("stop/+/delta");
-  client.subscribe("point/+/delta");
-  Serial.println("Subscribed to topics.");
-  manager.getInitialState();
 }
 
 void callback(char *topic, byte *payload, unsigned int length)
@@ -111,6 +165,22 @@ void callback(char *topic, byte *payload, unsigned int length)
 
 void loop()
 {
+  // WiFi接続チェック
+  if (WiFi.status() != WL_CONNECTED)
+  {
+    Serial.println("WiFi disconnected. Reconnecting...");
+    WiFi.reconnect();
+    delay(1000);
+    return;
+  }
+
+  // MQTT接続チェック
+  if (!client.connected())
+  {
+    Serial.println("MQTT disconnected. Reconnecting...");
+    reconnect();
+  }
+
   manager.loop();
   client.loop();
 }

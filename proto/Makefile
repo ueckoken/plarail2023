@@ -1,4 +1,4 @@
 buf:
 	rm -Rf ../backend/spec
-	rm ../frontend/dashboard/src/proto/ -Rf
+	rm -Rf ../frontend/dashboard/src/proto
 	buf generate

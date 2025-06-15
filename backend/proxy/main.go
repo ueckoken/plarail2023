@@ -5,12 +5,13 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"os"
 	"strings"
 )
 
 func main() {
-	frontendURL, _ := url.Parse("http://localhost:5173")
-	backendURL, _ := url.Parse("http://localhost:8080")
+	frontendURL, _ := url.Parse(os.Getenv("FRONTEND_URL"))
+	backendURL, _ := url.Parse(os.Getenv("BACKEND_URL"))
 
 	mux := http.NewServeMux()
 	mux.Handle("/", httputil.NewSingleHostReverseProxy(frontendURL))
@@ -20,6 +21,9 @@ func main() {
 			r.URL.Host = backendURL.Host
 			r.URL.Scheme = backendURL.Scheme
 			r.Header.Set("X-Forwarded-Host", r.Header.Get("Host"))
+			// cors
+			r.Header.Set("Access-Control-Allow-Origin", "*")
+			r.Header.Set("Access-Control-Allow-Headers", "*")
 		},
 	}
 	mux.Handle("/api/", &rev)
