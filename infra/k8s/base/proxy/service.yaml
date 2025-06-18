@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxy
+  labels:
+    app: proxy
+spec:
+  type: NodePort
+  ports:
+  - port: 3031
+    targetPort: 3031
+    nodePort: 30031
+    protocol: TCP
+  selector:
+    app: proxy

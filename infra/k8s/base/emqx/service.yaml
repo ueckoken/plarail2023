@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: emqx
+  labels:
+    app: emqx
+spec:
+  type: NodePort
+  ports:
+  - port: 1883
+    targetPort: 1883
+    nodePort: 31883
+    name: mqtt
+    protocol: TCP
+  - port: 8083
+    targetPort: 8083
+    nodePort: 30083
+    name: ws
+    protocol: TCP
+  - port: 8084
+    targetPort: 8084
+    nodePort: 30084
+    name: wss
+    protocol: TCP
+  - port: 8883
+    targetPort: 8883
+    nodePort: 30883
+    name: mqtts
+    protocol: TCP
+  - port: 18083
+    targetPort: 18083
+    nodePort: 31808
+    name: dashboard
+    protocol: TCP
+  selector:
+    app: emqx

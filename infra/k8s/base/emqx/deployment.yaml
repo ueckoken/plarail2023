@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emqx
+  labels:
+    app: emqx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emqx
+  template:
+    metadata:
+      labels:
+        app: emqx
+    spec:
+      containers:
+      - name: emqx
+        image: emqx/emqx:5.10.0
+        ports:
+        - containerPort: 1883
+          name: mqtt
+        - containerPort: 8083
+          name: ws
+        - containerPort: 8084
+          name: wss
+        - containerPort: 8883
+          name: mqtts
+        - containerPort: 18083
+          name: dashboard
+        env:
+        - name: EMQX_NODE_NAME
+          value: "emqx@127.0.0.1"
+        - name: EMQX_DASHBOARD__DEFAULT_USERNAME
+          value: "admin"
+        - name: EMQX_DASHBOARD__DEFAULT_PASSWORD
+          value: "password"
+        livenessProbe:
+          exec:
+            command:
+            - /opt/emqx/bin/emqx
+            - ctl
+            - status
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 25
+        readinessProbe:
+          exec:
+            command:
+            - /opt/emqx/bin/emqx
+            - ctl
+            - status
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 25
+        volumeMounts:
+        - name: emqx-data
+          mountPath: /opt/emqx/data
+        - name: emqx-log
+          mountPath: /opt/emqx/log
+      volumes:
+      - name: emqx-data
+        persistentVolumeClaim:
+          claimName: emqx-data-pvc
+      - name: emqx-log
+        persistentVolumeClaim:
+          claimName: emqx-log-pvc

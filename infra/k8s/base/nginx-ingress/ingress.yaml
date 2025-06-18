@@ -1,0 +1,51 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: plarail-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      # Frontend (root path)
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 80
+      # State Manager API
+      - path: /api(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: state-manager
+            port:
+              number: 8080
+      # Proxy
+      - path: /proxy(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: proxy
+            port:
+              number: 3031
+      # EMQX Dashboard
+      - path: /emqx(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: emqx
+            port:
+              number: 18083
+      # Mongo Express
+      - path: /mongo-express(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: mongo-express
+            port:
+              number: 8081

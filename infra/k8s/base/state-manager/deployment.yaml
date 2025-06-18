@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: state-manager
+  labels:
+    app: state-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: state-manager
+  template:
+    metadata:
+      labels:
+        app: state-manager
+    spec:
+      containers:
+      - name: state-manager
+        image: plarail2023/state-manager:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MQTT_BROKER_ADDR
+          value: "tcp://emqx:1883"
+        - name: MQTT_USERNAME
+          value: ""
+        - name: MQTT_PASSWORD
+          value: ""
+        - name: MQTT_CLIENT_ID
+          value: "state-manager-client"
+        - name: MONGODB_URI
+          value: "mongodb://root:password@mongodb:27017/"
+        - name: APP_ENV
+          value: "prod"
+        livenessProbe:
+          httpGet:
+            path: /debug/ping
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /debug/ping
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 10

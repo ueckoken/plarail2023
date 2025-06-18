@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auto-operation
+  labels:
+    app: auto-operation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auto-operation
+  template:
+    metadata:
+      labels:
+        app: auto-operation
+    spec:
+      containers:
+      - name: auto-operation
+        image: plarail2023/auto-operation:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: SERVER_ADDR
+          value: "http://state-manager:8080"
