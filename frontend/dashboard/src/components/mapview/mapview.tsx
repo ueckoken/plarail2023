@@ -77,7 +77,7 @@ function MapView() {
     <>
       {/* <button onClick={() => mutateTrain({ train: { trainId: "test", positionId: "shinjyuku_up_s1" } })}>Add Train</button>
       <button onClick={() => mutateTrain({ train: { trainId: "test", positionId: nextLocation(trains.trains[0])?.positionId } })}>Move</button> */}
-      <svg width="100%" height="620px">
+      <svg width="100%" height="100%" style={{ display: 'block' }}>
         <Background />
         <Rail
           points={[
