@@ -5,7 +5,6 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"log"
 	"log/slog"
 	"net"
 	"net/http"
@@ -83,16 +82,19 @@ func init() {
 	slog.SetDefault(logger)
 }
 
-func NewTlsConfig() *tls.Config {
+func NewTlsConfig() (*tls.Config, error) {
 	certpool := x509.NewCertPool()
 	ca, err := os.ReadFile("emqxsl-ca.pem")
 	if err != nil {
-		log.Fatalln(err.Error())
+		return nil, fmt.Errorf("failed to read CA certificate: %w", err)
 	}
-	certpool.AppendCertsFromPEM(ca)
+	ok := certpool.AppendCertsFromPEM(ca)
+	if !ok {
+		return nil, fmt.Errorf("failed to parse CA certificate")
+	}
 	return &tls.Config{
 		RootCAs: certpool,
-	}
+	}, nil
 }
 
 func main() {
@@ -126,7 +128,12 @@ func main() {
 	mqttClientOpts.Username = os.Getenv("MQTT_USERNAME")
 	mqttClientOpts.Password = os.Getenv("MQTT_PASSWORD")
 	mqttClientOpts.ClientID = os.Getenv("MQTT_CLIENT_ID")
-	tlsconfig := NewTlsConfig()
+	tlsconfig, err := NewTlsConfig()
+	if err != nil {
+		slog.Default().Error("failed to create TLS config", slog.Any("err", err))
+		cancel()
+		return
+	}
 	mqttClientOpts.SetTLSConfig(tlsconfig)
 
 	mqttHandler, err := mqtt_handler.NewHandler(mqttClientOpts, DBHandler)
@@ -137,7 +144,7 @@ func main() {
 	}
 
 	r := chi.NewRouter()
-	// r.Use(middleware.Recoverer)
+	r.Use(middleware.Recoverer)
 	r.Use(middleware.Heartbeat("/debug/ping"))
 	r.Use(httplog.RequestLogger(
 		httplog.NewLogger(
@@ -186,7 +193,10 @@ func main() {
 	eg.Go(func() error {
 		slog.Default().Info("start mqtt handler")
 		err := mqttHandler.Start(ctx)
-		return fmt.Errorf("mqtt handler error: %w", err)
+		if err != nil {
+			return fmt.Errorf("mqtt handler error: %w", err)
+		}
+		return nil
 	})
 
 	// errGroup.Waitはeg.Goが全てerrorを返すまでwaitする
@@ -196,5 +206,10 @@ func main() {
 	slog.Default().Info("shutting down server")
 	newCtx, srvTimeOutCancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer srvTimeOutCancel()
-	srv.Shutdown(newCtx)
+	if err := srv.Shutdown(newCtx); err != nil {
+		slog.Default().Error("failed to shutdown server gracefully", slog.Any("error", err))
+	}
+	
+	// Close database connection
+	DBHandler.Close(newCtx)
 }

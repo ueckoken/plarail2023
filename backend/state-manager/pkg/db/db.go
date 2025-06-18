@@ -7,8 +7,8 @@ package db
 import (
 	"context"
 	"fmt"
-	"log"
 	"log/slog"
+	"time"
 
 	statev1 "github.com/ueckoken/plarail2023/backend/spec/state/v1"
 	"go.mongodb.org/mongo-driver/bson"
@@ -40,12 +40,10 @@ func Open(ctx context.Context, opts *options.ClientOptions) (*DBHandler, error) 
 	}, nil
 }
 
-func (db *DBHandler) Close() {
+func (db *DBHandler) Close(ctx context.Context) {
 	slog.Default().Debug("Closing connection to DB...")
-	// TODO: contextを受けて、その子contextをDBクライアントに渡す
-	if err := db.stateManagerDB.Client().Disconnect(context.TODO()); err != nil {
-		slog.Default().Error("DB Connection Closing failed")
-		log.Println(err)
+	if err := db.stateManagerDB.Client().Disconnect(ctx); err != nil {
+		slog.Default().Error("DB Connection Closing failed", slog.Any("error", err))
 	}
 	slog.Default().Debug("DB Connection is successfully closed")
 }
@@ -88,13 +86,18 @@ func (db *DBHandler) GetPoint(pointId string) (*statev1.PointAndState, error) {
 
 func (db *DBHandler) GetPoints() ([]*statev1.PointAndState, error) {
 	collection := db.stateManagerDB.Collection("points")
-	cursor, err := collection.Find(context.Background(), bson.M{})
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	
+	cursor, err := collection.Find(ctx, bson.M{})
 	if err != nil {
 		slog.Default().Warn("Get Points failed", slog.Any("err", err))
 		return nil, err
 	}
+	defer cursor.Close(ctx)
+	
 	var result []*statev1.PointAndState
-	if err = cursor.All(context.Background(), &result); err != nil {
+	if err = cursor.All(ctx, &result); err != nil {
 		return nil, err
 	}
 	return result, nil
@@ -140,12 +143,17 @@ func (db *DBHandler) GetStop(stopId string) (*statev1.StopAndState, error) {
 
 func (db *DBHandler) GetStops() ([]*statev1.StopAndState, error) {
 	collection := db.stateManagerDB.Collection("stops")
-	cursor, err := collection.Find(context.Background(), bson.M{})
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	
+	cursor, err := collection.Find(ctx, bson.M{})
 	if err != nil {
 		return nil, err
 	}
+	defer cursor.Close(ctx)
+	
 	var result []*statev1.StopAndState
-	if err = cursor.All(context.Background(), &result); err != nil {
+	if err = cursor.All(ctx, &result); err != nil {
 		return nil, err
 	}
 	return result, nil
@@ -189,12 +197,17 @@ func (db *DBHandler) GetBlock(blockId string) (*statev1.BlockState, error) {
 
 func (db *DBHandler) GetBlocks() ([]*statev1.BlockState, error) {
 	collection := db.stateManagerDB.Collection("blocks")
-	cursor, err := collection.Find(context.Background(), bson.M{})
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	
+	cursor, err := collection.Find(ctx, bson.M{})
 	if err != nil {
 		return nil, err
 	}
+	defer cursor.Close(ctx)
+	
 	var result []*statev1.BlockState
-	if err = cursor.All(context.Background(), &result); err != nil {
+	if err = cursor.All(ctx, &result); err != nil {
 		return nil, err
 	}
 	return result, nil

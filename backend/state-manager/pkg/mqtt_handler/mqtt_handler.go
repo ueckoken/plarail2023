@@ -39,8 +39,10 @@ func (h *Handler) Start(ctx context.Context) error {
 		select {
 		case msg := <-msgCh:
 			// if topic start with "point/"
-			log.Printf("Received message: %s from topic: %s\n", msg.Payload(), msg.Topic())
-			h.topicHandler(msg)
+			slog.Default().Debug("Received message", slog.String("payload", string(msg.Payload())), slog.String("topic", msg.Topic()))
+			if err := h.topicHandler(msg); err != nil {
+				slog.Default().Error("Failed to handle topic", slog.Any("error", err), slog.String("topic", msg.Topic()))
+			}
 		case <-ctx.Done():
 			slog.Default().Info("Interrupted at mqtt_handler")
 			h.client.Disconnect(1000)
@@ -60,7 +62,8 @@ func (h *Handler) Subscribe(topic []string, f mqtt.MessageHandler) {
 
 	subscribeToken := h.client.SubscribeMultiple(filters, f)
 	if subscribeToken.Wait() && subscribeToken.Error() != nil {
-		log.Fatal(subscribeToken.Error())
+		slog.Default().Error("Failed to subscribe to topics", slog.Any("error", subscribeToken.Error()))
+		panic(fmt.Errorf("mqtt subscribe failed: %w", subscribeToken.Error()))
 	}
 }
 
@@ -79,12 +82,17 @@ func (h *Handler) Send(topic string, payload string) {
 func (h *Handler) topicHandler(msg mqtt.Message) error {
 	// Handle by Path
 	arr := strings.Split(msg.Topic(), "/")
+	
+	if len(arr) < 3 {
+		return fmt.Errorf("invalid topic format: %s", msg.Topic())
+	}
+	
 	target := arr[0]
 	id := arr[1]
 	method := arr[2]
 
 	if len(arr) > 3 {
-		return fmt.Errorf("message format failed")
+		return fmt.Errorf("message format failed: too many segments in topic %s", msg.Topic())
 	}
 
 	switch method {
@@ -117,9 +125,9 @@ func (h *Handler) getState(target string, id string) error {
 	case "stop":
 		stop, err := h.dbHandler.GetStop(id)
 		if err != nil {
-			log.Fatal(err)
+			return fmt.Errorf("Get stop failed, %w", err)
 		}
-		log.Println(stop)
+		slog.Default().Debug("Got stop state", slog.String("id", id), slog.Any("stop", stop))
 		token := h.client.Publish("stop/"+id+"/get/accepted", 0, false, stop.State.String())
 		token.Wait()
 
@@ -139,15 +147,21 @@ func (h *Handler) getState(target string, id string) error {
 	case "setting":
 		// read from /setting/esp/{id}.json
 		// check file exists
-		_, err := os.Stat("../settings/esp/" + id + ".json")
+		settingsPath := os.Getenv("SETTINGS_PATH")
+		if settingsPath == "" {
+			settingsPath = "../settings/esp"
+		}
+		filePath := fmt.Sprintf("%s/%s.json", settingsPath, id)
+		
+		_, err := os.Stat(filePath)
 		if err != nil {
-			log.Println(err.Error())
+			slog.Default().Warn("Settings file not found", slog.String("path", filePath), slog.Any("error", err))
 			// Return error message
 			token := h.client.Publish("setting/"+id+"/get/accepted", 0, false, "error")
 			token.Wait()
-			return fmt.Errorf("settings %w", err)
+			return fmt.Errorf("settings file not found: %w", err)
 		}
-		raw, err := os.ReadFile("../settings/esp/" + id + ".json")
+		raw, err := os.ReadFile(filePath)
 		if err != nil {
 			log.Println(err.Error())
 			return nil

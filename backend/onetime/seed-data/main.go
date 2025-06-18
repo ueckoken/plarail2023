@@ -31,7 +31,7 @@ func main() {
 	if err != nil {
 		return
 	}
-	defer db.Close()
+	defer db.Close(context.TODO())
 	data := &Seed{}
 	b, _ := os.ReadFile("./data/mfk-2024.yaml")
 	if err := yaml.Unmarshal(b, data); err != nil {
