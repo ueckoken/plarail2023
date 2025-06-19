@@ -29,13 +29,16 @@ jobs:
         run: |
           if [[ "${{ github.event_name == 'push' && startsWith(steps.extract_branch.outputs.branch , 'deployment') }}" == "true" ]]; then
             echo "tag=deployment-$(echo ${{ github.sha }} | cut -c1-7)-$(date +%s)" >> $GITHUB_OUTPUT
+            echo "latest_tag=false" >> $GITHUB_OUTPUT
             exit 0
           fi
           if [[ "${{ github.event_name == 'push' && steps.extract_branch.outputs.branch == 'main' }}" == "true" ]]; then
             echo "tag=main-$(echo ${{ github.sha }} | cut -c1-7)-$(date +%s)" >> $GITHUB_OUTPUT
+            echo "latest_tag=true" >> $GITHUB_OUTPUT
             exit 0
           fi
           echo "tag=wip-$(echo ${{ github.sha }} | cut -c1-7)-$(date +%s)" >> $GITHUB_OUTPUT
+          echo "latest_tag=false" >> $GITHUB_OUTPUT
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -72,7 +75,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
-      - name: Bake images
+      - name: Bake images with version tag
         uses: docker/bake-action@v4
         env:
           TAG: ${{ steps.generate_tag.outputs.tag }}
@@ -83,6 +86,19 @@ jobs:
           set: |
             *.cache-from=type=local,src=/tmp/.buildx-cache
             *.cache-to=type=local,mode=min,dest=/tmp/.buildx-cache-new
+          provenance: false
+
+      - name: Bake images with latest tag
+        if: ${{ steps.generate_tag.outputs.latest_tag == 'true' && steps.is_publish.outputs.is_publish == 'true' }}
+        uses: docker/bake-action@v4
+        env:
+          TAG: latest
+          BUILDX_BAKE_ENTITLEMENTS_FS: 0
+        with:
+          files: ./docker-bake.hcl
+          push: true
+          set: |
+            *.cache-from=type=local,src=/tmp/.buildx-cache
           provenance: false
 
       # https://github.com/docker/build-push-action/issues/252#issuecomment-744400434
