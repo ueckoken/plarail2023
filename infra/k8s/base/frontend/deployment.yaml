@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: plarail2023/frontend:latest
-        imagePullPolicy: IfNotPresent
+        image: ghcr.io/ueckoken/plarail2023/frontend:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 80

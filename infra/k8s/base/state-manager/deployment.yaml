@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
       - name: state-manager
-        image: plarail2023/state-manager:latest
-        imagePullPolicy: IfNotPresent
+        image: ghcr.io/ueckoken/plarail2023/state-manager:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
         env:

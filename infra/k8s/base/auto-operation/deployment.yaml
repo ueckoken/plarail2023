@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
       - name: auto-operation
-        image: plarail2023/auto-operation:latest
-        imagePullPolicy: IfNotPresent
+        image: ghcr.io/ueckoken/plarail2023/auto-operation:latest
+        imagePullPolicy: Always
         env:
         - name: SERVER_ADDR
           value: "http://state-manager:8080"
