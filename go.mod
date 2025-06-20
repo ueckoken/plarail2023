@@ -7,7 +7,7 @@ toolchain go1.21.13
 require (
 	connectrpc.com/connect v1.16.1
 	github.com/eclipse/paho.mqtt.golang v1.4.3
-	github.com/go-chi/chi/v5 v5.0.10
+	github.com/go-chi/chi/v5 v5.2.2
 	github.com/go-chi/httplog/v2 v2.0.7
 	github.com/joho/godotenv v1.5.1
 	github.com/rs/cors v1.10.1
