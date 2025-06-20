@@ -23,7 +23,8 @@ infra/k8s/
 ├── overlays/              # 環境別の設定
 │   └── local/            # ローカル開発環境用
 ├── build-images.sh       # Dockerイメージビルドスクリプト
-└── deploy.sh            # デプロイスクリプト
+├── deploy.sh            # デプロイスクリプト
+└── install-nginx-ingress.sh  # Nginx Ingress Controllerインストールスクリプト
 ```
 
 ## デプロイ手順
@@ -41,11 +42,14 @@ cd infra/k8s
 ./deploy.sh
 ```
 
+このスクリプトは自動的にnginx-ingress-controllerがインストールされているか確認し、
+必要に応じてインストールを行います。
+
 ## サービスへのアクセス
 
-### NodePort経由（デフォルト）
+### NodePort経由
 
-- Frontend (Proxy経由): http://localhost:30031
+- Frontend (Ingress経由): http://localhost:30080
 - EMQX Dashboard: http://localhost:31808
   - ユーザー名: admin
   - パスワード: password
@@ -53,22 +57,25 @@ cd infra/k8s
   - ユーザー名: admin
   - パスワード: password
 - MQTT: localhost:31883
+- Proxy (直接): http://localhost:30031
 
-### Nginx Ingress経由（オプション）
+### Nginx Ingress経由（推奨）
 
-Nginx Ingress Controllerがインストールされている場合：
+deploy.shスクリプトは自動的にnginx-ingress-controllerをインストールします。
+以下のURLでアクセス可能（すべてhttp://localhost:30080経由）：
+
+- Frontend: http://localhost:30080/
+- State Manager API: http://localhost:30080/api/
+- EMQX Dashboard: http://localhost:30080/emqx/
+- Mongo Express: http://localhost:30080/mongo-express/
+- Proxy: http://localhost:30080/proxy/
+
+### 手動でnginx-ingress-controllerをインストールする場合
 
 ```bash
-# Nginx Ingress Controllerのインストール
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/cloud/deploy.yaml
+# Helmを使用してインストール
+./install-nginx-ingress.sh
 ```
-
-インストール後、以下のURLでアクセス可能：
-
-- Frontend: http://localhost/
-- State Manager API: http://localhost/api/
-- EMQX Dashboard: http://localhost/emqx/
-- Mongo Express: http://localhost/mongo-express/
 
 ## 管理コマンド
 

@@ -15,7 +15,22 @@ if ! kubectl cluster-info &> /dev/null; then
     exit 1
 fi
 
+# Check if nginx-ingress-controller is installed
+echo "Checking nginx-ingress-controller..."
+if ! kubectl get deployment -n plarail nginx-ingress-ingress-nginx-controller &> /dev/null; then
+    echo "nginx-ingress-controller is not installed."
+    echo "Installing nginx-ingress-controller..."
+    ./install-nginx-ingress.sh
+    if [ $? -ne 0 ]; then
+        echo "Failed to install nginx-ingress-controller"
+        exit 1
+    fi
+else
+    echo "nginx-ingress-controller is already installed."
+fi
+
 # Apply the manifests using kustomize
+echo ""
 echo "Applying Kubernetes manifests..."
 kubectl apply -k overlays/local/
 
@@ -23,13 +38,15 @@ echo ""
 echo "Deployment complete!"
 echo ""
 echo "Services are available at:"
-echo "- Frontend: http://localhost:30031 (via proxy) or use Ingress"
+echo "- Frontend: http://localhost:30080 (via Ingress)"
 echo "- EMQX Dashboard: http://localhost:31808"
 echo "- Mongo Express: http://localhost:30081"
 echo "- MQTT: localhost:31883"
+echo "- Proxy: http://localhost:30031"
 echo ""
-echo "If using Ingress with NGINX Ingress Controller:"
-echo "- Frontend: http://localhost/"
-echo "- API: http://localhost/api/"
-echo "- EMQX Dashboard: http://localhost/emqx/"
-echo "- Mongo Express: http://localhost/mongo-express/"
+echo "Ingress endpoints (via http://localhost:30080):"
+echo "- Frontend: http://localhost:30080/"
+echo "- API: http://localhost:30080/api/"
+echo "- EMQX Dashboard: http://localhost:30080/emqx/"
+echo "- Mongo Express: http://localhost:30080/mongo-express/"
+echo "- Proxy: http://localhost:30080/proxy/"
