@@ -6,3 +6,7 @@ namespace: plarail
 resources:
   - ../../base
   - namespace.yaml
+
+images:
+  - name: ghcr.io/ueckoken/plarail2023-dashboard
+    newTag: main-7c4c839-1750394664

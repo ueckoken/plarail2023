@@ -1,4 +1,0 @@
-resources:
-  - ./certificate.yaml
-  - ./cluster-issuer.yaml
-  - ./namespace.yaml

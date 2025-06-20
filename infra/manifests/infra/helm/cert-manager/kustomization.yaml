@@ -1,4 +1,0 @@
-resources:
-  - ./repository.yaml
-  - ./release.yaml
-  - ./namespace.yaml
