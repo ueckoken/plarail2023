@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: seed-data
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: seed-data
+        image: ghcr.io/ueckoken/plarail2023-seed-data:latest
+        env:
+        - name: MONGODB_URI
+          value: "mongodb://mongodb:27017/plarail2023"
+        - name: SEED_DATA_FILE
+          value: "/config/seed-data.yaml"
+        volumeMounts:
+        - name: seed-data-config
+          mountPath: /config
+      volumes:
+      - name: seed-data-config
+        configMap:
+          name: seed-data-config

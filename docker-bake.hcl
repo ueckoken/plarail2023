@@ -2,7 +2,9 @@ group "default" {
   targets = [
     "state-manager",
     "autooperation",
-    "dashboard"
+    "dashboard",
+    "proxy",
+    "seed-data"
   ]
 }
 
@@ -43,4 +45,26 @@ target "dashboard" {
     GET_TAG("dashboard")
   ]
   target = "dashboard-runner"
+}
+
+target "proxy" {
+  dockerfile = "docker/backend/proxy/Dockerfile"
+  tags = [
+    GET_TAG("proxy")
+  ]
+  platforms = [
+    "linux/amd64",
+    "linux/arm64"
+  ]
+}
+
+target "seed-data" {
+  dockerfile = "docker/backend/seed-data/Dockerfile"
+  tags = [
+    GET_TAG("seed-data")
+  ]
+  platforms = [
+    "linux/amd64",
+    "linux/arm64"
+  ]
 }

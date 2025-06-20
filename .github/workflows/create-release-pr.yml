@@ -1,9 +1,9 @@
 # https://songmu.jp/riji/entry/2022-08-05-git-pr-release.html
 name: Create Release PR
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   publish:

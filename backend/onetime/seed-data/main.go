@@ -24,16 +24,31 @@ type Seed struct {
 }
 
 func main() {
-	if err := godotenv.Load(".env"); err != nil {
+	// .envファイルが存在する場合のみ読み込む（開発環境用）
+	_ = godotenv.Load(".env")
+	
+	// 環境変数から設定を取得
+	mongoURI := os.Getenv("MONGODB_URI")
+	if mongoURI == "" {
+		panic("MONGODB_URI is not set")
+	}
+	
+	dataFile := os.Getenv("SEED_DATA_FILE")
+	if dataFile == "" {
+		dataFile = "./data/mfk-2024.yaml" // デフォルト値
+	}
+	
+	db, err := dbhandler.Open(context.TODO(), options.Client().ApplyURI(mongoURI))
+	if err != nil {
 		panic(err)
 	}
-	db, err := dbhandler.Open(context.TODO(), options.Client().ApplyURI(os.Getenv("MONGODB_URI")))
-	if err != nil {
-		return
-	}
 	defer db.Close(context.TODO())
+	
 	data := &Seed{}
-	b, _ := os.ReadFile("./data/mfk-2024.yaml")
+	b, err := os.ReadFile(dataFile)
+	if err != nil {
+		panic(err)
+	}
 	if err := yaml.Unmarshal(b, data); err != nil {
 		panic(err)
 	}

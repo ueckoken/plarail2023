@@ -6,21 +6,10 @@ namespace: plarail
 resources:
   - ../../base
   - namespace.yaml
+  - ../../base/seed-data
 
-images:
-  - name: plarail2023/state-manager
-    newName: plarail2023/state-manager
-    newTag: local
-  - name: plarail2023/auto-operation
-    newName: plarail2023/auto-operation
-    newTag: local
-  - name: plarail2023/frontend
-    newName: plarail2023/frontend
-    newTag: local
-  - name: plarail2023/proxy
-    newName: plarail2023/proxy
-    newTag: local
-
-# ローカル開発用の設定
-patchesStrategicMerge:
-  - patches/storage-class.yaml
+configMapGenerator:
+  - name: seed-data-config
+    behavior: replace
+    files:
+      - seed-data.yaml

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: proxy
-        image: ghcr.io/ueckoken/plarail2023/proxy:latest
+        image: ghcr.io/ueckoken/plarail2023-proxy:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 3031
