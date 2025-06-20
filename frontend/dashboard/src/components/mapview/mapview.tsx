@@ -6,6 +6,7 @@ import {
   Background,
   Train,
 } from "@/components/svgElements";
+import styles from "./mapview.module.scss";
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import {
   // addTrain,
@@ -74,10 +75,11 @@ function MapView() {
   //   return undefined
   // }
   return (
-    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      {/* <button onClick={() => mutateTrain({ train: { trainId: "test", positionId: "shinjyuku_up_s1" } })}>Add Train</button>
-      <button onClick={() => mutateTrain({ train: { trainId: "test", positionId: nextLocation(trains.trains[0])?.positionId } })}>Move</button> */}
-      <svg width="100%" height="100%" viewBox="0 0 700 400" preserveAspectRatio="xMidYMid meet" style={{ display: 'block', maxWidth: '100%', maxHeight: '100%' }}>
+    <div className={styles.mapContainer}>
+      <div className={styles.svgWrapper}>
+        {/* <button onClick={() => mutateTrain({ train: { trainId: "test", positionId: "shinjyuku_up_s1" } })}>Add Train</button>
+        <button onClick={() => mutateTrain({ train: { trainId: "test", positionId: nextLocation(trains.trains[0])?.positionId } })}>Move</button> */}
+        <svg viewBox="0 0 700 400" preserveAspectRatio="xMidYMid meet">
         <Background />
         <Rail
           points={[
@@ -151,7 +153,8 @@ function MapView() {
 
         }
 
-      </svg>
+        </svg>
+      </div>
     </div>
   );
 }

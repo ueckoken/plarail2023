@@ -9,4 +9,4 @@ resources:
 
 images:
   - name: ghcr.io/ueckoken/plarail2023-dashboard
-    newTag: main-7c4c839-1750394664
+    newTag: main-bd20c2b-1750395692
