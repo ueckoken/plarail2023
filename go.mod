@@ -2,6 +2,8 @@ module github.com/ueckoken/plarail2023
 
 go 1.21.4
 
+toolchain go1.21.13
+
 require (
 	connectrpc.com/connect v1.16.1
 	github.com/eclipse/paho.mqtt.golang v1.4.3

@@ -6,10 +6,3 @@ namespace: plarail
 resources:
   - ../../base
   - namespace.yaml
-  - ../../base/seed-data
-
-configMapGenerator:
-  - name: seed-data-config
-    behavior: replace
-    files:
-      - seed-data.yaml=../../setting.yaml

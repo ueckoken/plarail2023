@@ -1,38 +1,19 @@
 #!/bin/bash
 
 # Seed Data実行スクリプト
-# 使用方法: ./seed-data.sh [環境] [データファイル]
-# 例: ./seed-data.sh local backend/onetime/seed-data/data/mfk-2024.yaml
+# 使用方法: ./seed-data.sh [データファイル]
+# 例: ./seed-data.sh overlays/local/setting.yaml
 
 set -e
 
 # デフォルト値
-ENV=${1:-local}
-# setting.yamlが同じディレクトリにあるので、それをデフォルトとして使用
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-DATA_FILE=${2:-$SCRIPT_DIR/setting.yaml}
 NAMESPACE="plarail"
 
-# 環境に応じた設定
-case $ENV in
-  "local")
-    NAMESPACE="plarail"
-    ;;
-  "staging")
-    NAMESPACE="plarail-staging"
-    ;;
-  "production")
-    NAMESPACE="plarail-production"
-    ;;
-  *)
-    echo "Error: Unknown environment: $ENV"
-    echo "Usage: $0 [local|staging|production] [data-file]"
-    exit 1
-    ;;
-esac
+# データファイルのパス（引数で指定されない場合はデフォルトを使用）
+DATA_FILE=${1:-$SCRIPT_DIR/overlays/local/setting.yaml}
 
 echo "=== Seed Data Deployment ==="
-echo "Environment: $ENV"
 echo "Namespace: $NAMESPACE"
 echo "Data file: $DATA_FILE"
 echo ""
@@ -56,7 +37,7 @@ kubectl create configmap seed-data-config \
 
 # Jobを実行
 echo "Applying seed-data job..."
-kubectl apply -f infra/k8s/base/seed-data/job.yaml -n $NAMESPACE
+kubectl apply -f $SCRIPT_DIR/base/seed-data/job.yaml -n $NAMESPACE
 
 # Jobの完了を待つ
 echo "Waiting for job to complete..."
