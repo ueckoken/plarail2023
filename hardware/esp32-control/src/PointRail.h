@@ -3,8 +3,8 @@
 #include <Arduino.h>
 #include <ESP32Servo.h>
 
-#define POINT_STRAIGHT_ANGLE 142
-#define POINT_REVERSE_ANGLE 160
+#define POINT_STRAIGHT_ANGLE 140
+#define POINT_REVERSE_ANGLE 155
 
 enum POINT_STATE
 {

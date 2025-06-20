@@ -1,10 +1,10 @@
 #ifndef MQTTSETTINGS_H
 #define MQTTSETTINGS_H
 
-const char *mqtt_broker = "192.168.1.106"; // broker address
-const char *mqtt_username = "test";        // username for authentication
-const char *mqtt_password = "password";    // password for authentication
-const int mqtt_port = 1883;                // port of MQTT (TCP)
+const char *mqtt_broker = "plarail.local"; // broker address
+const char *mqtt_username = "";            // username for authentication
+const char *mqtt_password = "";            // password for authentication
+const int mqtt_port = 31883;               // port of MQTT (TCP)
 const char *root_ca =
     "-----BEGIN CERTIFICATE-----\n"
     "MIIDrzCCApegAwIBAgIQCDvgVpBCRrGhdWrJWZHHSjANBgkqhkiG9w0BAQUFADBh\n"
