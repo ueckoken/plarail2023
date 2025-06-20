@@ -12,4 +12,4 @@ configMapGenerator:
   - name: seed-data-config
     behavior: replace
     files:
-      - seed-data.yaml
+      - seed-data.yaml=../../setting.yaml

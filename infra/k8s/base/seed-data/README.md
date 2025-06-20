@@ -4,16 +4,37 @@
 
 ## 使用方法
 
-### ローカル環境での実行
+### スクリプトを使用した実行（推奨）
 
-1. `infra/k8s/overlays/local/seed-data.yaml`を編集して、必要なデータを定義します。
+`infra/k8s/seed-data.sh`スクリプトを使用すると、簡単にseed-dataを実行できます：
 
-2. k8sクラスタにデプロイします：
+```bash
+# デフォルト（local環境、infra/k8s/setting.yaml）
+./infra/k8s/seed-data.sh
+
+# 環境とデータファイルを指定
+./infra/k8s/seed-data.sh local backend/onetime/seed-data/data/chofufes-2023.yaml
+
+# staging環境で実行
+./infra/k8s/seed-data.sh staging path/to/your/data.yaml
+```
+
+デフォルトでは、`infra/k8s/setting.yaml`が使用されます。
+
+スクリプトは以下を自動的に行います：
+- 既存のJobのクリーンアップ
+- ConfigMapの作成/更新
+- Jobの実行と完了待機
+- ログの表示
+
+### 手動での実行
+
+1. k8sクラスタにデプロイします（`infra/k8s/setting.yaml`を使用）：
 ```bash
 kubectl apply -k infra/k8s/overlays/local/
 ```
 
-3. Jobの実行状況を確認します：
+2. Jobの実行状況を確認します：
 ```bash
 kubectl get jobs -n plarail
 kubectl logs -n plarail job/seed-data
