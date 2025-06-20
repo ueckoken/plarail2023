@@ -17,6 +17,15 @@ const MapEditerPage: FC<{}> = () => {
 
     return (
         <>
+<div>
+                <h3>駅リスト</h3>
+                {SVGComponents.map((e, idx) => (
+                    <div key={idx} style={{ display: "flex", alignItems: "center", marginBottom: 4 }}>
+                        <span style={{ marginRight: 8 }}>{e.name}</span>
+                        <button onClick={() => setCurrentSVGComponents(e)}>編集</button>
+                    </div>
+                ))}
+            </div>
             <fieldset>
                 <legend>コンポーネントの追加</legend>
                 <div>
