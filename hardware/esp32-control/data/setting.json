@@ -3,43 +3,43 @@
   "stops": [
     {
       "stop_id": "ninini_s1",
-      "pin": 16
+      "pin": 16 // SM3
     },
     {
       "stop_id": "ninini_s2",
-      "pin": 17
+      "pin": 17 // SM4
     },
     {
       "stop_id": "nanana_s1",
-      "pin": 18
+      "pin": 18 // SM5
     }
   ],
   "points": [
     {
       "point_id": "ninini_p1",
-      "pin": 19
+      "pin": 19 // SM6
     }
   ],
   "detectors": [
     {
       "block_id": "nanana_b1",
-      "target": "CLOSE",
-      "pin": 12
+      "target": "CLOSE", 
+      "pin": 12 //IO1
     },
     {
       "block_id": "nanana_b1",
       "target": "OPEN",
-      "pin": 22
+      "pin": 22 //IO2
     },
     {
       "block_id": "ninini_b1",
       "target": "CLOSE",
-      "pin": 23
+      "pin": 23 //IO3
     },
     {
       "block_id": "ninini_b1",
       "target": "OPEN",
-      "pin": 25
+      "pin": 25 //IO4
     }
   ],
   "nfcs": []
