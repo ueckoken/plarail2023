@@ -33,6 +33,11 @@ const POINT_RAILS_FROM_ID: Map<string, { x: number, y: number, fixed: number, st
   ["ninini_p1", { x: 500, y: 100, fixed: 0, straight: 180, changed: 140 }],
 ]);
 
+const BLOCKS_FROM_ID: Map<string, { x: number, y: number }> = new Map([
+  ["ninini_b1", { x: 320, y: 400 }],
+  ["nanana_b1", { x: 320, y: 500 }],
+])
+
 const LOCATIONS_FOR_TRAIN_FROM_ID: Map<string, { x: number, y: number }> = new Map([...STOP_RAILS_FROM_ID, ...BLOCKS_FROM_ID]);
 
 function MapView() {
