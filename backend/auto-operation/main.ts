@@ -125,31 +125,31 @@ async function main() {
   }
 
 
-  for (const point of points) {
-    if (point.id == "ninini_p1") {
-      // ninini_b1のblockが閉じたらninini_p1を逆にする
-      const ninini_b1 = blocks.find(b => b.blockId === "ninini_b1");
-      if (ninini_b1 && ninini_b1.state === BlockStateEnum.BLOCK_STATE_CLOSE) {
-        if (point.state !== PointStateEnum.POINT_STATE_REVERSE) {
-          await client.updatePointState({
-            "state": {
-              "id": point.id,
-              "state": PointStateEnum.POINT_STATE_REVERSE
-            }
-          })
-        }
-      } else {
-        if (point.state !== PointStateEnum.POINT_STATE_NORMAL) {
-          await client.updatePointState({
-            "state": {
-              "id": point.id,
-              "state": PointStateEnum.POINT_STATE_NORMAL
-            }
-          })
-        }
-      }
-    }
-  }
+  // for (const point of points) {
+  //   if (point.id == "ninini_p1") {
+  //     // ninini_b1のblockが閉じたらninini_p1を逆にする
+  //     const ninini_b1 = blocks.find(b => b.blockId === "ninini_b1");
+  //     if (ninini_b1 && ninini_b1.state === BlockStateEnum.BLOCK_STATE_CLOSE) {
+  //       if (point.state !== PointStateEnum.POINT_STATE_REVERSE) {
+  //         await client.updatePointState({
+  //           "state": {
+  //             "id": point.id,
+  //             "state": PointStateEnum.POINT_STATE_REVERSE
+  //           }
+  //         })
+  //       }
+  //     } else {
+  //       if (point.state !== PointStateEnum.POINT_STATE_NORMAL) {
+  //         await client.updatePointState({
+  //           "state": {
+  //             "id": point.id,
+  //             "state": PointStateEnum.POINT_STATE_NORMAL
+  //           }
+  //         })
+  //       }
+  //     }
+  //   }
+  // }
   // for (const point of points) {
   //   console.log(point);
   // }
