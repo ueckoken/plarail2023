@@ -33,11 +33,6 @@ const POINT_RAILS_FROM_ID: Map<string, { x: number, y: number, fixed: number, st
   ["ninini_p1", { x: 500, y: 100, fixed: 0, straight: 180, changed: 140 }],
 ]);
 
-const BLOCKS_FROM_ID: Map<string, { x: number, y: number }> = new Map([
-  ["ninini_b1", { x: 320, y: 400 }],
-  ["nanana_b1", { x: 320, y: 500 }],
-])
-
 const LOCATIONS_FOR_TRAIN_FROM_ID: Map<string, { x: number, y: number }> = new Map([...STOP_RAILS_FROM_ID, ...BLOCKS_FROM_ID]);
 
 function MapView() {
@@ -89,8 +84,8 @@ function MapView() {
             { x: 200, y: 300 },
             { x: 350, y: 300 },
           ]}
-          isClosed={isClosed("nanana_b1")}
-          onClick={() => mutateBlock({ state: { blockId: "nanana_b1", state: isClosed("nanana_b1") ? BlockStateEnum.BLOCK_STATE_OPEN : BlockStateEnum.BLOCK_STATE_CLOSE } })}
+          isClosed={isClosed("ninini_b1")}
+          onClick={() => mutateBlock({ state: { blockId: "ninini_b1", state: isClosed("ninini_b1") ? BlockStateEnum.BLOCK_STATE_OPEN : BlockStateEnum.BLOCK_STATE_CLOSE } })}
         />
         <Rail
           points={[
@@ -99,8 +94,8 @@ function MapView() {
             { x: 600, y: 100 },
             { x: 500, y: 100 }
           ]}
-          isClosed={isClosed("ninini_b1")}
-          onClick={() => mutateBlock({ state: { blockId: "ninini_b1", state: isClosed("ninini_b1") ? BlockStateEnum.BLOCK_STATE_OPEN : BlockStateEnum.BLOCK_STATE_CLOSE } })}
+          isClosed={isClosed("nanana_b1")}
+          onClick={() => mutateBlock({ state: { blockId: "nanana_b1", state: isClosed("nanana_b1") ? BlockStateEnum.BLOCK_STATE_OPEN : BlockStateEnum.BLOCK_STATE_CLOSE } })}
         />
 
         <Rail
