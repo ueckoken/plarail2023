@@ -9,6 +9,6 @@ resources:
 
 images:
   - name: ghcr.io/ueckoken/plarail2023-dashboard
-    newTag: main-867dddd-1750441012
+    newTag: main-522c9a9-1750476628
   - name: ghcr.io/ueckoken/plarail2023-autooperation:latest
-    newTag: main-abd0b19-1750444269
+    newTag: main-4d71821-1750477970
